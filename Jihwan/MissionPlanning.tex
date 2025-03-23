@@ -9,11 +9,21 @@
 - list what the existing companies for mine detection drones use as their algorithm if they can be found
 \fi
 
-The mission planning of the multi-aerial drone system focuses on how to efficiently plan the paths of the drones to survey our \gls{roi} using the chosen suite of sensors. The input will be the user-defined \gls{roi} and the specifications of the drone system, which goes through the mission planning algorithm to output the set of coordinates each drone must follow.
+\paragraph{Objectives}
+
+The mission planning of the multi-aerial drone system focuses on how to efficiently plan the paths of the drones to survey our \gls{roi} using the chosen suite of sensors. The input will be the user-defined \gls{roi} and the specifications of the drone dynamics and sensors, which go through the mission planning algorithm to output the set of coordinates each drone must follow (Figure~\ref{fig:objmsp}).
+
+To have a successful mission planning framework, we wish to meet the following criteria:
+
+\begin{itemize}
+    \item \textbf{Efficient}: 
+    \item \textbf{Expandable}:
+    \item \textbf{Intuitive}:
+\end{itemize}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/Objective of the Mission Planning System.eps}
+    \includegraphics[width=0.5\linewidth]{figs/Jihwan/Objective of the Mission Planning System.eps}
     \caption{Objective of the Mission Planning System}
     \label{fig:objmsp}
 \end{figure}
@@ -31,7 +41,7 @@ We aim to improve on these works by proposing a \textit{Layered Approach} to the
 \fi
 
 \begin{enumerate}
-    \item \textbf{Define} the region of interest and obstacles.
+    \item \textbf{Define} the \gls{roi} and obstacles.
     \item \textbf{Cover} the area using a thermal sensor through a \gls{cpp} algorithm.
     \item \textbf{Analyse} the thermal readings using a machine learning algorithm to find the suspected points.
     \item \textbf{Target} and rescan the suspected points using a \gls{gpr} sensor through a \gls{tspo} algorithm.
