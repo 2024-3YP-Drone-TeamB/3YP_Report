@@ -1,5 +1,9 @@
 \subsection{Overview of Fusion} \label{fusion_overview}
 
+
+\paragraph{Justification for late stage DL fusion} By processing each sensor's data through individual YOLO models before merging, the individual strengths of different sensor types are leveraged, and single points of failure are removed. The network architecture is simpler for late stage fusion, and allows the retraining of the radar and thermal parts in parallel. 
+
+
     We have shown in \ref{compvis_radarcv} and \ref{compvis_thermalcv} that we can generate bounding boxes highlighting suspected mines for both the radar Bscans and thermal images respectively. In this analysis, we will treat the predictions by the CNNs at a probability distribution, where anywhere not in a bounding box is implicitly zero probability, and regions in bounding boxes have probability equal to the associated confidence score provided by the CNN.
     
     As mentioned in \ref{compvis_methods}, we fuse the probability distributions over each image by performing an affine transformation, and using the position and orientation metadata associated with each image, forming an Orthomosaic. DETAIL OF THE ALGO? REASONING FOR THIS? GPS DENIED? 
@@ -10,6 +14,11 @@
     We note the implicit fusion mentioned in \ref{compvis_methods}, for sake of time-saving, the radar sensor only scans points of high probability on the thermal probability map. The only way we can have a true negative system prediction (with rate $TN_{sys}$) is if: Thermal correctly identifies it as negative (with probability $S_t$), or the thermal sensor wrongly flags it (with probability $(1-S_t)$) but the radar sensor correctly rejects it (with probability $S_r$)
     
     Comparison with Naive Bayes; Because the ANFIS fusion system was shown to have improved precision and recall than Naive Bayes \ref{compvis_anfisvalid}, we can say that the performance metrics for Naive Bayes (which is easier to analyse) will be a lower bound on the precision metrics for the ANFIS fusion system on average. This can be though of as follows: ANFIS has access to physically relevant contextual information, and is constrained to physical solutions, where Naive Bayes does not. Thus we would expect ANFIS to provide better precision and recall than Naive bayes, which is indeed validated in \ref{compvis_anfisvalid}.
+
+    \paragraph{Sparse Map Assembly}
+        
+        Fusing the sensor outputs before the CNN is problematic due to irregular input sizes and the need for computationally intensive alignment algorithms that may introduce errors. Instead, we leverage the accurate location and pose metadata, and the known sensor fields-of-view to analytically project each sensor’s probability map onto a common geographical grid. Given that these probability maps are inherently sparse (most of the probability map is zero, with occasional spikes over landmines), and in contrast to fusing the raw images, the overlapping regions will be small; when they occur, a simple strategy—such as weighted averaging based on sensor confidence—suffices to resolve them.
+
     
     \subsubsection{Loss Matrix} \label{lossmatrix}
         

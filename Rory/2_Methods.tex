@@ -1,6 +1,6 @@
-\subsection{Unified Methodology} \label{compvis_methods}
 
-    \subsubsection{System Architecture}
+
+    \subsubsection{System Architecture} \label{compvis_methods}
     
         \begin{enumerate}
         
@@ -11,23 +11,25 @@
             \item \textbf{Radar Data Acquisition} Regions with \(\mathcal{P}_{\text{thermal}} > 0.5\) are flagged as \textit{Points of Interest} (POIs). A radar drone autonomously surveys these POIs, collecting GPSAR Bscans along linear transects (Section \ref{points_of_interest}). A second YOLOv11 CNN processes these Bscans to produce a radar probability map \(\mathcal{P}_{\text{radar}}(x,y)\).
             
             \item \textbf{Fusion} These two probability maps, from different sensors, but over the same geographical space, are passed into a fusion algorithm , along with some environmental contextual data, returning a third, fused, probability map $\mathcal{P}_{\text{fused}}$, that is the key output of the project Section \ref{fusion}. This map can be visualised in a human-computer interface to provide actionable intelligence for demining teams
+            
         \end{enumerate}
+
+
     
-    \subsection{Layered Detection Justification and Consequences} 
-    \label{sec:layered_approach}
+    \subsubsection{Summary and Key Novelty}
+
+
     
-        The hierarchical scanning strategy---thermal sensor for broad-area detection followed by radar for targeted verification---is fundamentally driven by the need to balance detection accuracy with operational efficiency. This approach exploits the complementary strengths of each sensor: the thermal sensor provides high recall (\(R_T\)) for rapid identification of potential mine locations, whereas the radar sensor delivers high precision (\(P_R\)) for definitive confirmation in flagged regions.
-    
-    \subsubsection{Information Entropy Reduction} 
-    
-        The thermal sensor acts as an entropy-reducing filter. Let \(\rho_0 = P(\text{Mine})\) denote the initial mine density (prior probability), \(R_T = P(\text{Thermal Flag} \mid \text{Mine})\) the thermal recall (true positive rate), and \(F_T = P(\text{Thermal Flag} \mid \text{No Mine})\) the thermal false positive rate. After thermal scanning, the posterior probability \(\rho_1\) of a mine in a flagged region (\(\mathcal{T}^+\)) is derived from Bayes' theorem:
-        
-        \begin{equation}
-            \rho_1 = P(\text{Mine} \mid \mathcal{T}^+) = \frac{P(\mathcal{T}^+ \mid \text{Mine}) P(\text{Mine})}{P(\mathcal{T}^+)} = \frac{R_T \rho_0}{R_T \rho_0 + F_T (1 - \rho_0)} = \frac{\rho_0}{\rho_0 + \frac{F_T}{R_T} (1 - \rho_0)}
-        \end{equation}
-        
-        Under the reasonable assumption that \(\frac{F_T}{R_T}\ll 1\), this posterior probability satisfies \(\rho_1 \gg \rho_0\), indicating that flagged regions exhibit higher mine density. The radar subsequently refines \(\rho_1\) to a fused precision \(P_{\text{fused}} > \rho_1\), as detailed in Section~\ref{sec:fusion}.
-    
+        \noindent In summary, the literature indicates that the combination of a CNN-based YOLO model, with a physics-informed deep learning fusion framework is the optimal solution for achieving high accuracy and robustness in landmine detection systems.
+
+        \noindent The hierarchical sensor integration described ensures much faster detection, with minimal compromise on accuracy, by leveraging the high recall, high speed thermal sensors, and the slower, high precision radar sensor a very efficient manner. This 'layered approach' is justified from a flight efficiency standpoint in Section \ref{layered_approach}, and a computer vision standpoint in Section \ref{fusion}.
+            
+        \noindent The system outlined in this report represents a novelty in the fusion approach. The layered approach for landmine detection has not yet been justified from a computer vision standpoint before, and the specific physics-informed deep learning model for late stage fusion used in Section \ref{fusion}, has not been used before in the context of landmine detection.
+
+        The next section, \ref{compvis_implementation}, elaborates on sensor-specific implementations, where the precision and recall of the thermal and radar subsystems will be quantified.
+
+
+            
     %\subsubsection{Time Efficiency Analysis} 
     %Let \(A\) represent the total survey area, \(t_T\) the time per unit area for thermal scanning, and \(t_R\) the time per unit area for radar scanning. The total time for layered scanning comprises two components: thermal coverage of the entire area and radar scrutiny of high-probability regions:
     
@@ -50,9 +52,3 @@
     %as the radar's slower scan rate (\(t_R > t_T\)) dictates operational tempo. The layered approach therefore achieves an \textbf{80.5\% reduction} in operational time compared to exhaustive parallel scanning with these representative parameters.
     
     %Continuing this example, $\rho_1 \approx \text{50\%}$, meaning that the density of mines in the flagged regions was ten times that of the original area. This underscores the reasoning behind only using the radar sensors in the flagged, mine rich regions.
-    
-    \subsubsection{Conclusion} 
-    
-        The hierarchical sensor integration described ensures much faster detection, with minimal compromise on accuracy, by leveraging the high recall, high speed thermal sensors, and the slower, high precision radar sensor a very efficient manner.
-        
-        The subsequent section, Section~\ref{compvis_implementation}, elaborates on sensor-specific implementations, where we will quantify the precision and recall of the thermal and radar systems.

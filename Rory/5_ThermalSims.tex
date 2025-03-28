@@ -36,20 +36,23 @@
         
         The transient heat conduction problem is solved using the Finite Element Method (FEM) with triangular linear Lagrange (P1) elements to discretise the spatial domain. The time-dependent heat equation is integrated using an implicit backward Euler scheme, which ensures numerical stability for large time steps. MATLAB's PDE Toolbox automatically assembles the mass and stiffness matrices and employs a sparse direct solver (UMFPACK) for the resulting system of equations. To optimise runtime, the simulation is split into two phases: a low-resolution 14-day phase to establish a steady state, followed by a high-resolution 24-hour phase for detailed thermal behaviour.
     
-        \begin{figure}[htbp]
+         \begin{figure}[htbp]
+          \centering
+          \begin{subfigure}[t]{0.48\textwidth} % Top-aligned subfigures
             \centering
-            \includegraphics[width=0.8\textwidth]{figs/Rory/thermal_mesh.pdf}
-            \caption{4x Downsampled thermal mesh - maximum mesh size 0.02m}
+            \includegraphics[width=\textwidth]{figs/Rory/thermal_mesh_new.pdf}
+            \caption{Coarse mesh visualization}
             \label{fig:thermal_mesh}
-        \end{figure}
-        
-        
-        
-        \begin{figure}[htbp]
+          \end{subfigure}
+          \hfill
+          \begin{subfigure}[t]{0.48\textwidth}
             \centering
-            \includegraphics[width=0.8\textwidth]{figs/Rory/thermal_domain.pdf}
-            \caption{Thermal simulation domain}
+            \raisebox{2.5mm}{\includegraphics[width=\textwidth]{figs/Rory/thermal_domain.pdf}}
+            \caption{Domain configuration}
             \label{fig:thermal_domain}
+          \end{subfigure}
+          \caption[Thermal simulations setup]{Thermal simulation setup: (a) 4× downsampled mesh (max element size 0.02\,m vs. 0.005\,m resolution used in simulations), landmine shown in red; (b) Numerical domain with soil region ($\Omega_1$), mine inclusion ($\Omega_2$), boundary labels ($\Gamma_1$\--$\Gamma_4$), and heat flux components ($q_i$).}
+          \label{fig:thermal_setup}
         \end{figure}
     
     \subsubsection{Boundary Conditions} 
@@ -112,7 +115,7 @@
         \begin{figure}[htbp]
             \centering
             \begin{minipage}[b]{0.48\textwidth} % Adjust width as needed
-                \includegraphics[width=\textwidth]{figs/Rory/thermal_result.pdf}
+                \includegraphics[width=\textwidth]{figs/Rory/A_temp_distribution.pdf}
                 %\caption{Enlarged simulation domain at local Afghanistan time midnight} % Remove individual caption
                 %\label{fig:thermal_result} % Remove individual label
             \end{minipage}
@@ -122,20 +125,31 @@
                 %\caption{Surface distribution} % Remove individual caption
                 %\label{fig:thermal_1D} % Remove individual label
             \end{minipage}
-            \caption{Converged initial condition plotted both as a 2D contour plot of a zoomed section of the domain (left), and a 1D line plot of the surface distribution over the same x-axis (right).}
+            \caption[Converged initial condition]{Converged initial condition plotted both as a 2D contour plot of a zoomed section of the domain (left), and a 1D line plot of the surface distribution over the same x-axis (right).}
             \label{fig:combined_thermal} % Add a combined label
         \end{figure}
     
     
     \subsubsection{Sensitivity Analysis}
     
-        A sensitivity analysis was carried out to assess the impact of variations in key parameters, such as soil conductivity, ambient temperature, mine depth, and mine diameter. The analysis further involves generating fuzzy rules for an Adaptive Neuro-Fuzzy Inference System (ANFIS) to better understand the influence of these parameters on the detectability of buried landmines.
+        \paragraph{Motivation}
+            
+            In Section \ref{fusion}, a fusion algorithm is introduced for combining the thermal and radar sensor data, in a framework guided by \textit{fuzzy rules}. These rules encode causal physical relationships, which encapsulate domain knowledge cannot be learned from data alone. A key parameter with uncertainty is the soil conductivity. Soil conductivity can be hard to measure accurately, has high spatial variability, and fluctuated over short time-spans due to precipitation and evaporation. Moreover, for fuzzy rule definition, the influence of varying soil conductivity on \(\Delta T\), is not immediately obvious. Therefore, a dedicated sensitivity study is important to quantify how changes in soil conductivity affect \(\Delta T\).
         
-        \begin{figure}[htbp]
-            \centering
-            \includegraphics[width=0.8\textwidth]{figs/Rory/thermal_sensitivity_conductivity.pdf}
-            \caption{Effect of varying soil conductivity on the peak $\Delta T$ value over one day}
-            \label{fig:thermal_sensitivity_conductivity}
-        \end{figure}
-    
-    
+        \paragraph{Methods}
+        
+            For each value of soil conductivity between 0.2\,W/mK and 3.6\,W/mK, with even spacing of 0.2\,W/mK, a low resolution simulation was run to set the initial condition, as described in Section \ref{initial_condition} This was followed by a high-resolution simulation with a mesh size of 0.005\,m conducted over a 24-hour period under the environmental conditions representative of Afghanistan, which are tabulated in Table \ref{tab:properties}.
+        
+        \paragraph{Results}
+        
+            \begin{wrapfigure}{r}{0.48\textwidth}
+                \centering
+                \includegraphics[width=0.48\textwidth]{figs/Rory/thermal_sensitivity_conductivity.pdf}
+                \caption[$\Delta T$ Sensitivity to thermal conductivity]{Effect of soil conductivity on the peak \(\Delta T\) over a 24-hour period. The inversion point near 0.4 W/mK is evident.}
+                \label{conductivity}
+            \end{wrapfigure}
+        
+        As illustrated in Figure \ref{conductivity}, the peak \(\Delta T\) increases with soil conductivity beyond approximately 0.4 W/mK. This threshold corresponds to the point where the thermal diffusivity of the soil matches that of the mine, rendering the mine thermally ‘invisible’—since thermal diffusivity is the sole mechanism through which the mine influences the temperature field, as discussed in \ref{thermal_principles}. Linearisation of the thermal conductivity response at an operating point of 2\,W/mK, representative of Afghanistan conditions, indicates that the peak \(\Delta T\) value has a slope of approximately 0.175 K (W/mK)$^{-1}$. Considering that soil thermal conductivity is unlikely to vary by more than 50\% of its nominal value over the course of weeks (barring recent rainfall) or across several kilometres (excluding extraordinary regions such as riverbanks), the expected variation in peak \(\Delta T\) is on the order of 0.1\,K. This fluctuation is an order of magnitude lower than the peak \(\Delta T\) observed in Afghanistan and only twice the sensitivity of the thermal sensor \ref{hardware}. Thus peak \(\Delta T\) is insensitive to soil thermal conductivity. Given the upwards trend for peak \(\Delta T\) with soil thermal conductivity greater than 0.4 W/mK (which is expected for almost all soils), the fuzzy rule can be implemented as '\textit{IF soil thermal conductivity is high, THEN thermal sensor confidence is high}'. A slight variation on this rule is used in Section \ref{fuzzy_rules}, however the change just includes the relationship between soil thermal conductivity, which is difficult to measure, and soil water content, which is easy to measure or even estimate. 
+        
+        Interestingly, this result is in contrast to that described in Alqudsi et al. \cite{alqudsi2021review}, who suppose that infrared sensors become worse at detecting landmines as the soil gets increasingly moist.
+        

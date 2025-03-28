@@ -78,18 +78,3 @@
 \endgroup
 }
 
-% ADD ACRONYMS HERE
-\newacronym{3yp}{3YP}{Third-Year Project}
-\newacronym{cpp}{CPP}{Coverage Path Planning}
-\newacronym{tsp}{TSP}{Travelling Salesman Problem}
-\newacronym{tspo}{TSP-O}{Travelling Salesman Problem with Obstacles}
-\newacronym{roi}{ROI}{Region of Interest}
-\newacronym{gpr}{GPR}{Ground Penetrating Radar}
-\newacronym{gpsar}{GPSAR}{Ground Penetrating Synthetic Aperture Radar}
-\newacronym{anfis}{ANFIS}{Adaptive Neuro Fuzzy Inference System}
-\newacronym{lwir}{LWIR}{Long Wavelength Infrared}
-\newacronym{cnn}{CNN}{Convolutional Neural Network}
-
-% ADD ADDITIONAL PACKAGES HERE
-\usepackage{algpseudocode}
-\usepackage{hyperref}

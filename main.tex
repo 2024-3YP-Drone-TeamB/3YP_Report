@@ -1,9 +1,16 @@
 \documentclass{report_template_oxford}
 
 \title{3YP Report}
-\subtitle{Multiagent Autonomous Drone System for Landmine Detection}
+\subtitle{System and Software Design of Multi-Agent
+ Aerial Robotic System for the Detection and Mapping of Landmines}
 \author{Group B: Huirui Dai, Samuel Grace, Rory Millard, Jihwan Shin, Thomas Turner}
 \date{March 2025}
+
+\input{rory_header.tex}
+\input{thomas_header.tex}
+%\input{huirui_header.tex}
+%\input{jihwan_header.tex}
+%\input{samuel_header.tex}
 
 \begin{document}
 \maketitle
@@ -37,30 +44,30 @@ Add abstract here.
 \addcontentsline{toc}{section}{Glossary}
 \printglossaries
 
-\newpage
+%\newpage
 \pagenumbering{arabic}
-\fancyhead[C]{Student}
-\section{Introduction} \label{introduction}
+%\fancyhead[C]{Student}
+%\section{Introduction} \label{introduction}
 
-\fancyhead[C]{Student}
-\subsection{Sub-Introduction}
+%\fancyhead[C]{Student}
+%\subsection{Sub-Introduction}
 
 %\include{Jihwan/MissionPlanning}
 
 %\include{Huirui/Hardware}
 
-%\include{Rory/0_ComputerVision}
+\include{Rory/0_ComputerVision}
 
-%\include{Rory/00_Fusion}
+\include{Rory/00_Fusion}
 
 %\include{Samuel/SimulationAndControl}
 
-\include{Thomas/Intra_Communication/0_Intra_Communication}
+%\include{Thomas/HardwareProtection}
 
-%\include{Rory/000_ProjectFinancing}
+\include{Rory/000_ProjectFinancing}
 
 \fancyhead[C]{Student}
-\printbibliography{biblio}
+\printbibliography{biblio, rory}
 
 % Appendix
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.

@@ -1,32 +1,22 @@
 \subsection{Introduction and Objectives} \label{compvis_intro}
 
-
-    As discussed in Section \ref{introduction}, landmines pose a threat to millions of people, and come in many different shapes and sizes. It is the job of the computer vision system to turn sensor data into intelligent predictions of landmine locations. The effectiveness of this component directly determines the overall system's ability to save lives and restore land to productive use.
-
-
-    \paragraph{Key Objectives}
+     \noindent The computer vision system is responsible for converting sensor data into intelligent predictions of landmine locations, while being robust to variations in landmines and environmental conditions. The effectiveness of this component directly determines the overall system’s ability to save lives and restore land to productive use. The design and performance of the computer vision system are considered in this section. 
+     
+    \subsubsection{Key Objectives}
     
-        The primary objective of the computer vision system is to accurately detect landmines using the available multi-modal sensor data. The system should be able to detect landmines with high system recall $R_{sys}$
-        , and moderately high system precision $P_{sys}$, across a wide range of environmental conditions, whilst balancing system performance with operational autonomy and overall cost. Given the greater cost associated with false negatives (labelling a mined region as safe) compared to false positives (labelling a safe region as mined), the system is designed to prioritize recall over precision. This aspect is discussed more in Section \ref{lossmatrix}.
+        \noindent The primary objective of the computer vision system is to accurately detect landmines using the available multi-modal sensor data. The system is designed to detect landmines with high system recall $R_{sys}$, and moderately high system precision $P_{sys}$, across a wide range of environmental conditions, while balancing system performance with operational autonomy and overall cost. Given the greater cost associated with false negatives (labelling a mined region as safe) compared to false positives (labelling a safe region as mined), the system is designed to prioritize recall over precision. This aspect is discussed further in Section \ref{lossmatrix}.
 
-    \paragraph{Design Philosophy}
+    \subsubsection{Literature Review and Design Decisions} 
+    
+        Deep learning-based solutions for computer vision and data fusion are endorsed in recent literature, as they demonstrate superior performance in managing high-dimensional, noisy data. Barnawi et al. \cite{barnawi2022review} recommend \textit{"developing an automated deep learning based solution that integrates several technologies relevant to imaging and automation"}, highlighting that deep learning is the state of the art in both inference, and sensor fusion. Alqudsi et al. \cite{alqudsi2021review} recommend \textit{"developing an integrated detection system ... with the assist of ground sensors to achieve better detection and mapping results"}, which indicates that environmental contextual data can improve the fused detection results.
+    
+    \paragraph{Computer Vision} 
 
-        We have already decided on the sensors in Section \ref{sensor_selection}. The system design prioritizes minimal human input, and where human input is inevitable, it should be non-technical. This ensures that the operator requires minimal specialized training to operate the system effectively in the field.
-        The system must demonstrate robust performance across diverse environmental conditions. Consider two of the most densely mined countries on the planet, Afghanistan and Ukraine \footnote{\url{https://reliefweb.int/report/world/landmines-22-more-victims-one-year}}. Afghanistan is characterized by a continental climate with extreme temperature variations, low precipitation, and dry, sandy soils, starkly different from Ukraine's temperate climate, higher precipitation, and highly fertile chernozem soils. Our mine detection system must maintain consistent performance across such varied environmental contexts.
-        
-        System resilience is another key design consideration. As outlined in Section \ref{hardwareprotection}, the system should be robust to subsystem failure. This requirement directly influences our sensor fusion approach, favouring late-stage fusion over early fusion techniques. Early fusion strategies depend on all sensors functioning properly to produce meaningful results, creating a single point of failure. Instead, a late-stage fusion approach ensures that both sensor produce meaningful and interpretable results before fusion. This means that if either of the sensors, or the fusion algorithm isn't working nominally, the user still has a map of predicted landmines. The late stage fusion approach is also vastly simpler than an integrated fusion system, which requires complicated dataflows and network architectures, again making the system less robust.
-        
-        \cite{barnawi2022review}
-
-    \paragraph{Approach Selection}
+        \noindent As described in Section \ref{hardware}, the data from the thermal and radar sensors are both images. The problem of computer vision is accurately detecting landmine signatures within these complex images. The current state of the art in object detection is the You Only Look Once (YOLO\footnote{\url{https://github.com/ultralytics/ultralytics}}) architecture, which is an architecture based on convolutional neural networks (CNNs). YOLO's ability to do computationally efficient, robust, and high performance inference makes it suitable for detecting landmine signatures that are often partially occluded or obscured by a cluttered environment.
     
-        After careful consideration of the operational requirements and review of current literature in the field, we have determined that a CNN approach for each sensor, with physics-informed constraints and late-stage fusion presents the optimal solution for our landmine detection system. This conclusion is supported by several recent studies that have demonstrated the effectiveness of such approaches in similar multi-modal sensing applications [X, Y, Z].
-        
-        CNNs excel at identifying subtle patterns in complex, noisy data where the landmines may be occluded. By incorporating physics-informed constraints into our models, we leverage domain knowledge about sensor behaviours and landmine signatures to improve generalization across varied environmental conditions. This hybrid approach combines the flexibility and pattern recognition capabilities of deep learning with the reliability and interpretability of physics-based models.
-        The late-stage fusion framework allows each sensing modality to be processed by specialized algorithms optimized for that particular data type before combining results. This not only enhances system resilience as previously discussed but also facilitates more effective integration of the complementary information provided by different sensors, ultimately leading to more accurate detection outcomes.
+    \paragraph{Sensor Fusion} 
     
-    \paragraph{Key Novelty}
+        \noindent Several works in literature (for example, \cite{qui2023fusion}) propose an early/mid stage fusion approach. The approach taken in Section \ref{fusion} is late stage, deep learning fusion. Late stage fusion facilitates the addition of environmental contextual data, as recommended by Alqudsi. The justification for the specific implementation of the fusion algorithm, and how contextual data is implemented, is in Section \ref{fusion}. The fusion strategy is justified on the basis that it yields more reliable results across diverse environmental conditions, by being constrained to 'physically plausible' fusion weights.
     
-        The system outlined in this report represents a novelty in the fusion approach. To the best of my knowledge, no one else has described the layered approach \ref{layered_approach} for landmine detection, and no one has used a physics informed ANFIS model to aid the late stage fusion.
 
 

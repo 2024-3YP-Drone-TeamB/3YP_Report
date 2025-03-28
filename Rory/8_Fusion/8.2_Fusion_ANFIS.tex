@@ -1,0 +1,72 @@
+\subsection{Explicit Fusion Algorithm Selection}
+
+    An explicit fusion algorithm is required to intelligently combine the thermal and radar probability maps, \(P_{thermal}(x, y)\) and \(P_{radar}(x, y)\), respectively, into a final probability map, \(P_{fused}(x, y)\), over the geographical area of interest. The selection of an appropriate fusion algorithm is determines where the performance of the overall system lies within the bounds from Section \ref{fusion_bounds}, and requires careful consideration of the underlying assumptions and limitations of each method.
+    
+    \paragraph{Naive Bayes}
+    
+        An initial approach might be to use a Naive Bayes fusion algorithm. This approach assumes conditional independence between the sensor probability maps given the presence or absence of a landmine. However, this assumption is fundamentally flawed in this context. The thermal and radar sensor readings are not independent; they are intrinsically linked by underlying causal physics. Factors such as soil moisture, ambient temperature, and vegetation cover influence both thermal signatures and radar reflections in complex, non-stochastic ways. A Naive Bayes model, by its very nature, is incapable of capturing these dependencies, leading to potentially inaccurate fusion results. It is for this reason that a system using a Naive Bayes fusion algorithm represents a lower bound on the overall system performance. This result is validated in Section \ref{fusion_implementation}, and was used in Section \ref{fusion_bounds} because of Naive Bayes' simple mathematics.
+    
+    \paragraph{Kalman Filter}
+    
+        Similarly, the Kalman Filter, while offering a mathematically elegant framework for optimal linear estimation with Gaussian noise \footnote{MARGELLOS LECTURE NOTES CONTROL THEORY}, is ultimately unsuitable for this application. The Kalman Filter can model the sensor covariance \textit{statistically} but cannot encode causal, physical rules like \textit{"low soil moisture fraction amplifies the thermal detectability"} (Section~\ref{thermal_sensitivity}). This limits robustness in novel environments, for instance volcanic soils unrepresented in training data. More fundamentally though, the Kalman Filter's inherent assumption of \textit{unbounded} Gaussian noise is violated in this case, where our variables are \textit{bounded} sensor confidence values, \(\mathcal{P}_{\text{thermal}}, \mathcal{P}_{\text{radar}} \in [0,1]\). Truncation of the output would introduce bias.
+    
+    \paragraph{Neural Network}
+
+        A Neural Network (NN), as a universal function approximator, can learn complex mappings between sensor inputs and fused outputs. However, a standard NN cannot natively incorporate domain knowledge (e.g., \textit{"the radar sensor performs poorly in clay-rich soils"}) without extensive training data. Even with ample data, an NN models the statistical behaviour of the physics rather than the underlying causal mechanisms, which would cause poor performance in novel environments, for example when the soil is frozen, there is no thermal contrast, so the thermal sensor data  has no information (this caveat is discussed in Section \ref{frozen_soil}).
+
+
+    \paragraph{ANFIS}
+
+        The Adaptive Neuro-Fuzzy Inference System (ANFIS) \cite{jang1993anfis} addresses the limitations of prior methods by hybridizing neural networks and physics-grounded fuzzy logic. Unlike Naive Bayes, ANFIS explicitly models dependencies between sensors through rules representative of causal physical relationships. By constraining solutions to physically plausible outcomes—such as suppressing thermal confidence in frozen soils (Section~\ref{frozen_soil})—ANFIS can achieve robust fusion even in novel environments. The network effectively \textbf{learns the optimal rule weights} from data, ensuring that the fused predictions arise from first principles physics, rather than purely from statistical mimicry.
+
+
+    
+\subsection{ANFIS: Physics-Guided Fusion}
+
+    \paragraph{Membership Functions}
+
+        A fuzzy set is a linguistic representation of a numerical variable that has been fuzzified, enabling the modelling of uncertainty and partial truth. For example, the numerical range 1-10 can be categorised into the distinct fuzzy sets \textit{high, medium, low}. The value 9 would have a high \textit{degree of membership} in the fuzzy set \textit{high}, and a low degree of membership in the other sets. Membership functions are mathematical functions that assign each input value to a degree of membership \(\in [0,1]\) for each fuzzy set. 
+        
+        Gaussian membership functions have been chosen to represent the all of the environmental variables, and the sensor confidence values. The Gaussian membership function is defined as
+        
+        \[
+        \mu(x) = \exp\left( -\frac{(x - c)^2}{2\sigma^2} \right),
+        \]
+        
+        where \( c \) is the mode of the fuzzy set and \( \sigma^2 \) its variance. This function is a smooth, differentiable bell curve.
+        Gaussian membership functions are particularly well-suited for representing the natural variability in environmental parameters, such as soil moisture and ambient temperature, because many natural processes tend to be normally distributed, as suggested by the Central Limit Theorem \footnote{\url{https://en.wikipedia.org/wiki/Central_limit_theorem}}. Note that normalization is not necessary here because the membership values are degrees of activation rather than probability densities, and are scaled so that \(\mu(x)\in [0,1]\).
+        
+        In ANFIS, the network learns optimal \(c\) and \(\sigma\) parameters for each fuzzy set, tuning membership functions to best fit the fusion data. Rule consequents are learned as linear combinations of non-fuzzified inputs (Takagi-Sugeno Type-3 ANFIS \cite{jang1993anfis})
+        
+    \subsubsection{Fuzzy Rule Selection}
+    
+        ANFIS can be configured to include every possible 'rule' regarding the inputs to the network, however this is very slow, as the number of rules required scales as \(\text{(number of mfs)}^\text{(number of inputs)}\), making this approach intractable when incorporating lots of domain knowledge inputs (an example of this for time-series prediction is included in \cite{jang1993anfis}). Instead, it is far more efficient to explicitly encode just these fuzzy rules in the ANFIS network. The fuzzy rules are manually derived from the simulations in Sections \ref{compvis_thermalsims} and \ref{compvis_radarsims}, from first-principles physics, and general \textit{rule of thumb} domain knowledge. The following rules are proposed for our ANFIS implementation:
+        
+        \begin{enumerate}
+
+        
+            \item \textbf{IF then soil moisture is high THEN thermal confidence is high.}\\
+                Justification: In Figure \ref{fig:thermal_sensitivity_conductivity}, the peak \(\Delta T\) increases with soil thermal conductivity, and hence the soil moisture level, as soil thermal conductivity increases with soil water content \cite{wu2025soil}. It was argued in Section \ref{detectability_hypothesis} that \(\Delta T\) can be thought of as a proxy for the detectability of a landmine viewed from the thermal sensor, and thus when the soil moisture level is high, our confidence in the radar sensor is high also.
+            
+             \item \textbf{IF soil moisture is high THEN radar confidence is low.} \\
+                \textbf{Justification:} Although high soil moisture improves thermal detectability, it degrades radar performance by increasing the bulk soil electrical conductivity \cite{bai2013soils}, exponentially decreasing the penetration depth, and hence the confidence in the radar sensor \cite{giovanni2008penetration}.
+        
+          
+            \item \textbf{IF wind speed is high THEN thermal confidence is low} \\
+                \textbf{Justification:} Elevated wind speeds increase the rate of convective heat flux (Section \ref{compvis_thermalsims}), and tend to flatten soil surface temperature gradients, reducing \(\Delta T\) and thus the confidence in the thermal sensor.
+          
+            \item \textbf{IF soil is frozen THEN thermal confidence is low.} \\
+                \textbf{Justification:} As explained in Section \ref{frozen_soil}, when the soil is frozen it cannot exhibit appreciable \(\Delta T\), and so is any the information gained from the thermal sensor is very unreliable.
+ 
+        \end{enumerate}
+        
+        These rules are not exhaustive, and if more domain knowledge becomes available, new fuzzy rules should be included to improve performance. An experimental campaign investigating the effects of more environmental parameters on the sensor readings should be conducted to refine and build up the fuzzy rule database.
+
+    
+    \paragraph{Learning Approach of ANFIS}
+    
+        The ANFIS framework adopts a hybrid learning strategy that combines a feed-forward pass with backward error propagation. In the feed-forward phase, the fusion weightings (consequent parameters) are optimised with a least squares error (LSE) approach, whilst on the backwards pass, the membership function parameters (premise parameters) are optimised with gradient descent.
+        
+    
+    In summary, by integrating physics-based constraints through fuzzy rules and employing an adaptive learning strategy, ANFIS offers a robust and interpretable fusion method. This approach is expected to outperform traditional methods by providing a solution that is not only data-driven but also grounded in the physical realities of sensor detection. Indeed this is validated in the next section, Section \ref{compvis_anfisvalid}.
+    

@@ -1,50 +1,84 @@
-\subsection{Fusion System Performance Bounds} \label{fusion_bounds}
+\subsection{Fusion System Performance Bounds}\label{fusion_bounds}
 
-    \subsubsection*{Notation}
+    \subsubsection{Theoretical Framework}
+    
+        Independent of the specific fusion algorithm employed, the overall system performance is ultimately constrained by the intrinsic capabilities of the individual sensors. We adopt a Naive Bayes framework to establish performance estimates. The Naive Bayes approach assumes conditional independence between sensors, allowing for straightforward analytical expressions of posterior probabilities without requiring complex joint distributions. While this simplification may not perfectly capture all sensor interactions, it provides tractable mathematics that yield conservative performance estimates; as argued in Section \ref{fusion_implementation}, our physics-driven ANFIS approach is expected to match or exceed these metrics by leveraging domain-specific knowledge that the Naive Bayes model cannot incorporate. 
         
-        Let:
-        \begin{itemize}
-            \item \(\rho_0\) be the initial density of mines in the field, i.e. the fraction of all points that are true mines.
-            \item \(R_T\) be the recall of the thermal sensor, i.e. the probability that a mine is flagged when present.
-            \item \(F_T\) be the false positive rate of the thermal sensor, i.e. the probability that a non-mine is flagged.
-        \end{itemize}
+        We define the following key parameters, and the corresponding probabilistic interpretation: the prior mine density $\rho_0 = P(\text{Mine})$, the set of locations that have been flagged by the thermal sensor \(\mathcal{T}^+\), the thermal sensor's recall $R_T = P(\mathcal{T}^+\mid\text{Mine})$ , and its false positive rate $F_T = P(\mathcal{T}^+ \mid \overline{\text{Mine}})$. Similarly, the radar sensor is characterized by its recall $R_R$ and false positive rate $F_R$.
         
-        The thermal sensor defines a candidate region \(\mathcal{T}^+\) where it deems mines likely. Within \(\mathcal{T}^+\), the effective mine density, \(\rho_1\), is given exactly by
+        Following thermal scanning, the mine density in the flagged region, $\mathcal{T}^+$, can be found with Bayes rule:
         \[
-        \rho_1 = \frac{R_T\,\rho_0}{R_T\,\rho_0 + F_T\,(1-\rho_0)}.
+        \rho_1 = P(\text{Mine} \mid \mathcal{T}^+) =\frac{P(\mathcal{T}^+\mid\text{Mine})P(\text{Mine})}{P(\mathcal{T}^+\mid\text{Mine})P(\text{Mine})+ P(\mathcal{T}^+\mid \overline{\text{Mine}})P(\overline{\text{Mine}})} =\frac{R_T \rho_0}{R_T \rho_0 + F_T (1 - \rho_0)}
         \]
-        This follows from noting that the number of true positives (per unit area) is \(R_T\,\rho_0\) while the number of false positives is \(F_T\,(1-\rho_0)\).
+        This represents the entropy reduction from reducing the search space uncertainty, enabled by the thermal sensor. Now the radar sensor is used most efficiently, as it samples a set \(\mathcal{T}^+\) with much greater mine density. 
+        
+        \paragraph{Use of densities over precisions} 
+        
+
+            Note the use of \textit{mine densities} (\(\rho\)) rather than the nominal precision values reported in Section \ref{compvis_implementation}. This arises from the class imbalance discussed in Section \ref{class_imbalance}—the nominal precision derived from such a dataset is misleading when applied to real-world conditions, where mines are extremely rare. Instead of using the nominal precision over the entire dataset, we adopt a full Bayesian treatment that incorporates the prior distribution over mine locations. The Bayesian perspective allows us to update our belief about mine locations after thermal screening, yielding \(\rho_1\), and then after radar verification, yielding \(\rho_2\), thereby mitigating the effects of class imbalance. For example, although the thermal computer vision system reports a nominal precision of 85.1\%, when applied to an environment with only a 2\% mine density, the effective mine density in the flagged region is only 11.2\% (see the next paragraph for the derivation). By using the posterior densities \(\rho\)over the nominal precisions, which incorporate no prior, the effective mine density in a set of locations can be sequentially updated as more information is gained, and reflects a more accurate picture of the actual mine distribution.
+
+        
+    \subsubsection{Bounds on Precision and Recall}
     
-    \subsubsection*{Lower Bound on Fused Precision}
-    
-        After the thermal sensor stage, the radar sensor is applied only to \(\mathcal{T}^+\). In the worst-case scenario, suppose that the radar sensor and subsequent fusion add no extra discriminative power, so that the final decision is entirely determined by the thermal sensor’s candidate set. Then, the final system precision \(P_F\) (i.e. the probability that a candidate flagged as a mine is indeed a mine) cannot be lower than the candidate density \(\rho_1\). Thus, we obtain the explicit lower bound:
+        Under the Naive Bayes framework, the expected system precision after fusion equals the posterior density after both sensors have flagged an area. The radar sensor further refines the estimate from $\rho_1$, and the expected precision after fusion is:
+
+        
         \[
-        P_F \ge \rho_1 = \frac{R_T\,\rho_0}{R_T\,\rho_0 + F_T\,(1-\rho_0)}.
-        \]
-        In other words, even if the radar sensor provides no additional filtering, the fused system will have a precision of at least \(\rho_1\).
-        \subsection*{Upper Bound on Fused Precision}
-        Let the radar sensor, when operating on the candidate set, have an intrinsic precision \(P_R\). By definition,
-        \[
-        P_R = \frac{R_R\,\rho_1}{R_R\,\rho_1 + F_R\,(1-\rho_1)},
-        \]
-        where \(R_R\) and \(F_R\) denote the recall and false positive rate of the radar sensor on \(\mathcal{T}^+\), respectively. Since the fusion method (here, implemented via ANFIS with physical rules) cannot produce a fused precision higher than the best that the radar sensor can provide on its inputs, we obtain the upper bound
-        \[
-        P_F \le P_R.
-        \]
-    
-    \subsubsection*{Summary of Bounds}
-    
-        Thus, the overall fused system precision satisfies
-        \[
-        \frac{R_T\,\rho_0}{R_T\,\rho_0 + F_T\,(1-\rho_0)} \le P_F \le \frac{R_R\,\rho_1}{R_R\,\rho_1 + F_R\,(1-\rho_1)}.
+        P_F = \rho_2 = \frac{R_R \rho_1}{R_R \rho_1 + F_R (1-\rho_1)} \text{, where }         \rho_1 = \frac{R_T \rho_0}{R_T \rho_0 + F_T (1-\rho_0)}.
         \]
         
-    \subsubsection*{Numerical Example and Discussion}
-    
-        For instance, suppose that the initial mine density is \(\rho_0 = 0.1\), the thermal sensor has a recall \(R_T = 0.8\), and a false positive rate \(F_T = 0.4\). Then the candidate region density is
+        Again, this expected precision serves as our lower bound, since the ANFIS system should perform at least as well (Section \ref{fusion_implementation}). The upper bound remains the radar's intrinsic precision $P_R$, giving:
         \[
-        \rho_1 = \frac{0.8 \times 0.1}{0.8 \times 0.1 + 0.4 \times 0.9} 
-        = \frac{0.08}{0.08 + 0.36} 
-        = \frac{0.08}{0.44} \approx 0.182.
+        \rho_2 \leq P_F < P_R
         \]
-        Thus, the overall fused system precision is bounded by \(P_F \ge 0.182\). In practice, since the radar sensor and the fusion method (ANFIS with physical rules) are designed to further refine the candidate set, the actual precision will be higher than this lower bound. To maximise overall recall while ensuring acceptable precision, the system is tuned to favour the thermal sensor’s recall (i.e. a high \(R_T\)) even at the expense of a higher \(F_T\), because false negatives are heavily penalised. The radar stage then acts to reduce false positives. This approach, which leverages the benefits of both sensors, is key to the system’s robust performance.
+        
+        The overall expected system recall can similarly be found by considering the intrinsic recalls of each sensor, and serves as the lower bound on the true system recall; since the radar scan is only applied to regions flagged by the thermal sensor, the expected system recall under Naive Bayes is the product of the individual recalls \(R_{sys} = R_T R_R\), 
+        which inherently cannot exceed $R_T$. This gives the operational bounds on the fused system's recall as
+        \[
+        R_TR_R\leq R_{sys}< R_T
+        \]
+    
+    \subsubsection{Naive Bayes Fusion: Expected Performance}
+    
+        Using the CNN performance metrics on unseen data, found in Table \ref{CNN_performance_table}, and assuming a 2\% prior landmine density:
+        \[
+        \rho_0 = 0.02,\quad R_T = 0.919,\quad F_T = 0.15,\quad R_R = 0.833,\quad F_R = 0.085.
+        \]
+        
+        After thermal screening, the posterior density in the flagged regions becomes:
+        \[
+        \rho_1 = \frac{0.919 \times 0.02}{0.919 \times 0.02 + 0.15 \times 0.98} \approx 0.112.
+        \]
+        
+        The subsequent radar scan refines this, and the posterior density after radar verification is given by:
+        \[
+        \rho_2 = \frac{R_R \rho_1}{R_R \rho_1 + F_R (1-\rho_1)} = \frac{0.833 \times 0.112}{0.833 \times 0.112 + 0.085 \times 0.888} \approx 0.553.
+        \]
+        
+        Thus, this fusion process concentrates the mine likelihood from an initial 2\% to approximately 55.3\% in the regions flagged by both sensors—a  27.7× improvement over "blind" demining.
+        
+        The expected system recall is:
+        \[
+        R_{sys} = R_T \times R_R \approx 0.919 \times 0.833 \approx 0.765,
+        \]
+        indicating an absolute recall drop of about $0.919 - 0.765 \approx 15.3\%$ compared to the thermal sensor alone.
+
+
+    \subsubsection{Implications for System Design}
+
+        \paragraph{Do we need the GPSAR sensor?}
+        
+            Following the initial thermal screening, the system achieves a recall of 91.9\% but a precision of only 11.2\%. While the high recall is advantageous, the low precision renders the system operationally infeasible. Without additional refinement, the expected mine density is only 5 times greater than naive demining, where all locations are treated as mined—a cost-prohibitive scenario given how the cost of demining scales with precision (see Section \ref{finance}). 
+        
+            The inclusion of the radar sensor mitigates this limitation, boosting system precision by approximately another 5 times, with only a marginal 15.3\% drop in recall.This trade-off is justified, as a modest reduction in recall has negligible real-world impact—no system can guarantee perfect mine detection (Section \ref{loss_matrix}), and the operational difference between 91.9\% and 76.5\% recall is minimal.
+        
+        \paragraph{Is the layered approach beneficial?}
+        
+            The layered approach, where the radar sensor only probes thermally flagged regions, enables the radar sensor to operate over a much smaller region after thermal screening, covering only $\frac{\rho_0}{\rho_1} \approx \frac{0.02}{0.112} \approx 17.8\%$ of the total land area. In contrast, if both sensors were applied in parallel, with the radar scanning the entire region, detection time would increase by 4.5× (Section \ref{time_saving}), with a slight improvement in recall and no measurable gain in precision.
+
+            In summary, incorporating the radar sensor increases system precision to 55.3\%, ensuring the demining process remains both efficient and cost-effective (see Section \ref{finance}). The layered approach optimally balances system recall and operational efficiency by deploying the high-precision radar sensor only in regions with elevated mine density identified by the thermal screening step, \(\mathcal{T}^+\). 
+
+            Now that we have quantified bounds on the system performance, the problem of fusion becomes designing an explicit fusion architecture whose performance metrics are as close to the upper bounds as possible.
+            
+
+        

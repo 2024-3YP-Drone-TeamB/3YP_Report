@@ -1,68 +1,106 @@
 \subsection{Computer Vision Implementation} \label{compvis_implementation}
 
+    Both the thermal and radar CNNs are implemented using Ultralytics YOLOv11\footnote{\url{https://github.com/ultralytics/ultralytics}}—a state-of-the-art, real-time object detection framework based on convolutional neural networks (CNNs). The software is free and open source, and released under a copyleft license\footnote{\url{https://github.com/ultralytics/ultralytics/blob/main/LICENSE}}. Although both systems utilise YOLOv11, there are significant differences in their network architectures and, notably, in the characteristics of their training, validation and testing datasets.
+
+
 \subsubsection{Datasets Comparison}
 
-    \paragraph{Thermal}
-    
-        Dataset from Roboflow\footnote{\url{https://universe.roboflow.com/xamurani/landmines_detection}} of 1020 images of landmines. The set of images where taken from different altitudes (1-10m), and the mine depth varied between 0 and 5cm, and mines of different type and diameter were used. This is clearly quite robust/varied/diverse/heterogeneous/variable/complex.
-        
-        This is good because a diverse dataset exposed the network to a wider range of features. This allows the network to learn more generalisable features \textbf{WHY?}.
-    
-    \paragraph{Radar}
+The thermal dataset consists of 1,080 images sourced from Roboflow\footnote{\url{https://universe.roboflow.com/xamurani/landmines_detection}}, captured from altitudes between 1 and 10\,m, with mines of wide variety, and buried between 0 and 5\,cm deep. This diversity allows the network to learn robust and generalisable features. In contrast, the radar dataset, again sourced from Roboflow\footnote{\url{https://universe.roboflow.com/hassan-sdqop/gpr-data-n3n5u}} comprises 100 raw Bscans generated from simulated data. These Bscans are extremely clean, and lack noisy effects caused by real-world conditions (soil heterogeneity, surface roughness and vegetation) that would be seen by an operational radar sensor. The effect of soil heterogeneity on the radar Bscans is investigated in Section \ref{compvis_radarsims}. 
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figs/Rory/A_thermal_image.jpg} % Thermal example
+    \caption{Thermal Dataset Example}
+    \label{fig:thermal_example}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figs/Rory/A_radar_image.jpg} % Radar example
+    \caption{Radar Dataset Example}
+    \label{fig:radar_example}
+  \end{subfigure}
+  \caption{Example Images from Thermal and Radar Datasets}
+  \label{fig:dataset_examples}
+\end{figure}
 
 \subsubsection{Architecture Comparison}
 
-    \paragraph{Thermal}
-    
-        The thermal image landmine detection algorithm will be a  convolutional neural network. CNNs are used because they excel in extracting low level patterns from data, and are thus quite robust to noise, and discrepancies between real life and training data. They are also computationally efficient for small models (REF XX), although we are not constrained by computational efficiency (SEC XX).
-        
-        The specific model used for training was a YOLOv11 large model, and had 631 layers, and  25311251 parameters
-    
-    \paragraph{Radar}
-    
-        The radar computer vision model was developed using a YOLOv11 Large architecture, which comprises 357 layers and contains 25\,311\,251 parameters. The model was trained on raw Bscans due to the lack of publicly available datasets for back-projected Bscans in ground-penetrating radar (GPR) readings of landmines\footnote{\url{https://universe.roboflow.com/hassan-sdqop/gpr-data-n3n5u}}. Training was performed on a T4 GPU using Google Colab. Although the back-projection algorithm transforms the raw Bscans into a coordinate system where the landmine features are more distinct, thereby potentially enhancing detection performance, the absence of a sufficiently diverse back-projected dataset meant that raw Bscans were used instead. After consultation with Huirui, it was agreed that models trained and tested on raw Bscans would provide a conservative performance estimate, effectively serving as a lower bound relative to models trained on optimally processed back-projected images. Such back-projected data would likely require extensive real-world experiments to source.
+Both models are built on the YOLOv11 Large architecture\footnote{\url{https://github.com/ultralytics/ultralytics}}, which prescribes the final network architecture; the thermal model results in a deeper network with 464 layers and 25,280,083 parameters, while the radar model, despite having the same parameter count, is shallower, with only 190 layers. This difference likely reflects the greater complexity required to extract features from the diverse thermal images, compared to the more uniform raw radar Bscans. For more detail of the YOLOv11 model, see \cite{khanam2024yolov11}
 
 \subsubsection{Training}
 
-    \paragraph{Thermal}
-    
-        Trained for 100 epochs.
-        Trained on a Tesla T4 GPU rented from google colab (REF XX)
-        Trained in 1.153 hours
-    
-        The average preprocessing, inference and postprocessing times was 1.3ms, 14.9ms and 3.6ms respectively.
+
+\begin{wrapfigure}{r}{0.35\textwidth} % Align right, width = 0.48\textwidth
+  \centering
+  \includegraphics[width=\linewidth]{figs/Rory/APR_curve_therm.png} % Use \linewidth to match wrapfig width
+  \caption{Precision-Recall (PR) curve for the thermal YOLOv11 model}
+  \label{fig:pr_curve}
+\end{wrapfigure}
+
+The thermal model was trained for 100 epochs on a Tesla T4 GPU via Google Colab, taking 1.153 hours. The per-image processing times were 1.3\,ms (preprocessing), 14.9\,ms (inference), and 3.6\,ms (postprocessing). In contrast, the radar model, also trained for 100 epochs on a T4 GPU, completed training in just 0.156 hours, with processing times of 0.2\,ms (preprocessing), 10.2\,ms (inference), and 1.0\,ms (postprocessing). The 30\% faster inference time and 86\% faster training time for the radar model is a reflection of the radar datasets' limited size and diversity.
+
+\subsubsection{Results} 
+
+Due to the limited variability of the radar training set, the radar models' performance statistics were high. The optimal confidence threshold of 0.405 was chosen (maximising the F1 score \footnote{\url{https://www.v7labs.com/blog/f1-score-guide}}), yielding a precision of 97.6\% and a recall of 100\%.
+
+Despite the significant diversity of the thermal dataset, the thermal model performed well. The precision-recall curve is visualised in Figure \ref{fig:pr_curve}, demonstrating that high precision can be maintained across a large range of recall values. The trade-off between precision and recall is discussed in Section \ref{lossmatrix}, where it is argued that recall for the thermal sensor should be maximised, with precision as a secondary consideration. This is a consequence of the layered detection approach. With this in mind, the optimal confidence threshold was selected as 0.299, yielding a precision of 85.1\% and a recall of 91.9\%. The results are summarised in Table \ref{tab:sensor_comparison}.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Thermal and Radar Sensor Performance}
+\label{tab:sensor_comparison}
+\begin{tabular}{lcc}
+\hline
+\textbf{Metric} & \textbf{Thermal} & \textbf{Radar} \\ 
+\hline
+Dataset size & 1,020 & 100 \\
+Train:Val:Test split & 70:15:15 & 70:15:15 \\
+Dataset variability & highly varied & not at all varied \\
+CNN architecture & YOLOv11 Large & YOLOv11 Large \\
+Number of layers & 464 & 190 \\
+Number of parameters & 25280083 & 25280083 \\
+Optimiser & Adam & Adam \\
+Training Hardware & T4 GPU\footnote{\label{ftn:t4gpu}NVIDIA Tesla T4 GPU} & T4 GPU\\
+Training time (100 epochs) & 1.153\,hr & 0.156\,hr \\
+Inference time & 14.9\,ms & 10.2\,ms \\
+Image type & Thermal Images & Raw B-scans \\
+Chosen confidence threshold & 0.299 & 0.405 \\
+\hline
+\rowcolor{gray!10} \textbf{Precision} & \textbf{85.1\%} & \textbf{97.6\%} \\
+\rowcolor{gray!10} \textbf{Recall} & \textbf{91.9\%} & \textbf{100\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+    \subsubsection{Class Imbalance} \label{class_imbalance}
+
+        \noindent The thermal and radar training datasets contain only images of landmines (100\% positive samples), whereas in real-world scenarios, a deployed CNN would encounter one the order of 1\%. This discrepancy introduces a \textit{class imbalance}, where networks trained exclusively on positive samples lack exposure to "safe" regions, leading to elevated false positive rates. To mitigate this, Section~\ref{fusion_bounds} applies Bayesian posterior densities (\(\rho_1, \rho_2\)) derived from a prior mine density, rather than relying on the raw precision metrics. This approach addresses the \textit{accuracy paradox}\footnote{\url{https://en.wikipedia.org/wiki/Accuracy_paradox}}.
+
+        \noindent Although physics-informed fusion (Section~\ref{anfis_fusion}) mitigates imbalance effects, training on balanced datasets would further close the gap between theoretical upper bounds and real-world performance. Therefore future work should explore training on datasets with realistic mine densities (1-5\% positive samples).
+
         
-    \paragraph{RADAR} 
+    \subsubsection{Justification for Simulations} \label{simulation_justification}
     
-        Training was completed over 100 epochs, taking approximately 0.156 hours in total. 
-
-\subsubsection{Results}
-
-    \paragraph{Thermal}     
+    
+        \paragraph{Thermal} 
         
-        Precision/Recall Curve: 
-    
-    \paragraph{RADAR} 
-    
-        Preliminary results indicate that the model is capable of recognising landmine signatures in noisy raw Bscan images, though its performance is expected to improve with the incorporation of back-projected images in future studies.
+            
+           It has been shown in Section \ref{computervision} that the thermal computer vision model performs well on an unseen dataset of highly varied images. This means the model can extract general 'landmine' features, and that \textit{given some features can be resolved by the sensor}, the model is likely to be able to detect them. Therefore, provided the peak temperature difference between the ambient soil and the soil directly above a buried landmine \(\Delta T\), is significantly greater than the sensitivity of the thermal sensor, which is 0.1\,K, then the thermal model will be able to detect the landmine. This is the \textbf{detectability hypothesis}
 
-        PR Curve
-    
-\subsubsection{Justification for Simulations} \label{simulation_justification}
-
-
-    \paragraph{Thermal} 
-    
-        Watertight argument for needing simulations.
+            It has been shown by Van Dam et al. \cite{van2003effects} that the most challenging environmental conditions for thermal detection are dry and hot conditions, where the lowest measurable \(\Delta T\) will occur. This is validated in Section \ref{conductivity}. Therefore, it suffices to simulate the thermal return in Afghanistan, where it is hot, and the soils are sandy. Afghanistan is also relevant because it is one of the most densely mined countries in the world, with a large body of humanitarian work in the area.
+            
+            It is therefore important to simulate \(\Delta T\) caused by the presence of a landmine in Afghanistan, to validate that the thermal detection system will work in even the most challenging environmental conditions.
         
-        We have shown that even on a diverse dataset the CNN performs well. This means it can extract very general 'landmine' features, and the high precision and recall implies that \textit{given some features can be resolved by the sensor}, the CNN is likely to be able to detect it. We can work with the assumption that provided the peak temperature difference between the ambient soil and the soil directly above a buried landmine, is greater than a certain threshold \textbf{what is this threshold! the noise temp or what? Justify me!} Then the CNN will be able to detect the landmine. This is the \textit{detectability hypothesis}
+        \paragraph{RADAR} 
         
-        The photos in the dataset are also taken in one geographical area (REF XX), but the detection system should be robust to the specific location of the demining operation (we would like to detect mines in Afghanistan and Ukraine). 
-        
-        It is thus important that we can simulate the peak temperature differential caused by the presence of a landmine.
-    
-    \paragraph{RADAR} 
-    
-        The motivation behind the radar computer vision simulations is clear; the publicly available datasets are so limited in their diversity and imperfection that they may not be useful for detecting landmines in real, noisy Bscans. We need to produce some Bscans in simulation, where we have used as few assumptions as possible, and try to replicate some of the noise generating processes/feature, so that we may check if our pretrained CNN is robust to real-world noises. If it is, we may say that a CNN trained on real experimental data (a diverse, noisy dataset like that of the thermal sensor) would outperform this model significantly, and thus would perform very well.
+            The motivation behind the radar computer vision simulations is clear; the publicly available datasets are so limited in their diversity and size that they may not be useful for detecting landmines in real, noisy Bscans. We need to produce some Bscans in simulation, where we have used as few assumptions as possible, and try to replicate some of the noise generating processes/feature, so that we may check if our pretrained CNN is robust to real-world noises. If it is, we may say that a CNN trained on real experimental data (a diverse, noisy dataset like that of the thermal sensor) would outperform this model significantly, and thus would perform very well.
 
-
+            \noindent The motivation behind the radar computer vision simulations is clear. The publicly available datasets are so limited in their diversity and size that they are not useful for detecting landmines in real, noisy Bscans. Bscans need to be produced in simulation using as few assumptions as possible, attempting to replicate some of the physical noise-generating processes, as opposed to solely adding statistical noise to a 'clean' Bscan. 
+            This would allow for validation of whether the model is robust to noise not represented in its training data. If it is, it may be inferred that a more advanced model trained on real experimental data would outperform this model significantly, and perform well in operation.
+    
+    
+    
