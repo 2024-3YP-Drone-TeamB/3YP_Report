@@ -1,16 +1,9 @@
 \documentclass{report_template_oxford}
 
 \title{3YP Report}
-\subtitle{System and Software Design of Multi-Agent
- Aerial Robotic System for the Detection and Mapping of Landmines}
+\subtitle{Multiagent Autonomous Drone System for Landmine Detection}
 \author{Group B: Huirui Dai, Samuel Grace, Rory Millard, Jihwan Shin, Thomas Turner}
 \date{March 2025}
-
-\input{rory_header.tex}
-%\input{thomas_header.tex}
-%\input{huirui_header.tex}
-%\input{jihwan_header.tex}
-%\input{samuel_header.tex}
 
 \begin{document}
 \maketitle
@@ -44,30 +37,40 @@ Add abstract here.
 \addcontentsline{toc}{section}{Glossary}
 \printglossaries
 
-%\newpage
+\newpage
 \pagenumbering{arabic}
-%\fancyhead[C]{Student}
-%\section{Introduction} \label{introduction}
+\fancyhead[C]{Student}
+\section{Introduction} \label{introduction}
 
-%\fancyhead[C]{Student}
-%\subsection{Sub-Introduction}
+\fancyhead[C]{Student}
+\subsection{Sub-Introduction}
 
-%\include{Jihwan/MissionPlanning}
 
-%\include{Huirui/Hardware}
+\include{Jihwan/Mission_Planning}
+\include{Jihwan/Extra-UAV_Communication}
+
+\include{Huirui/Hardware}
+
+\include{Huirui/DataAcquisition}
 
 \include{Rory/0_ComputerVision}
 
 \include{Rory/00_Fusion}
 
-%\include{Samuel/SimulationAndControl}
+\include{Samuel/battery}
+\include{Samuel/simcontrol}
 
-%\include{Thomas/HardwareProtection}
+
+\include{Thomas/Intra_Communication/0_Intra_Communication}
+\include{Thomas/Custom_Hardware/0_Custom_Hardware}
+\include{Thomas/Return_To_Safety/0_Return_To_Safety}
 
 \include{Rory/000_ProjectFinancing}
+\include{Samuel/techstrat}
 
 \fancyhead[C]{Student}
-\printbibliography{biblio, rory}
+\printbibliography{biblio}
+
 
 % Appendix
 % Essential content that interrupts the flow of the document can be placed here, e.g. technical drawings, detailed lists of equations used, etc.

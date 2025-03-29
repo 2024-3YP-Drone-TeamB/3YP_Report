@@ -1,0 +1,39 @@
+\subsection{Design Considerations}
+
+\subsubsection{Trace Lengths}
+\paragraph{Signal Integrity and Timing}
+All traces have propagation delay that increases linearly with length. This means that the longer the trace, the longer the delay. Furthermore, the longer the length, the greater effect impurities and crosstalk have creating a nosier signal. Therefore, traces should be kept as short as possible.
+\paragraph{Length Matching}
+In synchronous communication methods the clock signal must be in sync with the data transmission. This means that the lines should be as similar in length as possible so that they arrive at the same delay. The faster the communication rate the stricter this must become as the clock signal frequency is increased. Therefore, signal speeds should be as low as possible to increase robustness.
+\paragraph{Effect of vias}
+Vias allow for the transference of signals between planes which is often necessary for routing. However, they introduce extra impedance, noise and delay \cite{source} and therefore should be avoided. Furthermore, for synchronous high speed signals they should be included in trace length considerations as the line with fewer vias should be tuned to have a longer length to achieve the same delay. For this application, as none of the signals are greater than \textbf{highest speed} tuning exact timings is not necessary.
+
+\subsubsection{Touch Protection}
+\paragraph{\gls{ESD}}
+\paragraph{Protection Devices}
+\paragraph{Component Placement}
+
+\subsubsection{Component Placement}
+\paragraph{Utility Regions}
+\paragraph{Power Coupling}
+\paragraph{Thermal Considerations}
+
+\subsubsection{Headers and interfaces}
+\paragraph{Placement and accessibility}
+\paragraph{Locking}
+\paragraph{Uniformity}
+
+\subsubsection{Trace Widths and Spacing}
+\paragraph{Thermal Management}
+\paragraph{Impedance Control}
+\paragraph{Crosstalk}
+
+\subsubsection{Layers}
+\paragraph{Two Layers}
+\paragraph{Four Layers}
+\paragraph{Six or more Layers}
+
+\subsubsection{Component Selection}
+\paragraph{Procurement Cost}
+\paragraph{Mounting}
+\paragraph{Footprint and Volume}

@@ -1,0 +1,29 @@
+\subsection{Design Considerations}
+
+\subsubsection{Modularity}
+\paragraph{Relevance}
+Mechanical modularity is the most obvious path as the components need to physically connect easily however, the communication architecture also needs to support this so that devices can easily communicate even if they are changed completely.
+\paragraph{Modular Communication Protocols}
+Modular communication architectures are based around nodes. Some protocols such as \gls{SPI} operate as Master-Slaves whereas others such as Cyphal or \gls{UART} are more flexible, however, the concept remains the same. The networks allow for different devices to communicate without specific dependencies on each other. Therefore, if I was communicating to an \gls{IMU} via \gls{SPI} it would not make a difference if I then changed the \gls{IMU} with the exception of a possible software update. Another key property of modular networks is physical, some networks lend themselves better to modular design, for example for a \gls{CAN} Bus you only need to add a stub to add a node making the physical process very easy.
+
+
+\subsubsection{Telemetry}
+\paragraph{Battery Telemetry}
+There are two key failure modes for the battery: State of Charge and thermal runaway. Both can cause complete failure and therefore both should be monitored. In the drone clearance operating environment these issues are made more extreme due expected high temperatures in heavily mined countries putting the batteries closer to thermal runaway. Therefore, both the state of charge and the cell temperatures should be considered during operation as both should trigger return to home or return to safety. 
+\paragraph{\gls{ESC} Telemetry}
+\gls{ESC}s traditionally did not provide telemetry data and instead failures are detected using \gls{IMU} data. However, relying on noisy inertial sensor data is limited compared to telemetry. This is because, it cannot be as precise in locating the issue or precise in quantifying it. They are also not subject to random variations including wind. The telemetry provided by the \gls{ESC} includes voltage, current and \gls{RPM}. This is incredibly important information when classifying motor and propeller faults accurately.  
+
+
+\subsubsection{Redundancy}
+\paragraph{Relevance}
+Reducing communication failures requires redundant components as a single failure should not cause the communication system to break. This means that where possible, the system should be able to tolerate the failure of a single node.
+\paragraph{Distributed Networks}
+If a node itself cannot be a redundant it should be able to communicate on at least two different lines. This allows for a single failure to not cause common mode failure.
+
+
+\subsubsection{Safety Critical Devices}
+\paragraph{Relevance}
+Safety critical devices ensure that the drone does not crash. This therefore consists of the components in the drone that keep it flying, including the: flight controller, battery, electronic speed controllers, and, the motors. It also includes: location sensing,  collision detection and altimetry as these all prevent the drone from crashing or landing somewhere it is difficult to retrieve.
+\paragraph{Risk mitigation through node distribution}
+Distributing the devices on different communication lines reduces the risk of failure as it reduces the risk of common mode failure from a single node. For example, if a \gls{GNSS} module were to have an improper fixture and move in a way that it severs all connections if both communication lines are in it, both are severed and crashing is inevitable, however, if only one communication line is on it the other communication line is undamaged. This means distributing the devices is a key risk mitigation strategy.
+

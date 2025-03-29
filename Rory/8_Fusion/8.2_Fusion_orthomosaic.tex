@@ -1,0 +1,14 @@
+\subsection{Sparse Map Assembly} \label{orthomosaic}
+
+    Using the meta-data associated with each image (pose, location, speed etc REF XX) the algorithms can project the probability distributions over each image onto a real geographical map of the area, with meaningful axes
+    
+    
+     A question that should be asked is "how do we fuse multiple images that might overlap to form a larger coherent image?". However due to the nature of the images we can avoid this problem all-together and consider a simple solution that is usually impractical: Crucially, the probability distributions are \textit{sparse}, and the error in the knowledge of the drone location and pose is small (REF XX). This means that there is already high confidence in the required transform the perfectly mosaic the images, and the sparsity means that if there is an erroneous overlap, it will have minimal effect, because the probability distributions of each image are mostly 0, with occasional spikes at suspected landmines.
+    
+    \textbf{Some detail on why we fuse the probability maps and not the images?}
+    \begin{itemize}
+        \item Sparsity of P maps and not of images
+        \item computational cost of inferring lots of images parallel vs series
+        \item Training on images of a fixed size, the fused images will depend on the number taken on the mission 
+    \end{itemize}
+    
