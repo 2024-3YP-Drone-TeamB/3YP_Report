@@ -2,49 +2,51 @@
 
     \subsubsection{Introduction and Physical Principles} \label{rory_radar_principles}
     
-        As outlined in Section \ref{simulation_justification}, the limited diversity of the radar dataset necessitates physics-driven simulations to replicate the noise and clutter encountered in real-world environments. These simulations aim to validate the CNN’s robustness to physical processes that degrade B-scan clarity, ensuring reliable performance under operational conditions.
-    
-        The electromagnetic phenomena governing radar losses are:
-        \begin{itemize}
+        \noindent As described in Section \ref{simulation_justification}, the limited diversity of the radar dataset necessitates physics-driven simulations to replicate the noise and clutter encountered in real-world environments. The simulations in this section aim to test the radar model's robustness to the physical processes that degrade B-scan clarity: scattering, attenuation, antenna and transmission losses.
         
-            \item \textbf{Antenna losses}: Mismatch losses (approximately −1 dB \cite{daniels2005gpr}), and efficiency losses (excluded as secondary to subsurface effects).
-            
-            \item \textbf{Transmission losses}: Signal attenuation from reflections at air-soil and soil-air interfaces.
-            
-            \item \textbf{Material losses}: Frequency-dependent attenuation within heterogeneous soils.
-            
-            \item \textbf{Scattering losses}: Arising from subsurface inhomogeneities in soil composition, and soil surface roughness.
-        
-        \end{itemize}
-        
-        To model these effects, finite-difference time-domain (FDTD) simulations were conducted using \textit{gprMax} \cite{warren2016gprmax}, an open-source framework for solving Maxwell’s equations in 3D geophysical media. This approach captures full-wave electromagnetic behaviour, including wave propagation, reflection, and attenuation, while explicitly accounting for soil heterogeneity. The inclusion of surface roughness is not considered in this report, as for the purposes of validating the CNN-driven detection framework, modelling of subsurface heterogeneity suffices to ensure robustness to clutter. This is however a significant contribution to the clutter observed in an operational GPSAR system, and future work should consider this aspect that has been overlooked here.
+        \noindent To model these effects, finite-difference time-domain (FDTD) simulations were conducted using \textit{gprMax} \cite{warren2016gprmax}, an open-source framework for solving Maxwell’s equations in 3D. These simulations capture full-wave electromagnetic behaviour, including wave propagation, reflection, and attenuation, and explicitly account for soil heterogeneity. The inclusion of surface roughness is not considered in this section, but for the purposes of validating the models robustness to noise artifacts not in the training data, just modelling the subsurface heterogeneity suffices. This is however a significant contribution to the clutter in an actual Bscan, and future work should consider this aspect.
      
-    
     
     \subsubsection{gprMax Implementation}
 
         \paragraph{Radar}
         
-             The source/receiver configuration follows recommendations provided by Huirui (see Section XX) and employs a Ricker waveform as the excitation signal. The Ricker waveform is widely used in GPR and seismic applications for its clear central frequency and well‐defined bandwidth properties \cite{dummyRef2}. A central frequency of 1.5\,GHz was chosen, as it provides a good compromise between penetration depth and resolution—even in moderately moist soils where deeper penetration is required. The transmitter and receiver are modelled as Herzian dipole antennas 10cm from the surface of the soil, and separated from each other by 2cm. B-scans are produced by taking successive A-scans while moving the source and receiver in 4\,mm increments from left to right across the simulation domain
+             \noindent The radar configuration follows recommendations by Huirui (Section \ref{hardware}), and a Ricker is used as the excitation signal. A central frequency of 1.5\,GHz was used, as it provides a good compromise between penetration depth and resolution, as shown in Section \ref{hardware}. The transmitter and receiver are modelled as Herzian dipole antennas \footnote{\url{https://engineering.purdue.edu/wcchew/ece604s21/Lecture\%20Notes/Lect25.pdf}} 10cm from the surface of the soil, and separated from each other by 2cm. B-scans are produced by taking successive A-scans while moving the source and receiver in 4\,mm increments from left to right across the simulation domain
     
         \paragraph{Domain}
 
-            The simulated computational domain spans $0.8\times 0.3\times0.02$\,m ($x\times y\times z$), representing a quasi-2D space. The domain is discretised into cubic elements of side length 0.002\,m , 100 times smaller than the wavelength of the radar pulse. Two thirds of the domain is occupied with soil, and the rest with air. A circular landmine with radius 5\,cm was buried with its centre 0.1\,m below the surface of the soil, and was modelled as a perfect electric conductor (PEC), representative of a metallic landmine.
+            \noindent The simulated computational domain spans $0.8\times 0.3\times0.02$\,m ($x\times y\times z$), representing a quasi-2D space. The domain is discretised into cubic elements of side length 0.002\,m , 100 times smaller than the wavelength of the radar pulse. Two thirds of the domain is occupied with soil, and the rest with air. A circular landmine with radius 5\,cm was buried with its centre 0.1\,m below the surface of the soil, and was modelled as a perfect electric conductor (PEC), representative of a metallic landmine. See Figure \ref{fig:radar_domain} for a visualisation fo the simulation domain.
 
 
         \paragraph{Boundary Conditions}
         
-            Perfectly matched layers (PMLs) are used as obsorbing boundary conditions on all sides of the domain, to mimick an open boundary. The source and receiver were placed more than 20 cells away from the PML regions to avoid erroneous interference. Each simulation was run for 5$\times$10$^{\text{-9}}$\,s, enough to capture all the relevant electromagnetic phenomena.
+            \noindent Perfectly matched layers (PMLs) \footnote{\url{https://en.wikipedia.org/wiki/Perfectly_matched_layer}} are used as absorbing boundary conditions on all sides of the domain, to mimic an open boundary. The source and receiver were placed more than 20 cells away from the PML regions to avoid erroneous interference, as is advised in the gprMax docs. Each simulation was run for 5$\times$10$^{\text{-9}}$\,s, enough to capture all the relevant electromagnetic phenomena.
 
-        
+                \begin{figure}[htbp]
+            \centering
+            \begin{minipage}[b]{0.48\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{figs/Rory/radar_domain.pdf}
+                \caption{(a) Simulation domain viewed in ParaView \tablefootnote{\url{https://www.paraview.org/}}}
+                \label{fig:radar_domain}
+            \end{minipage}
+            \hfill
+            \begin{minipage}[b]{0.48\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{figs/Rory/sim_bscan_cropped.png}
+                \caption{(b) Raw simulated B-scan (no digital enhancement)}
+                \label{fig:original_bscan}
+            \end{minipage}
+        \end{figure}
+        \noindent 
     
     \subsubsection{Heterogeneous Soil Model}
     
-        A realistic simulation of electromagnetic wave propagation necessitates an accurate representation of the subsurface. In this work, the heterogeneous soil is modelled using the Peplinski model, which characterises soil dielectric properties based on sand fraction, clay fraction, bulk density, sand-particle density and volumetric water fraction range, over a frequency range of 1-18\,GHz. To capture the natural spatial variability, a fractal generation technique is employed \cite{dummyRef5}. This method replicates the self-similar patterns observed in natural soils over multiple scales, thereby enhancing the fidelity of the simulation, and accurately accounting for the heterogeneity in the soil. Detail of the Peplinski soil model, and the fractal generation technique can be found in \cite{warren2016gprmax}. 
+        \noindent The heterogeneous soil is modelled using the Peplinski model, detailed in \cite{warren2016gprmax}. The model characterises soil dielectric properties based on sand fraction, clay fraction, bulk density, sand-particle density and volumetric water fraction range. To capture natural spatial variability, a fractal generation technique is employed, where self-similar patterns observed in natural soils are replicated over multiple scales (also detailed in Warren et al.).
 
         \paragraph{Soil Parameters}
 
-            For the simulation to give realistic results, it is initialised with accurate soil parameters for Ukraine. Ukraine is mostly covered with the very fertile Chernozem soil \footnote{\url{https://www.britannica.com/place/Ukraine/Soils}}, the properties of which were taken from \cite{suleymanov2021chernozem}, and are summarised here.
+            For the simulation to give physically realistic results, it is initialised with accurate soil data for Ukraine. Ukraine is mostly covered with the very fertile Chernozem soil \footnote{\url{https://www.britannica.com/place/Ukraine/Soils}}, the properties of which were taken from \cite{suleymanov2021chernozem}, and are summarised here.
 
             \begin{table}[htbp]
               \centering
@@ -62,24 +64,12 @@
               \end{tabular}
             \end{table}
     
-        \begin{figure}[htbp]
-            \centering
-            \includegraphics[width=0.8\textwidth]{figs/Rory/radar_domain.pdf}
-            \caption{Simulation domain viewed in ParaView.}
-            \label{fig:radar_domain}
-        \end{figure}
-        \footnote{\url{https://www.paraview.org/}}
+
     
     \subsubsection{Results and Validation}
     
-        Figure~\ref{fig:original_bscan} shows the simulated radar responses, illustrating the backscattered signatures generated by the presence of a buried landmine. These responses have been compared with real GPR data obtained from controlled field experiments \cite{dummyRef7}, demonstrating reasonable agreement. However, computational limitations restrict the number of simulations that can be feasibly run, and the current model assumes a simplified environment with flat ground, no foliage, and an absence of puddles or other surface irregularities. These factors may contribute to discrepancies between simulated and real-world data.
-    
-        \begin{figure}[htbp]
-            \centering
-            \includegraphics[width=0.8\textwidth]{figs/Rory/sim_bscan_cropped.png}
-            \caption{Raw simulated B-scan (no digital enhancement)}
-            \label{fig:original_bscan}
-        \end{figure}
+        Figure~\ref{fig:original_bscan} shows the simulated radar responses, illustrating the backscattered signatures generated by the presence of a buried landmine. . However, computational limitations restrict the number of simulations that can be feasibly run, and the current model assumes a simplified environment with flat ground, no foliage, and an absence of puddles or other surface irregularities. These factors may contribute to discrepancies between simulated and real-world data.
+
     
     \subsubsection{Data Augmentation}
     
