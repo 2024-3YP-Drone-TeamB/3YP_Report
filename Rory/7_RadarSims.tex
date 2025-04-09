@@ -22,7 +22,7 @@
         
             \noindent Perfectly matched layers (PMLs) \footnote{\url{https://en.wikipedia.org/wiki/Perfectly_matched_layer}} are used as absorbing boundary conditions on all sides of the domain, to mimic an open boundary. The source and receiver were placed more than 20 cells away from the PML regions to avoid erroneous interference, as is advised in the gprMax docs. Each simulation was run for 5$\times$10$^{\text{-9}}$\,s, enough to capture all the relevant electromagnetic phenomena.
 
-                \begin{figure}[htbp]
+            \begin{figure}[htbp]
             \centering
             \begin{minipage}[b]{0.48\textwidth}
                 \centering
@@ -46,7 +46,7 @@
 
         \paragraph{Soil Parameters}
 
-            For the simulation to give physically realistic results, it is initialised with accurate soil data for Ukraine. Ukraine is mostly covered with the very fertile Chernozem soil \footnote{\url{https://www.britannica.com/place/Ukraine/Soils}}, the properties of which were taken from \cite{suleymanov2021chernozem}, and are summarised here.
+            For the simulation to give physically realistic results, it is initialised with accurate soil data for Ukraine. Ukraine is mostly covered with the very fertile Chernozem soil \footnote{\url{https://www.britannica.com/place/Ukraine/Soils}}, the properties of which were taken from \cite{suleymanov2021chernozem}, and are summarised here in Table \ref{tab:chernozem}.
 
             \begin{table}[htbp]
               \centering
@@ -62,13 +62,12 @@
                 Volumetric water fraction range & $1\% - 10\%$ \\
                 \bottomrule
               \end{tabular}
+              \label{tab:chernozem}
             \end{table}
     
 
     
-    \subsubsection{Results and Validation}
-    
-        Figure~\ref{fig:original_bscan} shows the simulated noisy radar Bscan. Around 100 images like this will be needed to test radar YOLO model without bias. On comparison with the 'clean' Bscans in the training set, we can see that the simulated Bscan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface. The current model assumes a simplified environment with flat ground, no foliage, and an absence of puddles or other surface irregularities. These factors may contribute to discrepancies between simulated and real-world data.
+    \subsubsection{Simulation Results and Validation}
 
         \noindent Figure~\ref{fig:original_bscan} shows the simulated noisy radar Bscan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the 'clean' Bscans in the training set (Section \ref{computervision}) shows that the simulated Bscan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
 
