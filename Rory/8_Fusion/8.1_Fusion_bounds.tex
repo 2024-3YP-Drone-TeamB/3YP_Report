@@ -40,26 +40,25 @@
         P_{sys} \geq \rho_2 = \frac{R_R \rho_1}{R_R \rho_1 + F_R (1-\rho_1)} = \frac{0.833 \times 0.112}{0.833 \times 0.112 + 0.085 \times 0.888} \approx 0.553.
         \]
         
-        Thus, this fusion process concentrates the mine likelihood from an initial 2\% to approximately 55.3\% in the regions flagged by the radar sensor—a  27.7× improvement over "blind" demining.
+        Thus, this fusion process concentrates the mine likelihood from an initial 2\% to \textit{at least} 55.3\% in the regions flagged by the radar sensor—a  27.7× improvement over "blind" demining.
         
-        The expected system recall is given as $R_{sys} \geq R_T \times R_R \approx 0.919 \times 0.833 \approx 0.765$, indicating an absolute recall drop of about $0.919 - 0.765 \approx 15.3\%$ compared to the thermal sensor alone.
+        The expected system recall is given as $R_{sys} \geq R_T \times R_R \approx 0.919 \times 0.833 \approx 0.765$, indicating an upper bound recall drop of about $0.919 - 0.765 \approx 15.3\%$ compared to using just the thermal sensor alone.
 
 
     \subsubsection{Implications for System Design}
 
-        \paragraph{Do we need the GPSAR sensor?}
+        \paragraph{Benefit of the GPR Sensor}
         
-            Following the initial thermal screening, the system achieves a recall of 91.9\% but a precision of only 11.2\%. While the high recall is advantageous, the low precision renders the system operationally infeasible. Without additional refinement, the expected mine density is only 5 times greater than naive demining, where all locations are treated as mined—a cost-prohibitive scenario given how the cost of demining scales with precision (see Section \ref{finance}). 
+            Following the initial thermal screening, the system achieves a recall of 91.9\% but a precision of only 11.2\%. While the high recall is advantageous, the low precision means the costs of detection and demining are too high, rendering the system operationally infeasible. This is discussed in Section \ref{finance},
+            
+            When the radar sensor is included as part of the layered architecture, the system precision is increased approximately 5 times, with only a marginal 15.3\% drop in recall. This trade-off is justified, as a modest reduction in recall has negligible operational impact (Section \ref{loss_matrix}), whilst the boost in precision dramatically reduces costs of mine detection and removal, as there are approximately 5 times fewer locations tagged for demining. Therefore it is crucial to have the radar sensor.
+                
+        \paragraph{Benefit of the Layered Approach}
         
-            The inclusion of the radar sensor mitigates this limitation, boosting system precision by approximately another 5 times, with only a marginal 15.3\% drop in recall.This trade-off is justified, as a modest reduction in recall has negligible real-world impact—no system can guarantee perfect mine detection (Section \ref{loss_matrix}), and the operational difference between 91.9\% and 76.5\% recall is minimal.
-        
-        \paragraph{Is the layered approach beneficial?}
-        
-            The layered approach, where the radar sensor only probes thermally flagged regions, enables the radar sensor to operate over a much smaller region after thermal screening, covering only $\rho_1 \approx 11.2\%$ of the total land area. In contrast, if both sensors were applied in parallel, with the radar scanning the entire region, detection time would increase by 4.5× (Section \ref{time_saving}), with a slight improvement in recall and no measurable gain in precision.
+            The layered approach, where the radar sensor only probes thermally flagged points, enables the radar sensor to operate over a much smaller region, covering only $\rho_1 \approx 11.2\%$ of the total land area. In contrast, if both sensors were applied in parallel, with the radar sensor scanning the entire area, detection time, and hence cost would increase by 
+            $\approx$ \textbf{XX.XX}$\times$ (Section \ref{sec:msp_comparison_manual_demining}), for only a slight improvement in recall and a negligible gain in precision. Therefore, the layered approach is a very efficient way of incorporating the radar sensor. 
 
-            In summary, incorporating the radar sensor increases system precision to 55.3\%, ensuring the demining process remains both efficient and cost-effective (see Section \ref{finance}). The layered approach optimally balances system recall and operational efficiency by deploying the high-precision radar sensor only in regions with elevated mine density identified by the thermal screening step, \(\mathcal{T}^+\). 
-
-            Now that we have quantified bounds on the system performance, the problem of fusion becomes designing an explicit fusion architecture whose performance metrics are as close to the upper bounds as possible.
+            Now that bounds on the system performance have been quantified, the problem of fusion becomes designing an explicit fusion architecture whose performance metrics are as close to the upper bounds as possible.
             
 
         
