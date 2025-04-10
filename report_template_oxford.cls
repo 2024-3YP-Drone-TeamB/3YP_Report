@@ -189,12 +189,6 @@
     tabsize=2
 }
 
-\DeclareCaptionLabelFormat{mycode}{C code snippet}
-\captionsetup[lstlisting]{
-    labelformat=mycode,
-    labelsep=colon
-}
-
 \usepackage{tablefootnote}
 \usepackage{hyperref}
 \usepackage{adjustbox}
@@ -203,7 +197,53 @@
 \usepackage{siunitx}
 \usepackage{multirow}
 \usepackage{tablefootnote}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{ifthen}
 
+% Corrected command: draws a code of 6 symbols.
+\newcommand{\drawcode}[4]{%
+  \begin{tikzpicture}[scale=0.5, baseline=-0.5ex]
+    \foreach \i/\state in {0/#1, 1/#2, 2/#3, 3/#4} {%
+      \begin{scope}[xshift=\i*0.7cm]
+        \ifthenelse{\equal{\state}{red}}{%
+          \fill[red] (0,0) circle (0.2);%
+        }{%
+          \ifthenelse{\equal{\state}{green}}{%
+            \fill[green!70!black] (0,0) circle (0.2);%
+          }{%
+            \ifthenelse{\equal{\state}{white}}{%
+              \fill[white] (0,0) circle (0.2);%
+              \draw (0,0) circle (0.2);%
+            }{%
+              \ifthenelse{\equal{\state}{blink}}{%
+                \draw (0,0) circle (0.2);%
+                \draw (-0.15,-0.15) -- (0.15,0.15);%
+                \draw (-0.15,0.15) -- (0.15,-0.15);%
+              }{%
+                \ifthenelse{\equal{\state}{blinkred}}{%
+                  \fill[red] (0,0) circle (0.2);%
+                  \draw (0,0) circle (0.2);%
+                  \draw[black, thick] (-0.15,-0.15) -- (0.15,0.15);%
+                  \draw[black, thick] (-0.15,0.15) -- (0.15,-0.15);%
+                }{%
+                  \ifthenelse{\equal{\state}{blinkgreen}}{%
+                    \fill[green] (0,0) circle (0.2);%
+                    \draw (0,0) circle (0.2);%
+                    \draw[black, thick] (-0.15,-0.15) -- (0.15,0.15);%
+                    \draw[black, thick] (-0.15,0.15) -- (0.15,-0.15);%
+                  }{%
+                    % if state doesn't match any known option, do nothing
+                  }%
+                }%
+              }%
+            }%
+          }%
+        }%
+      \end{scope}%
+    }%
+  \end{tikzpicture}%
+}
 %%%%%%%%%%%%%
 
 %Huirui Stuff
