@@ -2,12 +2,13 @@
 \fancyhead[C]{Thomas Turner}
 \section{Custom Hardware} \label{section:Custom Hardware}
 \subsection{Introduction and Philosophy}
-Custom hardware is a key novelty to our design and helps us reduce our cost and increase our performance for the specific task at hand. This is because, our custom hardware affordably mitigates the specific risks of operation over the minefield. The key risk not faced by similar commercial projects is the fact we cannot safely carry out emergency landing procedures when a fault is detected, or in fact crash when a fault is incurred due to the difficulty of retrieval. Not only does it possibly damage the imaging sensors onboard but it comes at the significant opportunity cost of not clearing the mines if the drone is lost. 
+Due to the specific operating environment, custom hardware is required. This is because the device cannot safely carry out emergency landing procedures when a fault is detected due to the difficulty of retrieval. Furthermore, any crashes can damage the onboard imaging sensors. Lastly, there is significant opportunity cost of delaying mapping as the equipment and manpower involved in demining would be ineffective until retrieval and repair or replacement of the device. 
+
 \paragraph{When to use custom components}
-\gls{COTS} options should always be considered before any custom part as if there is something that already meets the design requirements it is often the better choice. This is because you do not need to invest the design and development time into making a new device and the current manufacturer benefits from greater economies of scale. However, often when choosing \gls{COTS} options they can cause compromises to cost and specification that make custom hardware appropriate in specialist applications such as this project.
+\gls{COTS} options should always be considered before any custom part due to the significant design and testing costs associated with custom parts. Furthermore, \gls{COTS} options will often have shorter lead times and will benefit from sourcing at greater scales. However, when there are specific design requirements not met in the current market custom components need to be used.
 \paragraph{Objectives}
-All hardware should be easy and quick to debug even by unskilled ground operators, it should support redundancy in both sensors and in communications. They should also line up with our sustainability objectives by ensuring all components are \gls{RoHS} compliant and our modularity objectives by having clear and easy interfaces.
+All hardware should be easy and quick to debug, it should support redundancy and it should be as modular as possible. Furthermore, they should also line up with our sustainability and inclusion objectives by ensuring all components are \gls{RoHS} compliant and, where applicable, should support those with disabilities.
 
-
+\input{Thomas/Custom_Hardware/PCBS}
 \input{Thomas/Custom_Hardware/1_General_Design}
 \input{Thomas/Custom_Hardware/2_Custom_Components}
