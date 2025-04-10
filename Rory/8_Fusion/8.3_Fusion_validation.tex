@@ -1,16 +1,20 @@
-\subsection{Validation} \label{compvis_anfisvalid}
+\subsection{ANFIS Validation} \label{compvis_anfisvalid}
 
-It has been asserted a number of times in this report (Section \ref{fusion_bounds}, XX) that a physics-informed ANFIS fusion network is expected outperform a standard Naive Bayes (NB) fusion model. It is therefore important to validate this hypothesis with a crude simulation of environmental conditions, and the resulting sensor data to demonstrate how integrating domain knowledge can improve data fusion performance.
+Previous sections (Section \ref{fusion_bounds}) hypothesise that a physics-informed deep learning fusion network, such as ANFIS, will outperform a standard Naive Bayes (NB) fusion model. It is therefore important to validate this hypothesis with a (somewhat crude) simulation of environmental conditions and the \textbf{consequent} sensor data. This simulation aims to demonstrate that an ANFIS network with incorporated domain knowledge can improve data fusion performance over NB, when the sensor data are \textit{not} conditionally independent.
 
-\paragraph{Synthetic Data Generation}  
-
-    The reason that ANFIS is expected to work better than NB, is that the assumptions of conditional independance on which NB is based, fail in real world conditions, where there is coupling between the two sensors through the causal physics of the environment. To highlight the shortcomings of NB, we must include this conditional dependence in the model. Here it is chosen to use the \textbf{soil moisture} as a means to do this. It was shown in Section \ref{anfis_rules} that an increase in soil moisture tends to boost the thermal sensor detectability (through increasing the thermal conductivity, which, as shown in Section \ref{conductivity}, increases the thermal return) and to inhibit the radar return (by increasing the electrical conductivity, causing an exponential decrease in the penetration depth of the radar). This by no means represents \textit{all} of the coupling between the sensors in real life, but it suffices to only model this dependancy. The effect of wind speed is also modelled, where higher wind speed tends to decrease thermal returns, and have no effect on the radar return.
+\subsubsection{Synthetic Data Generation}  
+.
+    ANFIS is expected to outperform NB because the latter assumes conditional independence between sensors, an assumption often invalid in real-world conditions where there is coupling between the two sensors through the causal physics of the environment. 
     
-    A 200×200 grid was generated, with 2\% of the grid randomly covered by mines. Soil moisture was simulated using a simplified sine-cosine function varying between 0 and 1, and is visualised in Figure \ref{fig:anfis_summary}. Wind speed is modelled as random noise from a gaussian distribution with mean 0 and stddev 2. The layered approach (Section \ref{layered_approach}) is incorporated by only allowing the radar sensor to sample points flagged by the thermal sensor. A small random spatial shift between thermal and radar data is introduced to to simulate GPS drift, and better highlight the shortcomings of NB in the face of uncertainty.
+    To demonstrate NB's limitations, synthetic data is generated to model the influence of \textbf{soil moisture}. As detailed in Section \ref{fuzzy_rules}, increased soil moisture enhances thermal sensor return (via increased thermal conductivity) while inhibiting radar sensor return (via increased electrical conductivity). This is not the only coupling between the two sensors, but it suffices to model one to illustrate the advantages of ANFIS. Additionally, the model includes the effect of wind speed, which decreases thermal returns but does not affect radar returns.
 
-\paragraph{Sensor Modelling}  
 
-    The sensor confidence maps were computed using empirically estimated curve fits  that encode the effects of soil moisture and wind speed on the thermal and radar sensors. Sensor noise is also modelled as Guassian:
+    A 200$\times$200 grid was generated, with 2\% coverage of randomly placed mines. Soil moisture was simulated using a simplified sine-cosine function varying between 0 and 1, and is shown in Figure \ref{fig:anfis_summary}. Wind speed was modelled using random samples from a Gaussian distribution with a mean of 0 and a standard deviation of 2 (arbitrary units). Following the layered approach (Section \ref{layered_approach}), the radar sensor only samples points previously flagged by the thermal sensor. To simulate GPS drift and further illustrate the limitations of NB under uncertainty, a small random spatial shift was introduced between the thermal and radar datasets.
+
+
+\subsubsection{Sensor Modelling}  
+
+    The sensor confidence maps were computed using equations to model the effects of soil moisture (\textit{m}, dimensionless, ranging 0-1) and wind speed (\textit{w}, in \si{\metre\per\second}) on the thermal and radar sensor outputs. These curves are designed to reflect the higher precision characteristic of the radar sensor and the higher recall of the thermal sensor. Sensor noise was modelled as zero-mean Gaussian white noise ($\mathcal{N}$), with a variance of 0.15 for the thermal sensor, and 0.12 for the radar sensor. The resulting sensor output probabilities ($P$) are given by:
     
     \begin{equation}
         P_{\text{thermal}} = \begin{cases} 
@@ -26,18 +30,27 @@ It has been asserted a number of times in this report (Section \ref{fusion_bound
         \end{cases}
     \end{equation}
 
-\paragraph{Fusion Implementation}
+\subsubsection{Fusion Implementation}
 
-    The ANFIS architecture is implemented using the TensorFlow/Keras framework. The model accepts four input features: soil moisture, wind speed, thermal sensor confidence, and radar sensor confidence. Input fuzzification is performed using Gaussian membership functions, as described in Section \ref{anfis}. ANFIS with automatic rule specification is used, due to the small number of inputs making this not a computational burden (4 inputs, 3 membership functions). The network learns to optimal weightings of the $3^4=81$ possible rules. The output layer takes the weighted average of the rule consequents, and constrains the output between 0 and 1 with a sigmoid function. The hybrid learning approach described in Section \ref{anfis}.
+    \paragraph{ANFIS} The ANFIS architecture is implemented using the Keras framework. The model accepts four input features: soil moisture, wind speed, thermal sensor confidence, and radar sensor confidence. Input fuzzification uses three Gaussian membership functions per input, whose parameters ($c,~\sigma$ in Equation \ref{eq:gaussian_mf}) are trainable variables within the network..
 
-    The Naive Bayes fusion method combines thermal and radar sensor confidence values under the assumption of conditional independence. Fused confidence is proportional to the product of the individual sensor confidences estimate-a manifestation of Bayes theorem.
-
+    While Section \ref{ANFIS} proposed explicit, physics-derived fuzzy rules, this implementation uses a \texttt{Dense} rule antecedent layer (see Figure \ref{fig:ANFIS_diagram}). A dense layer combines the membership degrees from the four inputs (each with 3 membership functions), allowing the network to learn the antecedent combinations corresponding to all $3^4=81$ possible fuzzy rules. The consequent layer learns the parameters that define the output for each of these implicitly formed rules. While traditional ANFIS employs a hybrid learning algorithm described in Section \ref{ANFIS}, this implementation utilizes standard backpropagation with the Adam optimizer for training efficiency within the Keras framework.
     
-\paragraph{Results and Conclusion}  
+    The final custom output layer calculates a normalised, weighted sum of these rule outputs and applies a sigmoid function to ensure the final fused confidence is between 0 and 1.
 
-    The ANFIS model demonstrated improved recall (ANFIS: 0.66 NB: 0.11) and precision (ANFIS: 0.92 NB: 0.28), compared to Naive Bayes. The surprisingly low NB performance is predominately caused by the random shifting between the radar the thermal maps, that means NB often fuses nonzero mines by multiplying them with zero. 
-    This crude simulation is not meant to be a comprehensive comparison between the two methods. It is only meant to demonstrate that under some conditions, particurly when there is physical coupling between the sensor measurements, a physics-based fusion approach can perform better than purely statistical methods like Naive Bayes. 
+    \paragraph{NB} The Naive Bayes (NB) fusion method combines the thermal and radar sensor confidence values $P_{\text{thermal}}$, $P_{\text{radar}}$. Assuming conditional independence between the sensors given the presence or absence of a mine, the fused confidence $P_{\text{fused}}$ is calculated using Bayes Theorem, which may be written as:
+
+    \begin{equation}
+        \label{eq:bayes_fusion}
+        \mathcal{P}_\text{fused} = \frac{\mathcal{P}_\text{thermal}\mathcal{P}_\text{radar}}{\mathcal{P}_\text{thermal}\mathcal{P}_\text{radar} + (1-\mathcal{P}_\text{thermal})(1-\mathcal{P}_\text{radar})}
+    \end{equation}
     
+\subsubsection{Results and Conclusion}  
+
+    The ANFIS model demonstrated improved recall (ANFIS: 0.66 NB: 0.11) and precision (ANFIS: 0.92 NB: 0.28), compared to Naive Bayes. The surprisingly low NB performance is partly caused by the random shifting between the radar the thermal maps, that means NB often gives null results from multiplying misaligned confidence values. However, more fundamentally, the simulation highlights ANFIS' key advantage; it can leverage the environmental context (soil moisture and wind speed inputs in this implementation) to implicitly model the physical coupling between sensor readings. Naive Bayes' inability to handle uncertainty and conditionally dependent data is also clear. See the predicted mine locations from each fusion algorithm in Figure \ref{fig:anfis_summary}.
+
+     While this simulation is simplified, it validates the hypothesis that a deep learning fusion architecture, constrained to physically-plausible solutions and incorporates environmental context can perform significantly better than purely statistical methods, like Naive Bayes.
+
     \begin{figure}[h]
         \centering
         \includegraphics[width=0.98\textwidth]{figs/Rory/0_summary.png}

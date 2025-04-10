@@ -10,7 +10,7 @@
     
     \paragraph{Kalman Filter}
     
-        Similarly, the Kalman Filter, while offering a mathematically elegant framework for optimal linear estimation with Gaussian noise \footnote{\url{https://en.wikipedia.org/wiki/Kalman_filter}}, is ultimately unsuitable for this application. The Kalman Filter can model the sensor covariance \textit{statistically} but cannot encode causal, physical rules like \textbf{"low soil moisture fraction amplifies the thermal detectability"} (Section \ref{thermal_sensitivity}). This limits robustness in novel environments. More fundamentally though, the Kalman Filter's assumption of \textit{unbounded} Gaussian noise is violated in this case, where the variables are \textit{bounded} sensor confidence values, \(\mathcal{P}_{\text{thermal}}, \mathcal{P}_{\text{radar}} \in [0,1]\). Truncation of the output would introduce bias.
+        Similarly, the Kalman Filter, while offering a mathematically elegant framework for optimal linear estimation with Gaussian noise \footnote{\url{https://en.wikipedia.org/wiki/Kalman_filter}}, is ultimately unsuitable for this application. The Kalman Filter can model the sensor covariance \textit{statistically} but cannot encode causal, physical rules like \textbf{"low soil moisture fraction amplifies the thermal detectability"} (Section \ref{}). This limits robustness in novel environments. More fundamentally though, the Kalman Filter's assumption of \textit{unbounded} Gaussian noise is violated in this case, where the variables are \textit{bounded} sensor confidence values, \(\mathcal{P}_{\text{thermal}}, \mathcal{P}_{\text{radar}} \in [0,1]\). Truncation of the output would introduce bias.
     
     \paragraph{Neural Network}
 
@@ -37,22 +37,21 @@
             \caption{}
             \label{fig:membership_function_plot}
           \end{subfigure}
-          \caption[ANFIS Network]{\textbf{a)} ANFIS network, with labelled layers. \textbf{b)} Gaussian membership function, with $c=2$ and $\sigma^2=9$.}
+          \caption[ANFIS Network]{\textbf{a)} ANFIS network, with labelled layers. $x, \text{ } y$ represent the input, which are the $\mathcal{P}_\text{thermal},$ $\mathcal{P}_\text{radar}$, and environmental contextual data. Only two fuzzy sets and two fuzzy rules are visualised, for clarity.\textbf{b)} Gaussian membership function, with $c=2$ and $\sigma^2=9$.}
         \end{figure}
 
     
-\subsection{ANFIS: Physics-Guided Fusion}
+\subsection{ANFIS: Physics-Guided Fusion} \label{ANFIS}
 
     \paragraph{Membership Functions}
 
         A fuzzy set is a linguistic representation of a numerical variable that has been fuzzified, enabling the modelling of uncertainty and partial truth. For example, the numerical range 1-10 can be categorised into the distinct fuzzy sets \textit{high, medium, low}. The value 9 would have a high \textit{degree of membership} in the fuzzy set \textit{high}, and a low degree of membership in the other sets. Membership functions are mathematical functions that assign each input value to a degree of membership \(\in [0,1]\) for each fuzzy set. 
         
         Gaussian membership functions have been chosen to represent the all of the environmental variables, and the sensor confidence values. The Gaussian membership function is defined as
-        
-        \[
+        \begin{equation}
+        \label{eq:gaussian_mf}
         \mu(x) = \exp\left( -\frac{(x - c)^2}{2\sigma^2} \right),
-        \]
-        
+        \end{equation}
         where \( c \) is the mode of the fuzzy set and \( \sigma^2 \) its variance, and is visualised in Figure \ref{fig:membership_function_plot}. This function is a smooth, differentiable bell curve.
         Gaussian membership functions are particularly well-suited for representing the natural variability in environmental parameters, such as soil moisture and ambient temperature, because many natural processes tend to be normally distributed, as suggested by the Central Limit Theorem \footnote{\url{https://en.wikipedia.org/wiki/Central_limit_theorem}}. Note that normalization is not necessary here because the membership values are degrees of activation rather than probability densities, and are scaled so that \(\mu(x)\in [0,1]\).
         
@@ -67,7 +66,7 @@
         \begin{enumerate}
 
         
-            \item \textbf{IF then soil moisture is high THEN thermal confidence is high.}\\
+            \item \textbf{IF then soil moisture is high THEN thermal confidence is high.}
 
                 \textbf{Justification:} As shown in Figure \ref{fig:conductivity}, the peak \(\Delta T\) increases with soil thermal conductivity. Given that soil thermal conductivity increases with soil water content \cite{wu2025soil}, and the \textbf{detectability hypothesis} in Section \ref{simulation_justification} argues that \(\Delta T\) can serve as a proxy for the detectability of a landmine viewed by the thermal sensor, it follows that higher soil moisture levels correlate with higher confidence in the thermal sensor.
             
