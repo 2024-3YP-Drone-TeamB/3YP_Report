@@ -86,6 +86,7 @@
 \newacronym{tsp}{TSP}{Travelling Salesman Problem}
 \newacronym{tspo}{TSP-O}{Travelling Salesman Problem with Obstacles}
 \newacronym{roi}{ROI}{Region of Interest}
+\newacronym{poi}{POI}{Point of Interest}
 \newacronym{gis}{GIS}{Geographic Information System}
 \newacronym{qgis}{QGIS}{Quantum Geographic Information System}
 \newacronym{cgal}{CGAL}{Computational Geometry Algorithms Library}

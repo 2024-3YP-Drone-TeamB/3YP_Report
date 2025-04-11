@@ -2,26 +2,25 @@
 
     \subsubsection{Introduction and Physical Principles} \label{rory_radar_principles}
     
-        \noindent As described in Section \ref{simulation_justification}, the limited diversity of the radar dataset necessitates physics-driven simulations to replicate the noise and clutter encountered in real-world environments. The simulations in this section aim to test the radar model's robustness to the physical processes that degrade B-scan clarity: scattering, attenuation, antenna and transmission losses.
+        \noindent As described in Section \ref{simulation_justification}, the limited diversity of the radar dataset necessitates physics-driven simulations to replicate the noise and clutter encountered in real-world environments. The simulations in this section aim to test the radar model's robustness to the physical processes not represented in the training data, that degrade B-can clarity: scattering, attenuation, antenna and transmission losses.
         
-        \noindent To model these effects, finite-difference time-domain (FDTD) simulations were conducted using \textit{gprMax} \cite{warren2016gprmax}, an open-source framework for solving Maxwell’s equations in 3D. These simulations capture full-wave electromagnetic behaviour, including wave propagation, reflection, and attenuation, and explicitly account for soil heterogeneity. The inclusion of surface roughness is not considered in this section, but for the purposes of validating the models robustness to noise artifacts not in the training data, just modelling the subsurface heterogeneity suffices. This is however a significant contribution to the clutter in an actual Bscan, and future work should consider this aspect.
+        \noindent To model these effects, finite-difference time-domain (FDTD) simulations were conducted using \textit{gprMax} \cite{warren2016gprmax}, an open-source framework for solving Maxwell’s equations in 3D. These simulations capture full-wave electromagnetic behaviour, including wave propagation, reflection, and attenuation, and explicitly account for soil heterogeneity. Surface roughness is not considered in this section, but for the purposes of validating the models robustness it is not required. This is however a significant contribution to the clutter in an actual Bscan, and future work should consider this aspect.
      
     
     \subsubsection{gprMax Implementation}
 
         \paragraph{Radar}
         
-             \noindent The radar configuration follows recommendations by Huirui (Section \ref{hardware}), and a Ricker is used as the excitation signal. A central frequency of 1.5\,GHz was used, as it provides a good compromise between penetration depth and resolution, as shown in Section \ref{hardware}. The transmitter and receiver are modelled as Herzian dipole antennas \footnote{\url{https://engineering.purdue.edu/wcchew/ece604s21/Lecture\%20Notes/Lect25.pdf}} 10cm from the surface of the soil, and separated from each other by 2cm. B-scans are produced by taking successive A-scans while moving the source and receiver in 4\,mm increments from left to right across the simulation domain
+             \noindent The radar configuration follows recommendations by Huirui (Section \ref{hardware}), and a Ricker waveform is used as the excitation signal. A central frequency of 1.5\,GHz was used, as it provides a good compromise between penetration depth and resolution, as shown in Section \ref{hardware}. The transmitter and receiver are modelled as Herzian dipole antennas \footnote{\url{https://engineering.purdue.edu/wcchew/ece604s21/Lecture\%20Notes/Lect25.pdf}} 10cm from the surface of the soil, and separated from each other by 2cm. B-scans are produced by taking successive A-scans while moving the source and receiver in 4\,mm increments from left to right across the simulation domain
     
         \paragraph{Domain}
 
-            \noindent The simulated computational domain spans $0.8\times 0.3\times0.02$\,m ($x\times y\times z$), representing a quasi-2D space. The domain is discretised into cubic elements of side length 0.002\,m , 100 times smaller than the wavelength of the radar pulse. Two thirds of the domain is occupied with soil, and the rest with air. A circular landmine with radius 5\,cm was buried with its centre 0.1\,m below the surface of the soil, and was modelled as a perfect electric conductor (PEC), representative of a metallic landmine. See Figure \ref{fig:radar_domain} for a visualisation fo the simulation domain.
+            \noindent The simulated computational domain spans $0.8\times 0.3\times0.02$\,m ($x\times y\times z$), representing a quasi-2D space. The domain is discretised into cubic elements of side length 0.002\,m , 100 times smaller than the wavelength of the radar pulse\footnote{The wavelength of the pulse at the central frequency is 20~cm}. Two thirds of the domain is occupied with soil, and the rest with air. A circular landmine with radius 5\,cm is buried with its centre 0.1\,m below the surface of the soil, and is modelled as a perfect electric conductor (PEC), representative of a metallic landmine. See Figure \ref{fig:radar_domain} for a visualisation of the simulation domain.
 
 
         \paragraph{Boundary Conditions}
         
             \noindent Perfectly matched layers (PMLs) \footnote{\url{https://en.wikipedia.org/wiki/Perfectly_matched_layer}} are used as absorbing boundary conditions on all sides of the domain, to mimic an open boundary. The source and receiver were placed more than 20 cells away from the PML regions to avoid erroneous interference, as is advised in the gprMax docs. Each simulation was run for 5$\times$10$^{\text{-9}}$\,s, enough to capture all the relevant electromagnetic phenomena.
-
             \begin{figure}[htbp]
             \centering
             \begin{minipage}[b]{0.48\textwidth}
@@ -37,9 +36,7 @@
                 \caption{(b) Raw simulated B-scan (no digital enhancement)}
                 \label{fig:original_bscan}
             \end{minipage}
-        \end{figure}
-        \noindent 
-    
+        \end{figure}    
     \subsubsection{Heterogeneous Soil Model}
     
         \noindent The heterogeneous soil is modelled using the Peplinski model, detailed in \cite{warren2016gprmax}. The model characterises soil dielectric properties based on sand fraction, clay fraction, bulk density, sand-particle density and volumetric water fraction range. To capture natural spatial variability, a fractal generation technique is employed, where self-similar patterns observed in natural soils are replicated over multiple scales (also detailed in Warren et al.).
@@ -73,8 +70,8 @@
 
     
     \subsubsection{Data Augmentation}
-    
-      Running these simulations is computationally intensive (\(\approx\) 30 minutes of compute time, so one should make the most of each simulation performed. From this one simulation, multiple image augmentations were applied, each representing a physical process. The transforms considered were stretching (representing different soil properties and mine shape), cropping (representing Bscans that did not capture the whole mine) and adding Gaussian blur (representing greater attenuation of high frequencies due to different soil properties), and combinations of these. Contrast limited adaptive histogram equalisation (CLAHE) \footnote{\url{https://en.wikipedia.org/wiki/Adaptive_histogram_equalization}} is also applied to every transformed image, to enhance the image clarity whilst keeping the contrast manageable. When these transformations are applied to the simulated Bscan, a dataset of 90 images is generated, 3 of which are shown in Figure \ref{fig:sim_bscan_comparison} with the bounding box predictions from the pre trained YOLO model. This is sufficient to test whether the pre-trained CNN (Section \ref{compvis_implementation}) is robust to heterogeneous soil properties and other physical loss phenomena.
+
+      Running these simulations is computationally intensive (\(\approx\) 30 minutes per simulation), so the most should be made of each simulation. From one simulation, multiple image augmentations were applied, each representing a physical process. The transforms considered were stretching (representing different soil properties and mine shape), cropping (representing B-scans that did not capture the whole mine), adding Gaussian blur (representing greater attenuation of high frequencies due to different soil properties), and combinations of these. Contrast limited adaptive histogram equalisation (CLAHE) \footnote{\url{https://en.wikipedia.org/wiki/Adaptive_histogram_equalization}} is also applied to every transformed image, to enhance image clarity whilst keeping the contrast manageable. When these transformations were applied to the simulated B-scan, a dataset of 90 images was generated, 3 of which are shown in Figure \ref{fig:sim_bscan_comparison} with the bounding box predictions from the pre-trained YOLO model. This is sufficient to test whether the pre-trained CNN (Section \ref{compvis_implementation}) is robust to heterogeneous soil properties and other physical loss phenomena.
 
         
         \begin{figure}[htbp]
@@ -97,13 +94,14 @@
     
     \subsubsection{CV Results}
     
-        The augmented radar data were then fed into the radar YOLO model (Section \ref{compvis_implementation}) to evaluate the robustness of the model to the physical loss processes described in Section \ref{rory_radar_principles}. Precision and recall metrics were calculated on the augmented dataset, with the results summarised in Table~\ref{tab:cv_results}. The high precision of 91.5\% indicates that the combined approach of GPSAR and SOTA computer vision techniques is well-suited for practical landmine detection. In particular the high precision is achieved with a moderately high recall of 83.3\%, which shows that although the radar computer vision model was trained on a homogenous, 'clean' dataset, it generalised well to a more varied dataset from simulations that directly model noise processes. Therefore, a radar computer vision model trained on a larger dataset of experimentally obtained noisy Bscans should be robust to any features not present in the training data, and will generalise well across a range of environmental conditions.
+        The augmented radar data were then fed into the radar CV model (Section \ref{compvis_implementation}) to evaluate the robustness of the model to the physical loss processes described in Section \ref{rory_radar_principles}. Precision and recall metrics were calculated on the augmented dataset, with the results summarised in Table~\ref{tab:cv_results}. The high precision of 91.5\% indicates that the combined approach of GPR and YOLOv11 is well-suited for practical landmine detection. In particular the high precision is achieved with a moderately high recall of 83.3\%, which shows that although the radar computer vision model was trained on a homogenous, 'clean' dataset, it generalised well to a more varied dataset from simulations that directly model noise processes. Therefore, a radar computer vision model trained on a larger dataset of experimentally obtained noisy Bscans should be robust to features not present in the training data, and will generalise well across a range of environmental conditions.
 
         Overall, this system offers a highly accurate and robust solution for detecting landmines, that can improve as more context specific training data becomes available.
 
         \begin{table}[htbp]
           \centering
           \caption{Augmented Simulation Bscan Results}
+          \label{tab:cv_results}
           \begin{tabular}{@{} l l @{}} 
             \toprule
             \textbf{Metric} & \textbf{Value} \\
