@@ -34,11 +34,13 @@
 \usepackage{glossaries}
 \makeglossaries
 
-\newcommand{\subtitle}[1]{\def\@subtitle{#1}} 
+\newcommand{\subtitle}[1]{\def\@subtitle{#1}}%
 
 \renewcommand{\maketitle}{
 \begin{titlepage}
+
     \centering
+    
     \vspace*{1cm}
 
     \includegraphics[width=0.4\textwidth]{figs/OxEng Logo.pdf}
@@ -143,8 +145,8 @@
 \usepackage[margin=20 mm]{geometry}
 \usepackage{fancyhdr}
 \usepackage{amsmath, amssymb, amsfonts, mathtools}
-\usepackage{algorithm, algorithmic}
-\usepackage{hyperref}
+%\usepackage{algorithm, algorithmic}
+\usepackage{algorithm}
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{array}
@@ -154,6 +156,7 @@
 \usepackage{makecell}
 \usepackage{booktabs}
 \usepackage{import}
+\usepackage{hyperref}
 
 \usepackage{tikz}
 
