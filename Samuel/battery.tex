@@ -28,7 +28,7 @@
 
 Although most drones do not contain one, an inbuilt \acrshort{bms} \cite{SON2023120186} provides many key advantages when performing landmine detection. A \acrshort{bms}, along with the corresponding bespoke circuit topology, supports the complex control system, high-quality sensor requirements and extended mission duration capabilities necessary for effective landmine detection. Additionally, it is possible to program a \acrshort{bms} to optimise the battery cells’ lifespan; both reducing the operating cost and the environmental impact of the drone.
 
-\subsubsection{Design and Component Selection Overview}
+\subsection{Design and Component Selection}
 
 Design of the \acrshort{bms} and selection of the associated components are crucial as they directly impact every aspect of the drone. The process must focus on choosing components that will most effectively implement the optimal design solution while also considering cost, availability and sustainability. 
 
@@ -60,7 +60,7 @@ A decision matrix compares different components based on set criteria to select 
 \textbf{Total Score} & 7.7& 6.5& 8.1& 100\% \\
 \hline
 \end{tabular}
-\caption{Comparison for energy capacity, weight, and price, with normalised scores and weighted totals}
+\caption{Comparison for energy capacity, weight, and price, with normalised scores and weighted totals.}
 \label{tab:battery_comparison}
 \end{table}
 
@@ -106,17 +106,17 @@ For the \gls{soc} measurement, an \gls{ekf} is used in conjunction with the Coul
     \begin{subfigure}[b]{0.49\textwidth} % Use [b] to align captions at the bottom
         \centering
         \includegraphics[width=\textwidth]{figs/Samuel/Figures/plotsbattest (1) (cropped) (pdfresizer.com).pdf}
-        \caption{Estimate using Coulomb counting}
+        \caption{Estimate using Coulomb counting.}
         \label{fig:coolomb}
     \end{subfigure}
     \hspace{0\textwidth}
     \begin{subfigure}[b]{0.49\textwidth} % Use [b] to align captions at the bottom
         \centering
         \includegraphics[width=\textwidth]{figs/Samuel/Figures/plotsbattest (1) (cropped) (pdfresizer.com) (1).pdf}
-        \caption{Estimate additionally using \gls{ekf}}
+        \caption{Estimate additionally using \gls{ekf}.}
         \label{fig:kalmeff}
     \end{subfigure}
-    \caption{Comparison of cell equalisation strategies using the Simulink example shown in the footnote}
+    \caption{Comparison of cell equalisation strategies using the Simulink example shown in the footnote.}
     \label{fig:bmsestimefk}
 \end{figure}
 
@@ -197,10 +197,10 @@ Designing an efficient thermal management system has numerous advantages for bat
     \textwidth} % Use [b] to align captions at the bottom
         \centering
         \includegraphics[width=\textwidth]{figs/Samuel/Figures/Lithium-ion-battery-life-vs-temperature-and-charging-rate-36-39-44-45.png}
-        \caption{Variation of cycle life vs temperature \cite{REZVANIZANIANI2014110}}
+        \caption{Variation of cycle life vs. temperature \cite{REZVANIZANIANI2014110}}
         \label{fig:tempy2}
     \end{subfigure}
-    \caption{Effects of temperature variation on cell properties, figures from \cite{chen2013heat} (a) and \cite{REZVANIZANIANI2014110} (b)}
+    \caption{Effects of temperature variation on cell properties, figures from \cite{chen2013heat} (a) and \cite{REZVANIZANIANI2014110} (b).}
     \label{fig:tempythings}
 \end{figure}
 
@@ -258,7 +258,7 @@ Equation \ref{eq:cuk} gives a duty cycle of $D \approx$ 0.19 for the given $V_{I
 
 \subsubsection{Circuit Simulation}
 
-The Ćuk converter is accurately modelled in a simulation environment to verify the expected behaviour of the \acrshort{dcdc} converter over the range of $V_{IN}$ values supplied from the battery management system. The Simscape Electrical software from MathWorks is used to implement the model of the Ćuk converter circuit, using the ode23tb differential equation solver to compute the voltage and current evolutions over time. The ode23tb equation solver is an implicit Runge-Kutta method \cite{matlab_ode23tb}, which is effective at numerically solving the Ćuk converter equations both rapidly and accurately.
+The Ćuk converter is accurately modelled in a simulation environment to verify the expected behaviour of the \acrshort{dcdc} converter over the range of $V_{IN}$ values supplied from the battery management system. The Simscape Electrical Ćuk converter template from MathWorks is used to implement the model of the circuit, using the ode23tb differential equation solver to compute the voltage and current evolutions over time. The ode23tb equation solver is an implicit Runge-Kutta method \cite{matlab_ode23tb}, which is effective at numerically solving the Ćuk converter equations both rapidly and accurately.
 
 Modelling the \gls{esr} of each component is an important aspect of the simulation since the \acrshort{esr} has a significant impact on the output voltage ripple $\Delta V_{OUT}$ and output current ripple $\Delta I_{OUT}$. The Simscape Electrical software can model the \acrshort{esr}, so the numerical values for the \acrshort{esr} of the components were included in the simulation. To ensure that the output voltage and current ripple are acceptable across the whole range of possible battery output voltages, the simulation was run for input voltage values at 1 V intervals within the operating range of the battery, $V_{IN}$ = 18 V to $V_{IN}$ = 25.2 V. The results of these simulations are shown in Table \ref{tab:converter_performance}.
 
@@ -280,7 +280,7 @@ Modelling the \gls{esr} of each component is an important aspect of the simulati
         25.2 & 5.63 & 0.106 & 0.166 \\
         \bottomrule
     \end{tabular}
-    \caption{Output ripple characteristics and duty cycle relationship}
+    \caption{Output ripple characteristics and duty cycle relationship.}
     \label{tab:converter_performance}
 \end{table}
 
@@ -303,7 +303,7 @@ For each of the voltages tested in Table \ref{tab:converter_performance} above, 
     \includegraphics[width=\textwidth]{figs/Samuel/Figures/CukPlots (cropped) (pdfresizer.com) (1).pdf}
     \label{fig:cukmatlab_b}
 }
-\caption{Simscape simulation results for the Ćuk converter. SIMSCAPE EXAMPLE}
+\caption{Simscape simulation results for the Ćuk converter.}
 \label{fig:cukmatlab}
 \end{figure}
 
