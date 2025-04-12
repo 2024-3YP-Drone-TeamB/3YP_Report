@@ -125,6 +125,9 @@
 \newacronym{pd}{PD}{proportional–derivative}
 \newacronym{uav}{UAV}{Unmanned Aerial Vehicle}
 \newacronym{bms}{BMS}{Battery Management System}
+\newacronym{uml}{UML}{Unified Modelling Language}
+\newacronym{rocauc}{ROC AUC}{area under the receiver operating characteristic curve}
+\newacronym{mcc}{MCC}{Matthews correlation coefficient}
 %%%
 
 % ADD ADDITIONAL PACKAGES HERE
