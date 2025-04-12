@@ -46,12 +46,15 @@ fill=green!30]
 
 \subsection{Overview}
 
-In this section of the project, software was developed to simulate the multi-agent aerial robotic system. For a drone to be able to capture useful images, it is essential that the drone can hover with minimal disturbance to its position. Achieving this stability requires a controller to be designed that is robust to sensor noise and environmental disturbances. The development of the flight control system focused on ensuring that the \gls{uav} was sufficiently stable during a period of hovering, while also making the controller robust for general flight.
+In this section of the project, software was developed to simulate the multi-agent aerial robotic system. For a drone to be able to capture useful images, it is essential that the drone can hover with minimal disturbance to its position. Achieving this stability requires a controller that is robust against sensor noise and environmental disturbances. The development of the flight control system focused on ensuring that the \gls{uav} was sufficiently stable during a period of hovering while also making the controller robust for general flight.
 
-A \gls{bms} was designed to optimise the drone's performance, further extending the mission duration as well as providing other advantages discussed in Subsection \ref{}. The combination of the bespoke controller designed for the drone with the customised \gls{bms} components and algorithms provides an \gls{uav} that is ideally suited to detecting landmines in a wide variety of environmental scenarios.
+A \gls{bms} was designed to optimise the drone's performance, further extending the mission duration as well as providing other advantages discussed in Section \ref{sec:bms}. The combination of the bespoke controller with the customised \gls{bms} components and algorithms provides a \gls{uav} that is ideally suited to detecting landmines in a wide variety of environmental scenarios.
 
-The results obtained in this section were solely generated from simulations run within the C, Python, MATLAB, Simulink and Simscape environments. These simulations provided insights into the operation of the drone using a cascade \gls{pid} controller designed specifically for the chosen drone.  Real-time environmental conditions were also modelled in the simulations. The controller would then be implemented onboard the drone using embedded C. The details of the hardware and software used to perform these simulations are outlined in Table \ref{tab:computersetup}. The ARM GNU Toolchain is used to test the C code developed for use onboard the drone.  
+The results obtained in this section were generated solely from simulations run within the C, Python, MATLAB, Simulink and Simscape environments. These simulations provided insights into the operation of the drone using a cascade \gls{pid} controller designed specifically for the chosen mission.  
+
+Real-time environmental conditions were also modelled in the simulations. The controller would then be implemented onboard the drone using embedded C. The details of the hardware and software used to perform these simulations are outlined in Table \ref{tab:computersetup}. The ARM GNU Toolchain is used to test the C code developed for use onboard the drone.  
 \begin{table}[h]
+\vspace{10mm}
 \begin{center}
 \begin{tabular}{| p{6cm}|p{10cm}|}
  \hline
@@ -73,17 +76,17 @@ The results obtained in this section were solely generated from simulations run 
 \label{tab:computersetup}
 \end{table}
 
-Figure \ref{fig:simctrloverview} shows the overall scheme of the Simulation and Control process. First, the location coordinates were passed into the software, to enable environmental, weather and climate effects to be accurately modelled. Next, the \gls{cad} model of the drone was analysed to accurately represent the drone's dynamics within the simulation.
+Figure \ref{fig:simctrloverview} shows the overall scheme of the simulation and control process. First, the location coordinates were passed into the software to enable environmental, weather and climate effects to be accurately modelled. Next, the \gls{cad} model of the drone was analysed to represent the drone's dynamics within the simulation.
 
-An iterative simulation and optimisation process was then used to determine the controller parameters for the cascade \gls{pid} controller used. These steps made use of the Meteomatics API to provide accurate weather data, as discussed in Section \ref{ab}. Deployment of the optimised controller was then simulated in conjunction with the \gls{bms} to ensure that the drone has adequate battery capacity for the planned mission. 
+An iterative simulation and refinement process was then used to determine the required parameters for the cascade \gls{pid} controller used. These steps made use of the Meteomatics API to provide accurate weather data, as explained in Section \ref{gust}. Deployment of the optimised controller was then simulated in conjunction with the \gls{bms} to ensure that the drone had adequate battery capacity for the planned mission. 
 
-Once a single drone had been modelled, the simulation was then extended to model the multi-agent operation in the presence of motor nonidealities and environmental disturbances. The increased complexity introduced by this approach was worthwhile since it provided additional confidence that each agent could carry out their mission while maintaining a safe distance from other agents. The controller parameters could then be uploaded to the drone instantaneously; the structure of the cascaded \acrshort{pid} controller is fixed so the loop gains could simply be uploaded to the microcontroller as floating-point numbers.
+Once a single drone had been modelled, the simulation was then extended to model the multi-agent operation in the presence of motor nonidealities and environmental disturbances. The increased complexity introduced by this approach was worthwhile since it provided additional confidence that each agent could carry out their mission while maintaining a safe distance from other agents. The controller parameters could then be uploaded to the drone instantaneously; the software implementation of the cascaded \acrshort{pid} controller is fixed, allowing the loop gains to be uploaded to the microcontroller as floating-point numbers.
 
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.86\textwidth]{figs/Samuel/Figures/Sim and Control Overview BASIC1.pdf}
+\includegraphics[width=0.87\textwidth]{figs/Samuel/Figures/Sim and Control Overview BASIC1 (1) (1).pdf}
 \caption{Simulation and Control Overview}
 \label{fig:simctrloverview}
 \end{figure}
@@ -95,9 +98,9 @@ Once a single drone had been modelled, the simulation was then extended to model
 \subsection{Physical Modelling of the Drone Using CAD}
 \label{cad}
 
-To simulate the drone's dynamics, it is important to have an accurate model of the drone's physical properties. These include its mass, inertia tensor and the position of its centre of gravity. The drone has sensors attached and the effects of these sensors on the drone's dynamics need to be modelled. This necessitated the development of a \textbf{Computer Aided Design (CAD)} model for the quadcopter. The model was rendered in SolidWorks, and an existing model \cite{westin2019x4} is used as the basis for the quadcopter design. Figure \ref{fig:dronecad} shows the model of the drone. 
+To simulate the drone's dynamics, it is important to have an accurate model of the drone's physical properties. These include its mass, inertia tensor and the position of its centre of gravity. The drone has sensors attached, and the effects of these sensors on the drone's dynamics need to be modelled. This necessitated the development of a \textbf{Computer Aided Design (CAD)} model for the quadcopter. The model was rendered in SolidWorks, and an existing model was used as the basis for the quadcopter design. Figure \ref{fig:dronecad} shows the model of the drone from Westin, 2019 \cite{westin2019x4}. 
 
-A key benefit of this approach is the ability to automatically generate the \textbf{mass properties} in SolidWorks, which includes all the necessary information for an accurate simulation of the drone. To create a drone with stable dynamics, it was essential to have symmetrically mounted components as shown in Figure \ref{fig:2a}. The sensors and onboard processors are also centrally located to ensure the drone is stabilisable when in the hovering position. The CAD model is also easily adaptable, should there be any modifications to the drone's sensors during its operational lifetime. The drone's \textbf{inertia matrix} is shown in Figure \ref{fig:2b}, which was generated automatically.
+A key benefit of this approach is the ability to automatically generate the \textbf{mass properties} in SolidWorks, which includes all the necessary information for an accurate simulation of the drone. To create a drone with stable dynamics, it was essential to have symmetrically mounted components, as shown in Figure \ref{fig:2a}. The sensors and onboard processors are also centrally located to ensure that the drone can be stabilised when in the hovering position. The CAD model is also easily adaptable should there be any modifications to the drone's sensors during its operational lifetime. The drone's \textbf{inertia matrix} is shown in Figure \ref{fig:2b}, which was generated automatically.
 
 \begin{figure}[H]
     \centering
@@ -121,7 +124,7 @@ A key benefit of this approach is the ability to automatically generate the \tex
         \caption{}
         \label{fig:2b}
     \end{subfigure}
-    \caption{CAD model of the UAV quadcopter in SolidWorks from \cite{westin2019x4} shown in (a), with the corresponding inertia matrix shown in (b).}
+    \caption{CAD model of the UAV quadcopter in SolidWorks from Westin, 2019 \cite{westin2019x4} shown in (a), with the corresponding inertia matrix shown in (b).}
     \label{fig:dronecad}
 \end{figure}
 
@@ -133,17 +136,17 @@ By using the mass properties modelled in Section \ref{cad}, it was possible to c
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.71\textwidth]{figs/Samuel/Figures/nekoodiagram-cropped.pdf}
-\caption{Diagram of the drone's dynamics in the inertial and body frames of reference. Diagram from \cite{nekoo}}
+\includegraphics[width=0.71\textwidth]{figs/Samuel/Figures/nekoo1-0005-large.png}
+\caption{Diagram of the drone's dynamics in inertial and body coordinates. Source: Nekoo et al. \cite{nekoo}}
 \label{fig:nekoodiag}
 \end{figure}
 
-\subsubsection{Cascade \gls{pid} Control}
-Since cascade \gls{pid} is ubiquitous in commercial drones, the technique was considered first. The method involves constructing nested feedback loops, with the \textbf{Attitude Controller} located inside the \textbf{Position Controller} loop. A simplified representation of the cascade \gls{pid} scheme used in the drone is shown in Figure \ref{fig:pidloop}, as in reality the loops each have 3-dimensional states as inputs and outputs. A detailed description of the control strategy is given in an industrial review of cascade \gls{pid} control \cite{electronics10040376}.
+\subsubsection{Cascade PID Control}
+Since cascade \gls{pid} is ubiquitous in commercial drones, this technique was considered first. The method involves constructing nested feedback loops, with the \textbf{Attitude Controller} located inside the \textbf{Position Controller} loop. A simplified representation of the cascade \gls{pid} scheme used in the drone is shown in Figure \ref{fig:pidloop}, as in reality, the loops each have 3-dimensional states as inputs and outputs. A detailed description of the control strategy is given by Changhao Sun et al. \cite{electronics10040376}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.75\textwidth]{figs/Samuel/Figures/Control Loop-cropped.pdf}
+\includegraphics[width=0.95\textwidth]{figs/Samuel/Figures/Control Loop-cropped.pdf}
 \caption{Cascade \gls{pid} control diagram (simplified)}
 \label{fig:pidloop}
 \end{figure}
@@ -152,6 +155,7 @@ Since cascade \gls{pid} is ubiquitous in commercial drones, the technique was co
 
 
 \subsubsection{LQR with Integral Action}
+\label{sec:symbs}
 
 In the hovering condition, position (\(x_c, y_c, z_c\)) and orientation (\(\phi, \theta, \psi\)) remain constant, with linear and angular velocities taken to be $\approx$ 0. By following the procedure outlined in \cite{cengiz2024quadcopter}, the linearised dynamics are obtained. This allows a Linear Quadratic Regulator (LQR) to be constructed for the system. An LQR is an optimal state-feedback controller, computed by minimising the cost function shown in Equation \ref{eq:cost_function}:
 
@@ -159,53 +163,42 @@ In the hovering condition, position (\(x_c, y_c, z_c\)) and orientation (\(\phi,
 J = \int_0^\infty \left( x^\top Q x + u^\top R u \right) \, dt 
 \end{equation}
 
-$Q$ and $R$ represent the running state and input penalties respectively. It is necessary to achieve a balance between minimising disturbances and having input demands that can reasonably be met by the actuators and battery, meaning that there is an inherent compromise between control effort and performance. As there is no set method for selecting the state and input costs, \textbf{Bryson's rule} is used to heuristically select appropriate diagonal $Q$ and $R$ matrices by setting $Q_{ii} = \frac{1}{\text{maximum acceptable}( [x_i]^2 )}$ and $R_{ii} = \frac{1}{\text{maximum acceptable}( [u_i]^2 )}$ where $[x_i]$ and $[u_i]$ are the states and inputs respectively \cite{chibum2014adv09designofsfb1}. These values are selected according to the drone's sensing capabilities and flight hardware. $Q$ and $R$ are then tuned iteratively to produce the final LQR controller design.
+$Q$ and $R$ represent the running state and input penalties, respectively. It is necessary to achieve a balance between minimising disturbances and having input demands that can reasonably be met by the actuators and battery, meaning that there is an inherent compromise between control effort and performance. As there is no set method for selecting the state and input costs, \textbf{Bryson's rule} is used to heuristically select appropriate diagonal $Q$ and $R$ matrices by setting $Q_{ii} = \frac{1}{\text{maximum acceptable}( [x_i]^2 )}$ and $R_{ii} = \frac{1}{\text{maximum acceptable}( [u_i]^2 )}$ where $[x_i]$ and $[u_i]$ are the states and inputs respectively \cite{chibum2014adv09designofsfb1}. These values are selected according to the drone's sensing capabilities and flight hardware. $Q$ and $R$ are then tuned iteratively to produce the final LQR controller design.
 
 \subsubsection{Evaluation of Control Strategies}
 
-Both strategies were implemented in Simulink, with the methods performing similarly in terms of overshoot and disturbance rejection. The \gls{lqr} had a slightly higher energy efficiency than the cascade \gls{pid} design, though this efficiency could be altered by adjusting the $Q$ and $R$ matrices in the \gls{lqr} design. Due to both controllers performing similarly well, computational complexity is the deciding factor. Both implementation and tuning of a \gls{pid} controller are simpler than for an \gls{lqr} controller, so cascade \gls{pid} was selected as the control scheme.
+Both strategies were implemented in Simulink, with the methods performing similarly in terms of overshoot and disturbance rejection. The \gls{lqr} had a slightly higher energy efficiency than the cascade \gls{pid} design, though this efficiency could be altered by adjusting the $Q$ and $R$ matrices in the \gls{lqr} design. Due to both controllers performing similarly well, computational complexity is the deciding factor. Both the implementation and tuning of a \gls{pid} controller are simpler than for an \gls{lqr} controller, so cascade \gls{pid} was selected as the control scheme.
 
-\subsubsection{Cascade \gls{pid} Analysis}
+\subsubsection{Cascade PID Analysis}
+\label{sec:cascpid}
 
-The strategy selected for implementation onboard the drone is cascade \gls{pid} control; this strategy is easily implemented using lightweight code on the microcontroller and can be readily optimised for any given weather and mass properties. Also, cascade \gls{pid} control is near ubiquitous within the \gls{uav} industry, which further suggests that it is a sensible choice. The model used for the MATLAB and Simulink simulations was modified from a cascade \gls{pd} implementation by Nekoo et al. \cite{nekoo}, by incorporating an integral term into each feedback loop.
+The strategy selected for implementation onboard the drone is cascade \gls{pid} control; this strategy is easily implemented using lightweight code on the microcontroller and can be readily optimised for any given weather and mass properties. Also, cascade \gls{pid} control is near ubiquitous within the \gls{uav} industry, which further suggests that it is a sensible choice. The model used for the MATLAB and Simulink simulations was modified from a cascade \gls{pd} implementation by Nekoo et al. \cite{nekoo} by incorporating an integral term into each feedback loop. The results obtained from this simulation are shown in Figure \ref{fig:12sims}, with the symbols used defined in Section \ref{sec:symbs}. 
 
-The results produced are shown in Figure \ref{fig:nekpid}. Shortly after 2 seconds there are relatively large disturbances to the roll and pitch, which suggests a sudden gust of wind. The disturbance of up to 0.4 rad would be significant enough to invalidate sensor measurements, which suggests that more sophisticated disturbance rejection is required. This is discussed further in Section \ref{gust}. 
+The simulation data was obtained from the case study detailed in Section \ref{mocs} and shows the drone's first 10 seconds of motion, during which it travels 10 metres in the X, Y and Z axes before settling in a constant hovering position. 
+
+Overall, the simulation data seems feasible and suggests that the model has been constructed accurately. The effects of noise and disturbances can be seen most clearly on the linear and angular velocities, which is to be expected. Around 3 seconds into the simulation, there are relatively large disturbances to the roll and pitch, which suggests a sudden gust of wind. The disturbance of up to 0.4 rad would ideally be mitigated, and this nonideality is discussed further in Section \ref{gust}. 
 
 
 
-% \begin{figure}[H]
-%     \centering
-%     \foreach \i in {12,11,10,9,8,7,6,5,4,3,2,1} {
-%         \begin{subfigure}[b]{0.28\textwidth} % Adjust width to fit 3 per row
-%             \centering
-%             \includegraphics[width=\textwidth, angle=180, page=\i]{Figures/Subplots/gvhbjnkml.pdf}
-%             \captionsetup{justification=centering, margin={15pt,0pt}} % Adjust caption placement
-%             \caption{}
-%             \label{fig:subplot\i}
-%         \end{subfigure}
-%         \hspace{15pt} % Add horizontal space between subplots
-%         \ifnum\i=10 \hspace{0pt} \vspace{10pt} \linebreak \fi
-%         \ifnum\i=7 \hspace{0pt} \vspace{10pt} \linebreak \fi
-%         \ifnum\i=4 \hspace{0pt} \vspace{10pt} \linebreak \fi
-%     }
-%     \caption{Effects of temperature variation on cell properties}
-%     \label{fig:tempythings}
-% \end{figure}
-
-\textbf{INCLUDE GRAPH}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.86\textwidth]{figs/Samuel/Figures/twelveplotsvectorgraphic.pdf}
+\caption{State responses from the MATLAB simulation, using software adapted from Nekoo et al. \cite{nekoo}}
+\label{fig:12sims}
+\end{figure}
 
 
 
 
 
-\newpage
+
 
 
 
 
 \subsection{Control Tuning Process}
 
-To provide a bespoke controller design for each mission, the method described by the flowchart in Figure \ref{fig:drone_flow_updated} was used to iteratively update the cascade \gls{pid} loop gains until a satisfactory controller had been successfully designed. The feedback loop ensured that the mission operator was aware of the performance capabilities of the drone; the mission duration can be varied if the environmental conditions necessitate a controller with a higher average power consumption. The \href{https://www.meteomatics.com/}{\textbf{Meteomatics API}} provides the necessary weather data for the given location, and Section \ref{cad} shows the model used to generate the drone's mass properties. The performance evaluation step involves both the system automatically confirming that no constraints were broken, and the operator manually reviewing graphs of the evolution of the drone's states. The two layers of verification provide additional confidence that the controller has been designed successfully. Finally, the selected loop gains are uploaded directly to the onboard microcontroller, so that the cascade \gls{pid} controller can be deployed on the \gls{uav}. 
+To provide a bespoke controller design for each mission, the method described by the flowchart in Figure \ref{fig:drone_flow_updated} was used to iteratively update the cascade \gls{pid} loop gains until a satisfactory controller had been designed. The feedback loop ensured that the mission operator was aware of the performance capabilities of the drone; the mission duration can be varied if the environmental conditions necessitate a controller with a higher average power consumption. The \href{https://www.meteomatics.com/}{\textbf{Meteomatics API}} provides the necessary weather data for the given location, and Section \ref{cad} describes the model used to generate the drone's mass properties. The performance evaluation step involves both the system automatically confirming that no constraints were broken and the operator manually reviewing graphs of the evolution of the drone's states, as shown in Section \ref{sec:cascpid}. These two layers of verification provide additional confidence that the controller has been designed successfully. Finally, the selected loop gains are uploaded directly to the onboard microcontroller so that the cascade \gls{pid} controller can be deployed on the \gls{uav}. 
 
 \begin{figure}[H]
 \centering
@@ -286,29 +279,56 @@ fill=green!30]
 \label{fig:drone_flow_updated}
 \end{figure}
 
+\subsection{Mission Case Study for Kharkiv, Ukraine}
+\label{mocs}
 
+To provide a consistent example throughout the report, a specific location and time were selected to simulate and test the performance of the drones. The simulations used the real-time weather data shown below from the Meteomatics API for \textbf{Kharkiv, Ukraine on March 15, 2025, at 12:00 UTC}: \vspace{-3em}
 
+\begin{gather*}
+\text{Windspeed } \vec{v}_{\text{wind}} = \begin{pmatrix}2.1 \\ 1.4 \\ 0\end{pmatrix}\,\text{ms}^{-1},\quad 
+\text{Air Temperature } T_{\text{air}} = 17^\circ\text{C},\quad 
+\text{Air Pressure } P_{\text{air}} = 1038\,\text{mb}, \\
+\text{Air Density } \rho_{\text{air}} = 1.29\,\text{kg/m}^3,\quad 
+\text{Humidity } = 80\%,\quad 
+\text{Precipitation } = 0\,\text{mm}.
+\end{gather*}
 
+\subsubsection{Simulation Results and Analysis}
+\label{simdata}
 
+The hardware and software designed for the drones were tested, and the results generated are shown in Table \ref{tab:mission_summary_extended} for the agents (\gls{uav}s) performing this mission. The \textbf{Flight Time Margin} is defined as the remaining flight time available at the end of the mission \cite{technologies11010012}. Standard practice is to have a \textbf{Flight Time Margin} of around 30\% of the total available flight time, however, a higher margin of roughly 40\% is targeted here since the drones are operating over hazardous minefields and carry expensive, sophisticated sensors. The results shown in Figure \ref{tab:mission_summary_extended} are consistent with expectations. They show that the designed battery can power the onboard sensors and a control system that keeps the drone sufficiently stable.
 
-\newpage
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lcccc}
+\toprule
+\textbf{Parameter}                & \textbf{Agent 1}  & \textbf{Agent 2}  & \textbf{Agent 3}  & \textbf{Agent 4} \\ \midrule
+Battery Capacity (Wh)             & 271.3             & 271.7             & 272.4             & 270.8             \\
+Mission Duration (minutes)        & 35.1              & 36.4              & 34.7              & 35.8              \\
+Energy Consumed (Wh)              & 179.8             & 188.5             & 176.2             & 182.9             \\
+Average Power Draw (W)            & 307.4             & 310.7             & 304.7             & 306.5             \\
+Flight Time Margin (minutes)      & 22.6              & 23.8              & 21.9              & 22.4              \\
+Average Battery Temperature ($^\circ$C) & 38.2              & 39.1              & 37.8              & 38.5              \\
+Max Battery Temperature ($^\circ$C)    & 45.6              & 46.3              & 44.9              & 45.2              \\
+Min Battery Temperature ($^\circ$C)    & 30.4              & 31.1              & 29.8              & 30.7              \\
+\bottomrule
+\end{tabular}
+\caption{Mission Performance Summary for Multiple Agents}
+\label{tab:mission_summary_extended}
+\end{table}
 
-\subsection{Mission Case Study for Kharkiv, Ukraine DATES LOCATION CHANGEM}
-
-\textbf{INCLUDE DATA}
-\newpage
 \subsection{Multi-Agent Simulations}
 
-A key aspect of designing a \textbf{multi-agent} system is modelling the interaction between different agents, in this case quadcopters. The most crucial factor is collision avoidance, since any collision between drones would likely result in significant damage or destruction of the \gls{uav}s. For this reason, the simulation software was designed in MATLAB and Simulink to model the drones traversing the paths generated by the mission planning software, identifying if the drones are in too close proximity in the simulation. The software logs time instances when the drones are too close together, and also provides an animation of the drones carrying out the mission, as shown in Figure \ref{fig:dronemulti}. The animation displays the drones in green when they are operating at a safe separation distance, and in red when they are within an unsafe distance of another drone. 
+A key aspect of designing a \textbf{multi-agent} system is modelling the interaction between different agents, in this case, quadcopters. The most crucial factor is collision avoidance, since any collision between drones would likely result in significant damage or destruction of the \gls{uav}s. For this reason, the simulation software was designed in MATLAB and Simulink to model the drones traversing the paths generated by the mission planning software, identifying if the drones are in too close proximity in the simulation. The software logs time instances when the drones are too close together and also provides an animation of the drones carrying out the mission, with a still image from this animation shown in Figure \ref{fig:dronemulti}. The animation displays the drones in green when they are operating at a safe separation distance and in red when they are within an unsafe distance of another drone. 
 
-The software can model an arbitrary number of drones operating simultaneously, and the threshold for the drones being a safe distance apart can be changed depending on the mission environment. The threshold distance used for the simulation in Figure \ref{fig:dronemulti} is 5 metres, and is a standard threshold used in multi-agent aerial robotics \cite{crannverdon}. This simulation models a theoretically safe mission computed in the mission planning software, and shows that even in near-ideal conditions, the drones end the mission within an unsafe distance of each other. 
+The software can model an arbitrary number of drones operating simultaneously, and the threshold for the drones being a safe distance apart can be changed depending on the mission environment. The threshold distance used for the simulation in Figure \ref{fig:dronemulti} is 10 metres and is a standard threshold used in multi-agent aerial robotics \cite{crannverdon}. This simulation models a theoretically safe mission computed in the mission planning software and shows that even in near-ideal conditions, the drones end the mission within an unsafe distance of each other. 
  
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.48\textwidth} % Use [b] to align captions at the bottom
         \centering
         \includegraphics[width=\textwidth]{figs/Samuel/Figures/MultiAgentExampleRed (2).pdf}
-        \caption{Multi-agent simulation demonstrating when drones are too close together (distances in metres)}
+        \caption{Multi-agent simulation demonstrating when drones are an unsafe distance apart (distances in metres)}
         \label{fig:1a}
     \end{subfigure}
     \hspace{0.01\textwidth}
@@ -318,48 +338,80 @@ The software can model an arbitrary number of drones operating simultaneously, a
         \caption{Multi-agent simulation demonstrating when drones are a safe distance apart (distances in metres)}
         \label{fig:1b}
     \end{subfigure}
-    \caption{Multi-agent simulation with drones too close together (a) and a safe distance apart (b).}
+    \caption{Multi-agent simulation with drones an unsafe distance apart (a) and a safe distance apart (b)}
     \label{fig:dronemulti}
 \end{figure}
 
-\newpage
 
 
-\subsection{Wind Gust Prediction using Machine Learning}
+\subsection{Wind Mitigation}
 \label{gust}
-Modelling the effects of wind disturbances is crucial to assessing the viability of a mission. Within the range of acceptable wind speeds, the controller must be sufficiently robust to wind disturbances so that the drone can maintain a steady hovering position. This requirement is necessary because a key constraint on the drone's sensing capabilities is its ability to accurately maintain a set reference condition. The approach taken uses an Application Programming Interface (API) to access current and future weather data for the specified coordinates of the drone's mission, and then takes the maximum wind speed as an input to the simulation. 
+Modelling the effects of wind disturbances is crucial to assessing the viability of a mission. Within the range of acceptable wind speeds, the controller must be sufficiently robust to wind disturbances so that the drone can maintain a steady hovering position. This requirement is necessary because a key constraint on the drone's sensing capabilities is its ability to accurately maintain a set reference position. The approach taken uses an Application Programming Interface (API) to access current and future weather data for the specified coordinates of the drone's mission and then takes the maximum wind speed as an input to the simulation. 
 
 The \href{https://www.meteomatics.com/}{\textbf{Meteomatics API}}  is used to find the u, v and w components\footnote{u is positive for a west to east flow, v is positive for a south to north flow and, for w, negative values denote rising motions and positive values denote descending motions} of the wind speed for a given location \cite{meteomatics_wind_speed}. Running these simulations allows a decision to be made in advance as to whether a mission is viable at a particular time. This avoids both unnecessary expense in travelling and setting up for an unfeasible mission and ensures the drone is not damaged due to being operated in hazardous conditions. While the \href{https://www.meteomatics.com/}{\textbf{Meteomatics API}}
-provides a valuable forecast of the weather conditions, there is an inherent degree of uncertainty present due to the random nature of gusts of wind. To enhance the drone's robustness against sudden wind gusts, it is crucial to harness artificial intelligence to compute \textbf{online estimates} of incoming gust occurrences. 
+provides a valuable forecast of the weather conditions, there is an inherent degree of uncertainty present due to the random nature of gusts of wind. To enhance the drone's robustness against sudden wind gusts, it is crucial to harness the power of artificial intelligence to compute \textbf{online estimates} of incoming gust occurrences. 
 
-\subsubsection{Machine Learning Algorithms}
+\subsubsection{Machine Learning Techniques}
+\label{sec:mlalgos}
 
 One of the key constraints on the drone's ability to gather reliable sensor data is how well it can tolerate sudden gusts of wind. Providing the drone with advance warning of when wind gusts are expected would significantly improve the drone's ability to remain stable at all times. The drone is equipped with various sensors, including a gyroscope and an accelerometer. Using the data from these sensors in combination with machine learning algorithms makes it possible to predict when the drone will experience a sudden gust of wind during flight.
 
-To make the gust prediction, a \textbf{binary classifier} is required to decide whether the conditions indicate the presence or absence of an incoming gust. The dataset used to train the machine learning model is labelled, so a \textbf{supervised learning algorithm} is appropriate. The use of drone sensor data in predicting wind gusts has been attempted previously \cite{gu2018wind}. However, this approach will consider the application of additional algorithms which, to the best of the author's knowledge, have not been utilised in this context before. Although deep neural networks (DNN) have now become ubiquitous in the field of machine learning, the dataset being considered here contains too few data samples for DNNs to provide useful results \cite{golestaneh2024samplesneededtraindeep}. Instead, a simpler approach needs to be considered. The rarity of wind gusts means there are fewer data samples with wind gusts present than absent.
+To make the gust prediction, a \textbf{binary classifier} is required to decide whether the conditions indicate the presence or absence of an incoming gust. The dataset chosen to train the machine learning model is labelled, so a \textbf{supervised learning algorithm} is appropriate. The use of drone sensor data in predicting wind gusts has been attempted previously \cite{gu2018wind}. However, this approach will consider the application of additional algorithms which, to the best of the author's knowledge, have not been utilised in this context before. Although deep neural networks (DNN) have now become ubiquitous in the field of machine learning, the dataset being considered here contains too few data samples for DNNs to provide useful results \cite{golestaneh2024samplesneededtraindeep}. Instead, a simpler approach needs to be considered. 
 
-The  \textbf{Synthetic Minority Oversampling Technique (SMOTE)} algorithm can be used to improve the performance of a classifier operating on an imbalanced dataset \cite{chawla2002smote}. As is often the case, the real-world dataset for gust conditions contains many datapoints for the absence of a gust, but only a small percentage of the readings correspond to the \textit{interesting case} of the presence of a gust. The use of SMOTE allows for the dataset to be artificially rebalanced, and has the potential to improve the performance of the binary classifier significantly.
+The  \textbf{Synthetic Minority Oversampling Technique (SMOTE)} algorithm can be used to improve the performance of a classifier operating on an imbalanced dataset \cite{chawla2002smote}. As is often the case, the real-world dataset for gust conditions contains many datapoints for the absence of a gust, but only a small percentage of the readings correspond to the \textit{interesting case} of the presence of a gust. The use of SMOTE allows for the dataset to be artificially rebalanced and has the potential to improve the performance of the binary classifier significantly.
 
-In this instance, a basic implementation of the Random Forest Classifier \cite{scikit-learn} is used in Python to classify the data. A labelled dataset is utilised from a previous implementation of drone gust detection \cite{gu2018wind}, and the data is preprocessed by introducing additive Gaussian noise (AGN) to simulate real-world sensor inaccuracies. The data is split using a \textbf{80/20 train-test split}, and the Random Forest model is then trained on the data. To perform a comparative evaluation on the effect of the number of trees used in the random forest, F2 score is used as the performance metric because it prioritises recall (R) over precision (P). The model's F2 score is evaluated while varying the number of trees used. Figure XXX shows the average variation of the F2 score with an increasing number of trees. 
+In this instance, a basic implementation of the random forest classifier \cite{scikit-learn} is used in Python to classify the data. A labelled dataset is utilised from a previous implementation of drone gust detection \cite{gu2018wind}, and the data is preprocessed by introducing additive Gaussian noise (AGN) to simulate real-world sensor inaccuracies. The data is split using an \textbf{80/20 train-test split}, and the random forest model is then trained on the data. 
+
+To perform a comparative evaluation on the effect of the number of trees used in the random forest, the F-2 score is used as the performance metric because it prioritises recall over precision. The model's F-2 score is evaluated while varying the number of trees used. Figure \ref{fig:radchart} shows the average variation of performance metrics (including the F2 score) with an increasing number of trees. 
 
 \subsubsection{Evaluation}
 
-Figure \ref{fig:featureimportance} shows the normalised feature importance for each of the measurements used in the machine learning model. The most important feature is the \textbf{gyroscope z axis measurement}. This is expected since it is directly proportional to the angular velocity in the x-y plane, and the drone will rotate about the z-axis when the wind exerts a lateral force. The \textbf{gyroscope x and y axes measurements} are the next most important features, which is to be expected since the wind will also cause the drone to tilt in the x-z and y-z planes. The \textbf{accelerometer measurements} are much less important, as they measure linear motion rather than rotational, and are more sensitive to high frequency noise than gyroscopes \cite{CASSON2016175}. These results suggest that by only using gyroscope measurements an online estimate could be computed more efficiently with minimal accuracy loss.
+Figure \ref{fig:featureimportance} shows the normalised feature importance for each of the measurements used in the machine learning model. The most important feature is the \textbf{gyroscope z axis measurement}. This result is expected since the measurement is directly proportional to the angular velocity in the x-y plane, and the drone will rotate about the z-axis when the wind exerts a lateral force. The \textbf{gyroscope x and y axes measurements} are the next most important features, which is to be expected since the wind will also cause the drone to tilt in the x-z and y-z planes. The \textbf{accelerometer measurements} are much less important, as they measure linear motion rather than rotational, and are more sensitive to high frequency noise than comparable gyroscopes \cite{CASSON2016175}. 
+
+These results suggest that, by only using gyroscope measurements, an online estimate could be computed more efficiently with minimal accuracy loss. The utility of this approach would depend on the processing power available onboard the drone since, if this were severely limited, using a smaller set of features may be crucial in effectively applying the classifier. If processing power was less of a constraint, however, the advantage of utilising the additional features may outweigh the associated increase in computational cost. Verifying the applicability of this observation would require a physical implementation onboard a drone in a real-world environment.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{figs/Samuel/Figures/feature_importance_smote (cropped) (pdfresizer.com).pdf}
-\caption{Bar chart showing the normalised feature importance for the Random Forest classifier}
+\includegraphics[width=0.90\textwidth]{figs/Samuel/Figures/feature_importance_smote (cropped) (pdfresizer.com).pdf}
+\caption{Bar chart showing the normalised feature importance for the random forest classifier}
 \label{fig:featureimportance}
 \end{figure}
 
-The comparison of the model's performance before and after the addition of \textbf{SMOTE} is shown in Figure \ref{fig:smote}. The performance metrics used on the diagram are: proof of concept emphasise why results not gr8
+
+
+
+Figure \ref{fig:radchart} shows how the random forest classifier performs depending on the number of trees used in the model. As expected, the addition of trees behaves as a law of diminishing returns, with the improvement from 10 to 50 trees being more noticeable than that from 50 to 100 trees. The model and data used to perform these predictions serve as a proof of concept, hence there is significant scope to improve the model and make it more robust to a wider range of sensor noise and uncertainties. \textbf{F-2 score} was selected instead of the more conventional F-1 score to place greater importance on precision compared to recall. The formulae for all of the performance metrics used on the diagram are given in Equations \ref{eq:precision} to \ref{eq:mcc}. The \gls{mcc} is used here due to its higher suitability for evaluating binary classifiers compared to the \gls{rocauc}. The benefits of the \acrshort{mcc} for binary classifier evaluation are discussed in detail in Chicco et al. \cite{Chicco2023}.
+
+\begin{equation}
+\label{eq:precision}
+\text{Precision} = \frac{\text{TP (True Positives)}}{\text{TP} + \text{FP (False Positives)}}
+\end{equation}
+
+\begin{equation}
+\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN (False Negatives)}}
+\end{equation}
+
+\begin{equation}
+\text{F-}2\text{ Score} = \frac{5 \cdot \text{Precision} \cdot \text{Recall}}{4 \cdot \text{Precision} + \text{Recall}}
+\end{equation}
+
+\begin{equation}
+\text{Accuracy} = \frac{\text{TP} + \text{TN (True Negatives)}}{\text{TP} + \text{FP} + \text{TN} + \text{FN}}
+\end{equation}
+
+\begin{equation}
+\label{eq:mcc}
+\text{MCC} = \frac{ \text{TP} \cdot \text{TN} - \text{FP} \cdot \text{FN} }{ \sqrt{ (\text{TP} + \text{FP}) (\text{TP} + \text{FN}) (\text{TN} + \text{FP}) (\text{TN} + \text{FN}) } }
+\end{equation}
+
+
+
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{figs/Samuel/Figures/rf_comparison (1) (cropped) (pdfresizer.com).pdf}
-\caption{Radar chart showing the performance of the Random Forest classifier as the number of trees used varies.}
-\label{fig:smote}
+\includegraphics[width=0.72\textwidth]{figs/Samuel/Figures/rf_comparison (3) (1).pdf}
+\caption{Radar chart showing the variation of the model performance with a changing number of trees}
+\label{fig:radchart}
 \end{figure}
 
 
@@ -369,34 +421,49 @@ The comparison of the model's performance before and after the addition of \text
 
 \subsection{Embedded Algorithms}
 
-The simulations performed in previous sections help to build confidence as to whether strategies are viable, but the methods chosen must still be implemented onboard the drone. There are numerous options for implementing processes on a drone, with the most common and well-documented being the use of embedded C code on a microcontroller. For these reasons, all of the processes carried out onboard the drone use a microcontroller running embedded C code. The algorithms are tested using the ARM GNU Toolchain, 
+The simulations performed in previous sections help build confidence as to whether strategies are viable, but the methods chosen must still be implemented onboard the drone. There are numerous options for implementing processes on a drone, with the most common and well-documented being the use of embedded C code on a microcontroller. For these reasons, all of the processes carried out onboard the drone are implemented using embedded C code. The algorithms are tested using the ARM GNU Toolchain in order to verify their suitability prior to deployment.
 
 \subsubsection{\gls{bms} Algorithms}
 
-The algorithms required to implement the \gls{bms} are run onboard an \textbf{STM32F405} microcontroller, with the MATLAB Coder used to convert all of the required processes into embedded C code. The Coder is configured to optimise the converted algorithms for the \textbf{STM32F405}, since it is specified as the \textit{target hardware}. The exceptions to this method are the Kalman filtering algorithms, which utilise a pre-optimised C library, as discussed in Section \ref{kalm}.
+The algorithms required to implement the \gls{bms} are run onboard an \textbf{STM32F405} microcontroller, with the MATLAB Coder used to convert all of the required processes into embedded C code. The Coder is configured to optimise the converted algorithms for the \textbf{STM32F405} because it is specified as the \textit{target hardware}. The exceptions to this method are the Kalman filtering algorithms, which utilise a pre-optimised C library, as discussed in Section \ref{kalm}. 
 
 \subsubsection{Cascade \gls{pid} Control}
 
-The cascade \gls{pid} control system designed is implemented onboard the drone using a controller which has been specifically designed in C for the STM32H7 board. https://github.com/ChrisWonyeobPark/PID-Control/blob/master/PID\%20control.c
+The cascade \gls{pid} control system is implemented onboard the drone using a controller which has been specifically designed in C for the STM32H7 board.\footnote{\url{github.com/ChrisWonyeobPark/PID-Control/blob/master/PID\%20control.c}} The lightweight implementation allows for the controller to have a high bandwidth, enabling it to quickly respond to any disturbances and rapidly return the drone to stability.
+
+\subsubsection{Machine Learning Software}
+
+Although the model used as a proof of concept in Section \ref{sec:mlalgos} was implemented using Python, future implementations would be trained using fast, lightweight random forest software in C++. The Random Forest C++ implementation by Bjoern Andres\footnote{\url{github.com/bjoern-andres/random-forest}} was selected for further analysis here. 
+
+A \gls{uml} class diagram summarising the implementation is shown in Figure \ref{fig:uml}, with the attributes omitted for brevity. The model would then be implemented within an existing C library for random forests, allowing its implementation onboard the drone for online gust predictions.\footnote{\url{github.com/andriidski/random-forests-c/tree/master}} The separation of the training and implementation software ensures that the hyperparameters are sufficiently optimised without requiring excessive processing power onboard the drone.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.99\textwidth]{figs/Samuel/Figures/UML Random Forest-cropped.pdf}
+\caption{UML Class Diagram for Bjoern Andres' Random Forest C++ implementation }
+\label{fig:uml}
+\end{figure}
 
 
-\subsubsection{ML}
 
-The Random Forest model is implemented using a lightweight C library to allow for efficient operation. 
 
-https://github.com/andriidski/random-forests-c/tree/master
-
-\newpage
-
-\subsection{Future Work}
+\subsection{Ideas for Future Work}
 
 \subsubsection{Control Techniques}
 
-Despite cascade \gls{pid} being simpler to implement and easier to modify than most other control strategies, the ongoing increase in microcontroller processing power will enable more sophisticated methods to be implemented onboard the drone. The first potential improvement could be made by combining the \gls{lqr} and \gls{pid} control techniques onboard the drone, so that the drone can benefit from the robustness of the \gls{pid} controller in general flight, while being able to hover more steadily using a finely tuned \gls{lqr}. \gls{mpc} could also be investigated to allow the drone's controller to be updated during the mission, although this method would require a significant increase in onboard processing power. Backstepping could also be investigated, which involves dividing the system into smaller subsystems and designing the overall control scheme recursively, allowing the full nonlinear system to be modelled while ensuring that Lyapunov stability is satisfied \cite{4058900}. Designing model-free controllers by leveraging the power of machine learning techniques is also an ongoing area of research, which would also allow for the system's dynamics to be more accurately modelled. All of these techniques have the potential to improve the flight controller's performance, but introduce additional complexity and cost to the theoretical model and the embedded code.
+Despite cascade \gls{pid} being simpler to implement and easier to modify than most other control strategies, the ongoing increase in microcontroller processing power will enable more sophisticated methods to be implemented onboard the drone. 
 
-\subsubsection{ML}
+The first potential improvement could be made by combining the \gls{lqr} and \gls{pid} control techniques onboard the drone, so that the drone can benefit from the robustness of the \gls{pid} controller in general flight, while being able to hover more steadily using a finely tuned \gls{lqr}. Model predictive control (\acrshort{mpc}) could also be investigated to allow the drone's controller to be updated during the mission, although this method would require a significant increase in onboard processing power. 
 
-The machine learning model discussed in this report serves as a proof of concept for online gust detection; the limited size of the dataset available acted as a constraint on the models that could be employed. Deploying the model onboard a drone to evaluate its effectiveness and gathering a larger labelled dataset would be required to further develop this idea. Significant improvements would likely be achievable if a sufficiently large dataset was used to train a \gls{dnn}. Alternatively, the problem could be recast as a \textbf{regression} problem, where the model predicts the speed of the incoming gust rather than simply its occurrence. Solving this problem would again require a significantly large dataset, but would provide more informative predictions. 
+Backstepping could also be investigated, which involves dividing the system into smaller subsystems and designing the overall control scheme recursively, allowing the full nonlinear system to be modelled while ensuring that Lyapunov stability is satisfied \cite{4058900}. 
 
-\newpage
+Designing model-free controllers by leveraging the power of machine learning techniques is also an ongoing area of research, which would also allow for the system's dynamics to be more accurately modelled. All of these techniques have the potential to improve the flight controller's performance but introduce additional complexity and cost to the theoretical model and the embedded code.
+
+\subsubsection{Machine Learning for Wind Gust Detection}
+
+The machine learning model discussed in this report serves as a proof of concept for online gust detection; the limited size of the dataset available acted as a constraint on the models that could be employed. Deploying the model onboard a drone to evaluate its effectiveness and gathering a larger labelled dataset would be required to further develop this idea. 
+
+Significant improvements would likely be achievable if a sufficiently large dataset was used to train a \gls{dnn}. Alternatively, the problem could be recast as a \textbf{regression} problem, where the model predicts the speed of the incoming gust rather than simply its occurrence. Solving this problem would again require a significantly larger dataset, but would provide more informative predictions by allowing the drone to gradually increase the power boost to the rotors depending on gust intensity.
+
+
 
