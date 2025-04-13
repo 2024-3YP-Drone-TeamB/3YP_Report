@@ -22,10 +22,10 @@
         P_\text{F} = \rho_\text{2} = \frac{R_\text{R} \rho_\text{1}}{R_\text{R} \rho_\text{1} + F_\text{R} (1-\rho_\text{1})} \text{, where }         \rho_\text{1} = \frac{R_\text{T} \rho_\text{0}}{R_\text{T} \rho_\text{0} + F_\text{T} (1-\rho_\text{0})}.
         \end{equation}
         
-         The upper bound is the radar's intrinsic precision $P_\text{R}$, giving precision bounds of $\rho_\text{2} \leq P_\text{sys} < P_\text{R}$.
-        
+         The upper bound is the radar's intrinsic precision $P_\text{R}$, giving \textbf{precision bounds of } $\rho_\text{2} \leq P_\text{sys} < P_\text{R}$
+         
         \paragraph{Recall} The Naive Bayes system recall can similarly be found by considering the intrinsic recalls of each sensor, and is a lower bound on the true system recall. Because the radar sensor only scans regions flagged by the thermal sensor, the NB system recall is the product of the individual recalls \(R_\text{sys} = R_\text{T} R_\text{R}\), 
-        which  cannot exceed $R_\text{T}$. This gives the bounds on the fused system's recall as $R_\text{T}R_\text{R}\leq R_\text{sys}< R_\text{T}$.
+        which  cannot exceed $R_\text{T}$. This gives the \textbf{bounds on the fused system's recall as} $R_\text{T}R_\text{R}\leq R_\text{sys}< R_\text{T}$.
     
     \subsubsection{Naive Bayes Fusion: Quantifying Bounds}
     
