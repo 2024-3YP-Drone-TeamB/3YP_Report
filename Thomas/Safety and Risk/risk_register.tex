@@ -1,0 +1,16 @@
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5cm}|c|c|c|>{\raggedright\arraybackslash}p{5cm}|}
+\hline
+\textbf{Risk Description} & \textbf{Likelihood} & \textbf{Impact} & \textbf{Severity} & \textbf{Mitigation Actions} \\ \hline
+\textbf{Sensor Malfunction or Degradation}: Imaging sensors may degrade affecting detection capability. & \HighRisk      & \HighRisk   & \HighRisk & Regular maintenance and calibration. \\ \hline
+\textbf{False Negatives}: Landmines not detected if obscured by noise or adverse conditions.         & \MediumRisk    & \HighRisk   & \HighRisk    & Use a multi-layered sensor approach. \\ \hline
+\textbf{False Positives}: Debris misclassified as landmines, leading to wasted clearance time.                                          & \HighRisk      & \LowRisk    & \MediumRisk  & Apply data fusion and secondary confirmation methods. \\ \hline
+\textbf{Communication Bus Failure}: Bus is severed or not securely connected.                                                                          & \MediumRisk    & \HighRisk   & \HighRisk    & Utilize redundant communication lines and pre-flight test signals. \\ \hline
+\textbf{Hardware Geolocation Failure}: Failure of the GNSS module.                                                                                      & \MediumRisk    & \HighRisk   & \HighRisk    & Install a redundant GNSS module. \\ \hline
+\textbf{State of Charge Failure}: Device out of power mid-flight, leading to emergency landing or crash.                                              & \MediumRisk    & \HighRisk   & \HighRisk    & Implement a robust \gls{BMS} with automatic \gls{RTH} when below threshold. \\ \hline
+\textbf{Weather}: Extreme rain, wind, or hail can cause damage and loss of control.                                                   & \HighRisk      & \HighRisk   & \HighRisk & Monitor pre-mission weather forecasts; enable a \gls{RTH} trigger via LoRA communication. \\ \hline
+\textbf{Cybersecurity Threats}: Blocked GNSS or spoofed LoRA communication.                                                    & \LowRisk       & \HighRisk   & \MediumRisk  & Limit LoRA functions to triggering \gls{RTH}; a GNSS module can perform dead reckoning. \\ \hline
+\textbf{Regulatory and Privacy Concerns}: Issues arising from aviation disruption and privacy. & \MediumRisk & \MediumRisk & \MediumRisk  & Collaborate with local authorities and host public meetings to ensure regulatory compliance and community support. \\ \hline
+\textbf{Partial Thrust Loss}: Damage to a propeller or motor causes reduced effectiveness in a propeller-motor set. & \HighRisk & \MediumRisk & \HighRisk & Deploy adaptive control techniques with \gls{RTS} measures. \\ \hline
+\textbf{Flight Controller Failure}: no control signal for the device. & \LowRisk       & \HighRisk   & \MediumRisk  & Independent control capability with GNSS modules. \\ \hline
+\textbf{Device Field Failure}: Poor operator use or a module failure leaves the device inoperable.                                        & \VeryHighRisk  & \LowRisk    & \HighRisk    & Use a flight controller LED array to isolate issues and design modular components for quick replacement. \\ \hline
+\end{tabular}

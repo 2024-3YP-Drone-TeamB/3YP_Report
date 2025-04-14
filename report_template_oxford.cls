@@ -251,6 +251,18 @@
     }%
   \end{tikzpicture}%
 }
+
+% Define colors for different risk levels
+\definecolor{highrisk}{HTML}{FFCCCC}       % light red for high risk
+\definecolor{veryhighrisk}{HTML}{FF9999}    % somewhat darker red for very high risk
+\definecolor{mediumrisk}{HTML}{FFFFCC}      % light yellow for medium risk
+\definecolor{lowrisk}{HTML}{90EE90}      % light green for low risk
+
+% Custom commands to color cells based on likelihood/impact values
+\newcommand{\HighRisk}{\cellcolor{highrisk}\textbf{High}}
+\newcommand{\VeryHighRisk}{\cellcolor{veryhighrisk}\textbf{Very High}}
+\newcommand{\MediumRisk}{\cellcolor{mediumrisk}\textbf{Medium}}
+\newcommand{\LowRisk}{\cellcolor{lowrisk}\textbf{Low}}
 %%%%%%%%%%%%%
 
 %Huirui Stuff
