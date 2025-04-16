@@ -1,2 +1,14 @@
 \subsection{Risk Analysis}
-\input{Thomas/Safety and Risk/risk_register}
+\subsubsection{Ground Operator Owned Risks}
+\input{Thomas/Safety and Risk/risk_register_ground} 
+\paragraph{Field Testing}
+Ground operators can load in tests that have known expected results. These tests are formed of control signals and then sensor measurements. If everything is working then the results match the expected results and the device is operable. If there is an actuator fault the sensors will all record similar results different to the expected results and if there is a sensor fault the sensors will all record the expected results except for the faulty sensors. Furthermore, all communication lines are tested to check they are operable even if they are redundant. This isolates any module faults so that they can be replaced and sent for repair.
+\paragraph{Role of Design}
+The design of the device should support ground operators at all times. Therefore, clear and easy documentation will be provided and all interfaces are as simple and easy to use as possible. However, in order to continue to support progress feedback must be gathered to improve the design in a testing phase and throughout operation.
+
+\subsubsection{Designer Owned Risks}
+\input{Thomas/Safety and Risk/risk_register_design} 
+\paragraph{Designed Redundancy}
+Reducing the risk of failure through redundancy is a key mitigation to the primary high severity risks as shown in \ref{tab:risk_register_designer}. This, in combination with regular field testing, means that the risk of failure is a low as reasonably possible as all modules and redundant modules are tested regularly so it would require a common mode failure, a catastrophic failure or a very unlikely dual failure.
+\paragraph{Analysis and updates}
+During testing and deployment if there are failures, they need to be analysed and mitigated against. This requires a designed level of support for analysis, improvement and replacement. For analysis, there is a removable memory device for all telemetry and error messages in addition to easy debugging methods. For improvements, all designed hardware have the specifications to increase their level of support if needed. Finally for replacement, all modules can be replaced easily with different specification versions. This design level flexibility is vital for the longevity of the design.

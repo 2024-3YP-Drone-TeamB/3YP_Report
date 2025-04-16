@@ -1,0 +1,17 @@
+% maybe I want to include injury and more safety related risks?
+\begin{table}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5cm}|c|c|c|>{\raggedright\arraybackslash}p{5cm}|}
+\hline
+\textbf{Risk Description} & \textbf{Likelihood} & \textbf{Impact} & \textbf{Severity} & \textbf{Mitigation Actions} \\ \hline
+\textbf{Sensor Malfunction or Degradation}: Imaging sensors may degrade affecting detection capability. & \HighRisk      & \HighRisk & \HighRisk & Regular maintenance and calibration. \\ \hline
+\textbf{False Negatives}: Landmines not detected if obscured by noise or adverse conditions. & \MediumRisk & \HighRisk & \HighRisk & Use a multi-layered sensor approach. \\ \hline
+\textbf{False Positives}: Debris misclassified as landmines, leading to wasted clearance time.& \HighRisk & \LowRisk    & \MediumRisk  & Apply data fusion and secondary confirmation methods. \\ \hline
+\textbf{Weather}: Extreme rain, wind, or hail can cause damage and loss of control. & \HighRisk & \HighRisk & \HighRisk & Monitor pre-mission weather forecasts; enable a \gls{RTH} trigger via LoRA. \\ \hline
+\textbf{Regulatory and Privacy Concerns}: Issues arising from aviation disruption and privacy. & \MediumRisk & \MediumRisk & \MediumRisk  & Collaborate with local authorities and host public meetings to ensure regulatory compliance and community support. \\ \hline
+\textbf{Device Field Failure}: Poor operator use or a module failure leaves the device inoperable. & \VeryHighRisk & \LowRisk & \HighRisk & Use a flight controller LED array to isolate issues and design modular components for quick replacement. \\ \hline
+\textbf{Hardware ageing}: Sensors and actuators become inaccurate or inefficient. & \VeryHighRisk & \MediumRisk & \HighRisk & Use pre-loaded test command sequences to regularly test and recalibrate sensors and actuators.\\ \hline
+\end{tabular}
+\caption{Risk Register: Ground Operators}
+\label{tab:risk_register_ground_operator}
+\end{table}
+

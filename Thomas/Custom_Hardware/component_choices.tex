@@ -1,59 +1,47 @@
 \begin{table}[htbp]
   \centering
-  \begin{tabular}{lcccc}
+  \begin{tabular}{|l|c|c|c|c|}
     \hline
-    \textbf{Name} & \textbf{Price/100} & \textbf{Gyro Noise} & \textbf{Accel Noise} & \textbf{Gyro Freq.} \\
-    & & (mdps/$\sqrt{\text{Hz}}$) & (µg/$\sqrt{\text{Hz}}$) & (kHz) \\
+    \textbf{Name} & \textbf{Price} & \textbf{Gyro Noise} & \textbf{Accel Noise} & \textbf{Gyro Freq.} \\
+    & £ & (mdps/$\sqrt{\text{Hz}}$) & (µg/$\sqrt{\text{Hz}}$) & (kHz) \\
     \hline
-    ICM-42688-P & 329 & 2.8 & 70 & 32 \\
-    MPU-6500    & 423 & 10  & 300 & 32 \\
-    BMI323      & 157 & 7   & 180 & 12.5 \\
+    ICM-42688-P\tablefootnote{\url{https://invensense.tdk.com/products/motion-tracking/6-axis/icm-42688-p/}} & 329 & 2.8 & 70 & 32 \\
+    MPU-6500\tablefootnote{\url{https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6500/}}    & 423 & 10  & 300 & 32 \\
+    BMI323\tablefootnote{\url{https://www.bosch-sensortec.com/products/motion-sensors/imus/bmi323}}      & 157 & 7   & 180 & 12.5 \\
     \hline
   \end{tabular}
   \caption{Comparison of Selected IMUs}
   \label{tab:imu-comparison}
 \end{table}
-\footnote{\url{https://invensense.tdk.com/products/motion-tracking/6-axis/icm-42688-p/}}
-\footnote{\url{https://invensense.tdk.com/products/motion-tracking/6-axis/mpu-6500/}}
-\footnote{\url{https://www.bosch-sensortec.com/products/motion-sensors/imus/bmi323}}
-
 
 \begin{table}[htbp]
   \centering
-  \begin{tabular}{lrrrrrr}
-    \toprule
-    \textbf{Name} & \textbf{Flash (KB)} & \textbf{RAM (KB)} & \textbf{Clock (MHz)} & \textbf{Price} & \textbf{CAN} & \textbf{Pins} \\
-    \midrule
-    MSPM0G3506SRHBR & 32 & 32 & 80 & 87 & 1 & 32 \\
-    STM32H743VGT6 & 1000 & 1000 & 480 & 737.21 & 2 & 100 \\
-    STM32F765VGT7 & 1000 & 512 & 216 & 812 & 3 & 100 \\
-    \bottomrule
+  \begin{tabular}{|l|r|r|r|r|r|r|}
+    \hline
+    \textbf{Name} & \textbf{Flash (KB)} & \textbf{RAM (KB)} & \textbf{Clock (MHz)} & \textbf{Price (£)} & \textbf{CAN} & \textbf{Pins} \\
+    \hline
+    MSPM0G3506SRHBR\tablefootnote{\url{https://www.ti.com/product/MSPM0G3506/part-details/MSPM0G3506SRHBR}} & 32 & 32 & 80 & 87 & 1 & 32 \\
+    STM32H743VGT6\tablefootnote{\url{https://www.st.com/en/microcontrollers-microprocessors/stm32h743vg.html}} & 1000 & 1000 & 480 & 737.21 & 2 & 100 \\
+    STM32F765VGT7\tablefootnote{\url{https://www.st.com/en/microcontrollers-microprocessors/stm32f765vg.html}} & 1000 & 512 & 216 & 812 & 3 & 100 \\
+    \hline
   \end{tabular}
-   \caption{Comparison of MCUs}
+  \caption{Comparison of MCUs}
   \label{tab:mcu-comparison}
 \end{table}
-\footnote{\url{https://www.ti.com/product/MSPM0G3506/part-details/MSPM0G3506SRHBR}}
-\footnote{\url{https://www.st.com/en/microcontrollers-microprocessors/stm32h743vg.html}}
-\footnote{\url{https://www.st.com/en/microcontrollers-microprocessors/stm32f765vg.html}}
 
 \begin{table}[htbp]
   \centering
-  \begin{tabular}{lccccc}
-    \toprule
-    \textbf{Name} & \textbf{Price/100} & \textbf{RTK} & \textbf{Update Rate (Hz)} & \textbf{Dead Reckoning} & \textbf{Precision (m)} \\
-    \midrule
-    MAX-F10S-00B & 1109 & No  & 10 & No  & 1    \\
-    ZED-F9P-05B & 9082 & Yes & 5 & No  & 0.01 \\
-    LC29HEAMD & 4091 & Yes & 10 & No  & 0.01 \\
-    LC29HAAMD & 769  & No  & 10 & No  & 1    \\
-    LG69T-AP & 5877 & Yes & 10 & Yes & 0.01 \\
-    \bottomrule
+  \begin{tabular}{|l|c|c|c|c|c|}
+    \hline
+    \textbf{Name} & \textbf{Price (£)} & \textbf{RTK} & \textbf{Update Rate (Hz)} & \textbf{Dead Reckoning} & \textbf{Precision (m)} \\
+    \hline
+    MAX-F10S-00B\tablefootnote{\url{https://www.u-blox.com/en/product/max-f10s-module}} & 1109 & No  & 10 & No  & 1    \\
+    ZED-F9P-05B\tablefootnote{\url{https://www.u-blox.com/en/product/zed-f9p-module}}    & 9082 & Yes & 5  & No  & 0.01 \\
+    LC29HEAMD\tablefootnote{\url{https://www.quectel.com/product/gnss-lc29h/}}         & 4091 & Yes & 10 & No  & 0.01 \\
+    LC29HAAMD\tablefootnote{\url{https://www.quectel.com/product/gnss-lc29h/}}         & 769  & No  & 10 & No  & 1    \\
+    LG69T-AP\tablefootnote{\url{https://www.quectel.com/product/gnss-lg69t-series/}}   & 5877 & Yes & 10 & Yes & 0.01 \\
+    \hline
   \end{tabular}
-   \caption{Comparison of GNSS Modules}
+  \caption{Comparison of GNSS Modules}
   \label{tab:gnss-modules}
 \end{table}
-\footnote{\url{https://www.u-blox.com/en/product/max-f10s-module}}
-\footnote{\url{https://www.u-blox.com/en/product/zed-f9p-module}}
-\footnote{\url{https://www.quectel.com/product/gnss-lc29h/}}
-\footnote{\url{https://www.quectel.com/product/gnss-lg69t-series/}}
-

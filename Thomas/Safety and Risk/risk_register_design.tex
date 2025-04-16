@@ -1,0 +1,14 @@
+\begin{table}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5cm}|c|c|c|>{\raggedright\arraybackslash}p{5cm}|}
+\hline
+\textbf{Risk Description} & \textbf{Likelihood} & \textbf{Impact} & \textbf{Severity} & \textbf{Mitigation Actions} \\ \hline
+\textbf{Communication Bus Failure}: Bus is severed or not securely connected. & \MediumRisk & \HighRisk & \HighRisk & Utilize redundant communication lines and pre-flight test signals. \\ \hline
+\textbf{Hardware Geolocation Failure}: Failure of the GNSS module. & \MediumRisk & \HighRisk & \HighRisk & Install a redundant GNSS module. \\ \hline
+\textbf{State of Charge Failure}: Device out of power mid-flight, leading to emergency landing or crash. & \MediumRisk & \HighRisk & \HighRisk & Implement a robust \gls{BMS} with automatic \gls{RTH} when below threshold. \\ \hline
+\textbf{Cybersecurity Threats}: Blocked GNSS or spoofed LoRA communication. & \LowRisk & \HighRisk & \MediumRisk & Limit LoRA functions to triggering \gls{RTH}; a GNSS module can perform dead reckoning. \\ \hline
+\textbf{Partial Thrust Loss}: Damage to a propeller or motor causes reduced effectiveness in a propeller-motor set. & \HighRisk & \MediumRisk & \HighRisk & Deploy adaptive control techniques with \gls{RTS} measures. \\ \hline
+\textbf{Flight Controller Failure}: no control signal for the device. & \LowRisk & \HighRisk & \MediumRisk  & Independent control capability with GNSS modules. \\ \hline
+\end{tabular}
+\caption{Risk Register: Designers}
+\label{tab:risk_register_designer}
+\end{table}
