@@ -429,13 +429,13 @@ The algorithms required to implement the \gls{bms} are run onboard an \textbf{ST
 
 \subsubsection{Cascade \gls{pid} Control}
 
-The cascade \gls{pid} control system is implemented onboard the drone using a controller which has been specifically designed in C for the STM32H7 board.\footnote{\url{github.com/ChrisWonyeobPark/PID-Control/blob/master/PID\%20control.c}} The lightweight implementation allows for the controller to have a high bandwidth, enabling it to quickly respond to any disturbances and rapidly return the drone to stability.
+The cascade \gls{pid} control system is implemented onboard the drone using a controller which has been specifically designed in C for the STM32H7 board.\footnote{\url{https://github.com/ChrisWonyeobPark/PID-Control}} The lightweight implementation allows for the controller to have a high bandwidth, enabling it to quickly respond to any disturbances and rapidly return the drone to stability.
 
 \subsubsection{Machine Learning Software}
 
-Although the model used as a proof of concept in Section \ref{sec:mlalgos} was implemented using Python, future implementations would be trained using fast, lightweight random forest software in C++. The Random Forest C++ implementation by Bjoern Andres\footnote{\url{github.com/bjoern-andres/random-forest}} was selected for further analysis here. 
+Although the model used as a proof of concept in Section \ref{sec:mlalgos} was implemented using Python, future implementations would be trained using fast, lightweight random forest software in C++. The Random Forest C++ implementation by Bjoern Andres\footnote{\url{https://github.com/bjoern-andres/random-forest}} was selected for further analysis here. 
 
-A \gls{uml} class diagram summarising the implementation is shown in Figure \ref{fig:uml}, with the attributes omitted for brevity. The model would then be implemented within an existing C library for random forests, allowing its implementation onboard the drone for online gust predictions.\footnote{\url{github.com/andriidski/random-forests-c/tree/master}} The separation of the training and implementation software ensures that the hyperparameters are sufficiently optimised without requiring excessive processing power onboard the drone.
+A \gls{uml} class diagram summarising the implementation is shown in Figure \ref{fig:uml}, with the attributes omitted for brevity. The model would then be implemented within an existing C library for random forests, allowing its implementation onboard the drone for online gust predictions.\footnote{\url{https://github.com/andriidski/random-forests-c/tree/master}} The separation of the training and implementation software ensures that the hyperparameters are sufficiently optimised without requiring excessive processing power onboard the drone.
 
 \begin{figure}[H]
 \centering
