@@ -1,10 +1,7 @@
 \subsection{Emergency Path Planning}
 
 \subsubsection{Cost Function}
-\paragraph{Objective}
-The key objective is to reduce the downtime and cost of operation of the drone. This means both the cost of damage to the drone through crashing and the difficulty of retrieval need consideration.
-\paragraph{Cost Function}
-Considering the centre of each hexagon in the cost map as a node and modelling the probability of surviving a node to node traversal between adjacent nodes as constant, $p$, the cost function of any path of length $D$ is shown in \ref{eq:cost function}. The specific $c_{crashing}$ and $c_{landing}$ can be defined by the ground operators for each classification. The ones used in testing are shown in \ref{tab:cost_values}.
+The key objective is to reduce the downtime and cost of operation of the drone. This means both the cost of damage to the drone through crashing and the difficulty of retrieval need consideration. Considering the centre of each hexagon in the cost map as a node and modelling the probability of surviving half of a node node traversal between adjacent nodes as constant, $p$, the cost function of any path of length $D$ is shown in \ref{eq:cost function}. The specific $c_{crashing}$ and $c_{landing}$ can be defined by the ground operators for each classification. The ones used in testing are shown in \ref{tab:cost_values}.
 \begin{equation}\label{eq:cost function}
     E(x) 
     = \sum_{n=1}^{D-1} c_{crashing}\bigl(x_n\bigr)\, (1-p) \,p^n 
@@ -28,8 +25,8 @@ Considering the centre of each hexagon in the cost map as a node and modelling t
 \paragraph{Cause}
 When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault due to the less aggressive control strategies deployed meaning that the maximum rejected gust becomes lower in magnitude and therefore more likely to occur. 
 \paragraph{Gust Modelling}
-Using forecast and modelling in \ref{SAM GRACE} the gustiness of the operating environment can be approximated. From this a model, the probability that a gust exceeds the known maximum rejection gust speed for the current control gains per second, $\lambda$, is calculated as shown in \ref{eq:p calc}. Furthermore, this prior knowledge can be improved with Bayesian updates by recording the magnitude of control outputs to update the gustiness belief. However, this requires data gathered during testing and is an area of future work.
-\begin{equation}\label{eq:p calc}
+Using forecasts and modelling in \ref{SAM GRACE} the gustiness of the operating environment can be approximated. From this we can model the probability that a gust exceeds the known maximum rejection gust speed for the current control gains per second, $\lambda$, is calculated as shown in \ref{eq:p_calc}. Furthermore, this prior knowledge can be improved with Bayesian updates by recording the magnitude of control outputs to update the gustiness belief. However, this requires data gathered during testing and is an area of future work.
+\begin{equation}\label{eq:p_calc}
     p = (1-\lambda)^{\frac{nodal\_distance}{speed}}
 \end{equation}
 
@@ -37,9 +34,9 @@ Using forecast and modelling in \ref{SAM GRACE} the gustiness of the operating e
 \input{Thomas/Return_To_Safety/search_algo}
 \input{Thomas/Return_To_Safety/flow_algo}
 \paragraph{Exhaustive Search}
-The simplest algorithm is the recursive function shown in\ref{alg:search}. There are steps taken to increase the efficiency, including pruning lines that already exceed the minimum cost as the cost is monotonic increasing and automatically terminating lines when they can land safely. However, the worst case time complexity remains $O(|V|6^{depth})$ as each node has 6 neighbours that get called recursively. To get guaranteed correct results it would require searching all paths as long as $|V|$ as costs cannot fall below 0 so it is never advantageous to revisit a node. Therefore the worst case complexity for guaranteed optimal paths is $O(|V|6^{|V|})$. This is not usable for practical applications, therefore it requires a compromise to depth of search, no longer getting optimal path results.
-\paragraph{Smoothing}
-To combat the issues with \ref{alg:search}, I developed \ref{alg:flow}. This algorithm smooths out the differences in path cost between neighbouring nodes, therefore you get a guaranteed correct answers when the nodes have fully converged. This algorithm is a Bellman-Ford style algorithm and therefore has a time complexity of $O(|E|\times |V|)$. In dense graphs this becomes  $O(|V|^3)$ however, we know $|E| \leq |V| \times 7$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual complexity is $O(|V|^2)$. This means it is practical to generate guaranteed optimal path results.
+The simplest algorithm is the recursive function shown in \ref{alg:search}. There are steps taken to increase the efficiency, including pruning lines that already exceed the minimum cost as the cost is monotonic increasing and automatically terminating lines when they can land safely. However, the worst case time complexity remains $O(|V|6^{depth})$ as each node has 6 neighbours that get called recursively. To get guaranteed correct results it would require searching all paths as long as $|V|$ as costs cannot fall below 0 so it is never advantageous to revisit a node. Therefore, the worst case complexity for guaranteed optimal paths is $O(|V|6^{|V|})$. This is not usable for practical applications, therefore it requires a compromise to depth of search, no longer getting optimal path results.
+\paragraph{Bellman-Ford}
+To combat the issues with \ref{alg:search}, I developed \ref{alg:flow}. This algorithm smooths out the differences in path cost between neighbouring nodes following the Bellman-Ford algorithm. This guarantees correct answers when the nodes have fully converged. Bellman-Ford algorithms have a time complexity of $O(|E|\times |V|)$. In dense graphs this becomes  $O(|V|^3)$ however, we know $|E| \leq |V| \times 7$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual complexity is $O(|V|^2)$\cite{cormen2009}. This means it is practical to generate guaranteed optimal path results.
 
 \subsubsection{Real-time application}
 \paragraph{Pre-Compute}
@@ -47,12 +44,33 @@ Carrying out memory and time complex operations on real-time hardware should alw
 \paragraph{$p$ ranges}
 While the value of $p$ can take any value between 0 and 1, there can be only 7 outputs for the next best move (going to each of the 6 neighbours or landing). Therefore, instead of creating a specific map for a specific value of $p$ on the flight controller you can pre-compute all the ranges of $p$ that would cause each of these outcomes. Then the device selects the option corresponding to its current $p$ value.
 \paragraph{Deployment}
-For a deployed algorithm consistent timings and a minimal memory footprint are essential. To reduce the memory intensity, instead of storing ranges of values you store a sorted array of values going from the smallest $p$ to the greatest. The first time the specific value of $p$ crosses the threshold $p$, you record the required action and if no value crosses the threshold then you default to landing. Finally, the row and column values are converted into \gls{GNSS} target co-ordinates.
+For a deployed algorithm consistent timings and a minimal memory footprint are essential. The algorithm \ref{alg:threshold} is used to select the next action based on the value of $p$ and the node $p$ ranges.
+\begin{algorithm}[htbp]
+  \caption{Threshold-Based Action Selection}
+  \label{alg:threshold}
+  \begin{algorithmic}[1]
+    \Require Sorted threshold array \(\mathcal{P} = [p_1, p_2, \dots, p_6]\), associated actions \(\mathcal{A} = [a_1, a_2, \dots, a_6]\), input probability \(p\), default landing action \(a_{\textit{land}}\)
+    \Ensure Selected action \(a\), GNSS coordinates \((\textit{lat}, \textit{lon})\)
+    
+    \State \(a \gets a_{\textit{land}}\) \Comment{Default to landing}
+    \For{\(i = 1\) to \(n\)}
+      \If{\(p < p_i\)}
+        \State \(a \gets a_i\)
+        \State \textbf{break}
+      \EndIf
+    \EndFor
+    
+    \State \((\textit{row}, \textit{col}) \gets \textit{GridCoordinates}(a)\)
+    \State \((\textit{lat}, \textit{lon}) \gets \Call{ConvertToGNSS}{\textit{row}, \textit{col}}\)
+    
+    \State \Return \((a, \textit{lat}, \textit{lon})\)
+  \end{algorithmic}
+\end{algorithm}
 \paragraph{Memory Management}
 The memory on the \gls{MCU}s consists of Flash and \gls{SRAM}. Flash is static memory that has to be pre-loaded onto the board before each run whereas \gls{SRAM} is volatile but has faster access times. Therefore, waypoints, maps and gains are loaded into \gls{RAM} from the preset values in Flash before a flight. In addition, the flight controller's \gls{MCU} has \gls{ITCM} configured \gls{RAM} and \gls{DTCM} configured \gls{RAM}. \gls{DTCM} and \gls{ITCM} allow for precise timings when accessing data and instructions respectively and should therefore be used for looped processes including control loops and heading calculations. Whereas, for less timing critical actions or varying time operations such as actuator tests the regular \gls{SRAM} can be used. For the \gls{GNSS} module \gls{MCU} there is just Flash and \gls{SRAM} however, as it is a less complex operational loop this is sufficient. 
 \input{Thomas/Return_To_Safety/memory}
 \paragraph{Memory Reduced Nodes}
-Using the C implementation given in \ref{lst:node} it requires 56 bytes per node, therefore, for a 256 node map it requires 14.336 kilobytes of \gls{RAM}. This puts significant resolution limitations on the map given the specifications of the \gls{MCU}s \ref{tab:MCU_memory}. Therefore, the map should be stored in custom data structures that contain only as many bits as required. By using an indexed node array instead of pointers, 12 bit indexes can be used supporting 4096 nodes and 8 bits for probability values is sufficient. Lastly, the index of the node can be used to derive its location and therefore the relative positions are not required. This structure is shown in \ref{lst:reducednode} and with the above values and using guaranteed optimal number of thresholds and actions of 6 results in 16.5 bytes per node. However, the major drawback is that when moving away from from standard C data types bespoke bit operations are required increasing the development difficulty. 
+Using a C implementation as shown in \ref{lst:node} it requires 56 bytes per node, therefore, for a 256 node map it requires 14.336 kilobytes of \gls{RAM}. This puts significant resolution limitations on the map. Therefore, the map should be stored in custom data structures that contain only as many bits as required. By using an indexed node array instead of pointers, 12 bit indexes can be used supporting 4096 nodes and 8 bits for probability values is sufficient. Lastly, the index of the node can be used to derive its location removing the relative values. This structure is shown in \ref{lst:reducednode} and with the above values and using guaranteed optimal number of thresholds and actions of 6 results in 16.5 bytes per node. However, the major drawback is that when moving away from from standard C data types bespoke bit operations are required increasing the development difficulty. 
 \paragraph{Stop-Go Method}
 The nature of the problem can be exploited using the strategy of the map having one option for the next move that above a probability threshold it goes to, and below that threshold it lands. This means that only one action and one threshold in the \ref{lst:reducednode} reduced node structure is needed resulting in a memory intensity of 4 bytes per node. 
 \paragraph{Testing Reduced Nodes}

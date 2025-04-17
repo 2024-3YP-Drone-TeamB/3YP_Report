@@ -1,17 +1,20 @@
 \begin{table}[htbp]
   \centering
-  \caption{Cost of custom component}
-  \label{tab:aggregated-cost}
-  \begin{tabular}{@{} l r r @{}}
-    \toprule
-    \textbf{}         & \textbf{MCU} & \textbf{IMU1}\\ 
-    \midrule
-    Passive Components        & £140.40  & XX\\
-    Active Components         & £1699.10 & XX\\
-    Headers/Connectors        & £179.50  & XX\\
-    PCB \& Assembly           & £262.14  & XX\\
-    \midrule
-    \textbf{Total}            & £2281.14 & XX\\
-    \bottomrule
+  \begin{tabular}{|l|r|r|r|}
+    \hline
+    \textbf{Component} & \textbf{Flight Controller} & \textbf{Redundant GNSS} & \textbf{Value}\\
+    \textbf{} & \textbf{Quantity} & \textbf{Quantity} & \textbf{(mA)}\\ 
+    \hline
+    ICM-42688-P\tablefootnote{\url{https://invensense.tdk.com/products/motion-tracking/6-axis/icm-42688-p/}} & 2  & 1 & 0.88\\
+    STM32H743VGT6\tablefootnote{\url{https://www.st.com/en/microcontrollers-microprocessors/stm32h743vg.html}} & 1 & 0 & 165\\
+    MSPM0G3506SRHBR\tablefootnote{\url{https://www.ti.com/product/MSPM0G3506/part-details/MSPM0G3506SRHBR}} & 0 & 1 & 8\\
+    MAX-F10S-00B\tablefootnote{\url{https://www.u-blox.com/en/product/max-f10s-module}} & 0 & 1 & 200\\
+    LEDs & 3 & 0 & 20 \\
+    Misc & 1 & 1 & 20 \\ 
+    \hline
+    \textbf{Total} & \textbf{246.76 mA} & \textbf{228.88 mA} & \textbf{}\\
+    \hline
   \end{tabular}
+  \caption{Current Draws}
+  \label{tab:current-draws}
 \end{table}

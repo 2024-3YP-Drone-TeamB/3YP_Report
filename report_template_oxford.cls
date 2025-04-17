@@ -207,7 +207,7 @@
 \usepackage{tikz}
 \usepackage{array}
 \usepackage{ifthen}
-
+\usepackage{gensymb}
 % Corrected command: draws a code of 6 symbols.
 \newcommand{\drawcode}[4]{%
   \begin{tikzpicture}[scale=0.5, baseline=-0.5ex]
