@@ -1,19 +1,22 @@
-\begin{algorithm}
-    \caption{Smoothing}
-    \label{alg:flow}
-\begin{algorithmic}[1]
-    \While{not $Converged$}
-        \State $Converged \gets TRUE$
-        \For{each Node $n$}
-            \For{each \textit{neighbour} in $n.\textit{neighbours}$}
-                \State $\textit{movement\_cost} \gets n.\textit{crashing\_cost} \cdot \frac{1 - p}{2} +  \textit{neighbour}.\textit{crashing\_cost} \cdot \frac{p(1 - p)}{2}$
-                \State $\textit{total\_cost} \gets \textit{movement\_cost} + p \cdot \textit{neighbour.path\_cost}$
-                \If{$\textit{total\_cost} < n.\textit{path\_cost}$}
-                    \State $n.\textit{path\_cost} \gets \textit{total\_cost}$
-                    \State $Converged \gets FALSE$
-                \EndIf
-            \EndFor
-        \EndFor
+\begin{algorithm}[htbp]
+  \caption{Graph Based Smoothing}
+  \label{alg:flow}
+  \begin{algorithmic}[1]
+    \Require A directed graph \(G=(V,E)\), crashing cost \(c(v)\) and landing cost \(l(v)\) for each \(v\in V\), probability \(p\in[0,1]\).
+    \Ensure Converged path-cost estimates \(d(u)\) for all \(u\in V\).
+    \ForAll{\(u\in V\)}  
+      \State \(d(u)\gets l(u)\) \Comment{Default to landing cost}
+    \EndFor
+    \State \(\mathit{Converged}\gets \text{false}\)
+    \While{not \(\mathit{Converged}\)}
+      \State \(\mathit{Converged}\gets \text{true}\)
+      \ForAll{\((u\to v)\in E\)}
+        \State \(w \gets c(u)\,(1-p)\;+\;c(v)\,p(1-p)\) \Comment{Movement Cost}
+        \If{\(w + p\,d(v) < d(u)\)}
+          \State \(d(u)\gets w + p\,d(v)\)
+          \State \(\mathit{Converged}\gets \text{false}\)
+        \EndIf
+      \EndFor
     \EndWhile
-\end{algorithmic}
+  \end{algorithmic}
 \end{algorithm}

@@ -1,25 +1,27 @@
-\begin{algorithm}
-\caption{Exhaustive Search}
-\label{alg:search}
-\begin{algorithmic}[1]
-    \For{each Node $n$}
-        \State $\textit{min\_cost} \gets \infty$
-        \State $n.path\_cost$ = \Call{search}{$n$, $p$, $1$, $0$, $depth$, $\textit{min\_cost}$}
+\begin{algorithm}[htbp]
+  \caption{Exhaustive Search}
+  \label{alg:search}
+  \begin{algorithmic}[1]
+    \Require Directed graph \(G=(V,E)\), crashing cost \(c(v)\) and landing cost \(l(v)\) for all \(v\in V\), probability \(p\in[0,1]\), max depth \(D\)
+    \Ensure Path-cost estimates \(d(v)\) for all \(v\in V\)
+    \ForAll{\(u\in V\)}
+      \State \(\mathit{minCost}\gets \infty\)
+      \State \(d(u)\gets \Call{Search}{u,\,p,\,1,\,0,\,D,\,\mathit{minCost}}\)
     \EndFor
-    
-    \Function{search}{$n$, $p$, $p\_alive$, $cost$, $depth$, \textbf{ref} $\textit{min\_cost}$}
-        \State $\textit{current\_cost} \gets cost + p\_alive \cdot n.\textit{landing\_cost}$
-        \If{$\textit{current\_cost} < \textit{min\_cost}$}
-            \State $\textit{min\_cost} \gets \textit{current\_cost}$
-        \EndIf
-        \If{$depth = 0$ $\mathbf{or}$ $n.\textit{landing\_cost} = 0$ $\mathbf{or}$ $cost > \textit{min\_cost}$}
-            \State \Return
-        \EndIf
-        \For{each $\textit{neighbour}$ in $n.\textit{neighbours}$}
-            \State $p\_alive\_next \gets p\_alive \cdot p$
-            \State $cost\_next \gets cost + p\_alive \cdot (1 - p) \cdot n.\textit{crashing\_cost}$
-            \State \Call{search}{$\textit{neighbour}$, $p$, $p\_alive\_next$, $cost\_next$, $depth - 1$, $\textit{min\_cost}$}
-        \EndFor
+
+    \Function{Search}{$(u,p,p_{\mathit{alive}},\mathit{cost},\mathit{depth},\mathbf{ref},\mathit{minCost})$}
+      \State \(\mathit{currCost}\gets \mathit{cost} + p_{\mathit{alive}}\;\cdot\; l(u)\)
+      \If{\(\mathit{currCost}<\mathit{minCost}\)}
+        \State \(\mathit{minCost}\gets \mathit{currCost}\)
+      \EndIf
+      \If{\(\mathit{depth}=0 \;\vee\; l(u)=0 \;\vee\; \mathit{cost}>\mathit{minCost}\)}
+        \State \Return
+      \EndIf
+      \ForAll{\((u\to v)\in E\)}
+        \State \(p'_{\mathit{alive}}\gets p_{\mathit{alive}}\;\cdot\;p\)
+        \State \(\mathit{cost}'\gets \mathit{cost} + p_{\mathit{alive}}\;(1-p)\;\cdot\;c(u)\)
+        \State \Call{Search}{$(v,\,p,\,p'_{\mathit{alive}},\,\mathit{cost}',\,\mathit{depth}-1,\,\mathit{minCost})$}
+      \EndFor
     \EndFunction
-\end{algorithmic}
+  \end{algorithmic}
 \end{algorithm}
