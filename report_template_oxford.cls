@@ -86,10 +86,21 @@
 \newacronym{tsp}{TSP}{Travelling Salesman Problem}
 \newacronym{tspo}{TSP-O}{Travelling Salesman Problem with Obstacles}
 \newacronym{roi}{ROI}{Region of Interest}
-\newacronym{poi}{POI}{Point of Interest}
 \newacronym{gis}{GIS}{Geographic Information System}
 \newacronym{qgis}{QGIS}{Quantum Geographic Information System}
 \newacronym{cgal}{CGAL}{Computational Geometry Algorithms Library}
+\newacronym{bcd}{BCD}{Boustrophedon Cellular Decomposition}
+\newacronym{tcd}{TCD}{Trapezoidal Cellular Decomposition}
+\newacronym{cdt}{CDT}{Constrained Delaunay Triangulation}
+\newacronym{ccdt}{CCDT}{Constrained Conforming Delaunay Triangulation}
+\newacronym{lora}{LoRa}{Long Range}
+\newacronym{lorawan}{LoRaWAN}{Long Range Wide Area Network}
+\newacronym{lpwan}{LPWAN}{Low-Power Wide Area Network}
+\newacronym{css}{CSS}{Chirp Spread Spectrum}
+\newacronym{phy}{PHY}{Physical}
+\newacronym{mac}{MAC}{Medium Access Control}
+\newacronym{ism}{ISM}{Industrial, Scientific and Medical}
+\newacronym{gnss}{GNSS}{Global Navigation Satellite System}
 \newacronym{gpr}{GPR}{Ground Penetrating Radar}
 \newacronym{gpsar}{GPSAR}{Ground Penetrating Synthetic Aperture Radar}
 \newacronym{anfis}{ANFIS}{Adaptive Neuro Fuzzy Inference System}
@@ -161,6 +172,7 @@
 \usepackage{booktabs}
 \usepackage{import}
 \usepackage{hyperref}
+\usepackage{tabularx}
 
 \usepackage{tikz}
 
