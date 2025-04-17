@@ -106,6 +106,7 @@
 \newacronym{anfis}{ANFIS}{Adaptive Neuro Fuzzy Inference System}
 \newacronym{lwir}{LWIR}{Long Wavelength Infrared}
 \newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{poi}{POI}{Point of Interest}
 
 %%% SAM ACRONYMS
 \newacronym{lipo}{LiPo}{lithium polymer}
