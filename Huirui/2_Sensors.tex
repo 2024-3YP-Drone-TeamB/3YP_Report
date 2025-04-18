@@ -1,32 +1,35 @@
-\subsection{Sensors}
+\subsection{Overview of Drone-Based Landmine Detection Techniques}
 
-\subsubsection{Landmine Detection Techniques}
+Landmine detection technologies have evolved to encompass a wide range of sensing principles, each targeting specific physical, chemical, or biological characteristics of surface-laid and buried mines. 
 
-Landmine detection technologies have evolved to encompass a wide range of sensing principles, each targeting specific physical, chemical, or biological characteristics of surface-laid and buried mines. Broadly, these methods can be categorized into five general classes: \textit{\textbf{electromagnetic induction-based} techniques}, \textit{\textbf{radiowave and microwave-based} systems}, \textit{\textbf{spectral and thermal imaging} approaches}, \textit{\textbf{mechanical and vibro-acoustic} methods}, and \textit{\textbf{chemical and biological} sensing methods}. Within each class, a variety of specialized detection technologies have been developed, including traditional metal detectors, ground-penetrating radar, infrared and hyperspectral imaging, seismic/acoustic sensors, vapor detection, and biosensors. Each of these approaches offers distinct advantages and faces specific limitations, especially when adapted to drone-based platforms for remote and efficient minefield scanning. In the following subsections, each class is explored in detail, with emphasis on the operating principles, detection capabilities, challenges, and documented UAV-based applications.
+Landmine detection relies on a variety of sensing techniques, each designed to identify specific physical, chemical, or biological features of buried or surface-laid explosives. These methods can be grouped into five main categories: electromagnetic induction-based techniques, radiowave and microwave-based systems, spectral and thermal imaging approaches, mechanical and vibro-acoustic methods, and chemical and biological sensing methods. Within each class, a variety of specialized technologies have been developed, including metal detectors, ground penetrating radar (GPR), optical and infrared cameras, seismic/acoustic sensors, biosensors, etc. Each approaches offers distinct advantages and faces unique limitations, especially when adapted to UAV platforms for remote and efficient minefield scanning. In the following subsections, each class is reviewed in details focusing on their working principles and drone applications.
 
-\paragraph{Electromagnetic Induction-Based Techniques}
 
-Electromagnetic induction (EMI) methods operate by exploiting the interaction between electromagnetic fields and conductive or magnetic materials in the ground. These systems are typically composed of a transmitter coil that emits a time-varying electromagnetic field into the soil. When this field encounters a conductive object—such as a landmine with metallic components—it induces eddy currents within the object, which in turn generate a secondary magnetic field. This field is detected by a receiver coil, and the resulting signal is processed to infer the presence of the object. These principles form the basis of conventional \textbf{metal detectors}~\cite{gichd2006guidebook}.
 
-In contrast, \textbf{magnetic sensors} or magnetometers do not actively induce eddy currents but instead measure disturbances in the Earth's ambient magnetic field caused by nearby ferromagnetic objects. While metal detectors rely on electromagnetic induction to detect a wide range of conductive materials, magnetometers are primarily sensitive to ferrous (iron-containing) materials and are particularly effective in detecting anomalies in the magnetic environment\footnote{\label{magnetometerfootnote}\url{https://www.sphengineering.com/integrated-systems/technologies/magnetometer}}.
+\subsubsection{Electromagnetic Induction-Based Techniques}
+
+Electromagnetic induction (EMI) methods operate by exploiting the interaction between electromagnetic fields and conductive or magnetic materials in the ground. These systems are typically composed of a transmitter coil that emits a time-varying electromagnetic field into the soil. When this field encounters a conductive object, such as a landmine with metallic components, it induces eddy currents within the object, which in turn generate a secondary magnetic field. This field is detected by a receiver coil, and the resulting signal is processed to infer the presence of the object. These principles form the basis of conventional \textbf{metal detectors}~\cite{gichd2006guidebook}.
+
+In contrast, \textbf{magnetic sensors} or magnetometers do not actively induce eddy currents but instead measure disturbances in the Earth's ambient magnetic field caused by nearby ferromagnetic objects. While metal detectors rely on electromagnetic induction to detect a wide range of conductive materials, magnetometers are primarily sensitive to ferrous (iron-containing) materials and are particularly effective in detecting anomalies in the magnetic environment\footnote{\url{https://www.sphengineering.com/integrated-systems/technologies/magnetometer}}.
 
 Several specialized EMI sensors have been developed, including induction coil imaging systems that generate spatial maps of subsurface metallic objects, conductivity meters that monitor variations in soil conductivity through eddy current decay, and a range of magnetometers such as fluxgate, proton precession, optically pumped atomic, and meandering winding designs. Each sensor type offers specific trade-offs in sensitivity, resolution, and robustness, and may be selected based on the expected mine characteristics and deployment constraints~\cite{Gooneratne2004ARO, Bruschini1997ASO}.
 
+\paragraph{Drone Applications} EMI-based sensors have been applied to UAV platforms in a number of recent studies~\cite{yoo2020drone,yoo2021application,rs16162916,Yoo2024UnmannedAV}. These implementations include both metal detectors and magnetometers mounted on drones for low-altitude scanning of mine-affected areas. Figure~\ref{fig:metal_detector_drone} shows an example of a UAV equipped with a metal detector, while Figure~\ref{fig:magnetometer_drone} illustrates a drone-mounted magnetometer system. Among these approaches, \textbf{magnetometers} have emerged as the most commonly used EMI technique in UAV-based landmine detection research.
 
-\textbf{Drone-Based Applications:} EMI sensors have been successfully integrated into UAV platforms in numerous studies~\cite{yoo2020drone,yoo2021application,rs16162916,Yoo2024UnmannedAV}. These include implementations of both lightweight metal detectors and magnetic sensors for aerial surveying of minefields. Figure~\ref{fig:metal_detector_drone} shows an example of a UAV equipped with a metal detector for low-altitude scanning, while Figure~\ref{fig:magnetometer_drone} illustrates a UAV-mounted magnetometer designed for aerial magnetic anomaly detection. 
+Despite their low cost and light weight, magnetometer-based UAV systems face several significant limitations that hinder their effectiveness in practical demining scenarios. First, effective detection of small metallic objects typically requires low flight altitudes (often below 1 meter) to maintain a strong magnetic signal-to-noise ratio~\cite{yoo2020drone,Yoo2024UnmannedAV}. This constraint increases the risk of collision with obstacles and complicates UAV control, particularly in rugged or vegetated terrain. Second, magnetometers are highly susceptible to electromagnetic interference generated by the drone’s motors, battery cables, and onboard electronics. To mitigate this, the sensors must be physically separated from the UAV by a distance of 1--2 meters~\cite{Yoo2024UnmannedAV,rs16162916}. While this approach reduces magnetic noise, it also introduces mechanical complexity and reduces system stability, especially during low-altitude flight in cluttered environments. Most importantly, magnetometers are fundamentally limited in their detection scope: they are ineffective against plastic or low-metal-content landmines~\cite{garcia2020airborne,vsipovs2020lightweight}.
 
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figs/Huirui/metal_detector_drone.png}
+        \includegraphics[height=5cm]{figs/Huirui/metal_detector_drone.png}
         \caption{UAV-mounted metal detector system\protect\footnotemark.}
         \label{fig:metal_detector_drone}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figs/Huirui/magnetometer_drone.png}
+        \includegraphics[height=5cm]{figs/Huirui/magnetometer_drone.png}
         \caption{Drone-based magnetometer platform~\cite{yoo2020drone}.}
         \label{fig:magnetometer_drone}
     \end{subfigure}
@@ -36,57 +39,57 @@ Several specialized EMI sensors have been developed, including induction coil im
 
 \footnotetext{\url{https://www.sphengineering.com/news/sph-engineering-introduces-the-drone-integrated-metal-detection-system}}
 
-\paragraph{Radiowave and Microwave-Based Systems}
 
-Ground Penetrating Radar (GPR) is a non-invasive geophysical technique that uses electromagnetic waves in the microwave frequency range (typically from several hundred MHz to a few GHz) to detect subsurface anomalies~\cite{gichd2006guidebook}. Unlike EMI-based systems, which respond to conductive or magnetic properties, GPR is sensitive to variations in the dielectric properties of materials~\cite{Gooneratne2004ARO}. It operates by transmitting short-duration radio pulses into the ground via a wideband antenna. When these pulses encounter boundaries between materials with different dielectric constants—such as between soil and a buried landmine—they are partially reflected. The reflected signals are then captured by a receiving antenna, and the time delay and intensity are analyzed to estimate the depth, shape, and dielectric contrast of subsurface targets~\cite{alqudsi2021review, paik2002image}.
+
+\subsubsection{Radiowave and Microwave-Based Systems}
+
+Ground Penetrating Radar (GPR) is a non-invasive geophysical technique that uses electromagnetic waves in the microwave frequency range (typically from several hundred MHz to a few GHz) to detect subsurface anomalies~\cite{gichd2006guidebook}. Unlike EMI-based systems, which respond to conductive or magnetic properties, GPR is sensitive to variations in the dielectric properties of materials~\cite{Gooneratne2004ARO}. It operates by transmitting short-duration radio pulses into the ground via a wideband antenna. When these pulses encounter boundaries between materials with different dielectric constants—such as between soil and a buried landmine—they are partially reflected. The reflected signals are then captured by a receiving antenna, and the time delay and intensity are analyzed to estimate the depth, shape, and dielectric contrast of subsurface targets~\cite{alqudsi2021review,paik2002image}.
 
 As the antenna is moved across the ground, successive measurements are combined to construct two-dimensional slices (radargrams) or even three-dimensional volumetric representations of the subsurface~\cite{Bruschini1997ASO}. The effectiveness of GPR depends heavily on the contrast between the dielectric properties of the object and the surrounding soil. High-frequency systems offer better resolution and are more suited for detecting small anti-personnel mines, while lower-frequency systems provide deeper penetration but at the cost of detail~\cite{gichd2006guidebook}.
 
-
-\textbf{Drone-Based Applications:} GPR has been widely explored for drone integration due to its capability to detect plastic-cased mines and to provide volumetric subsurface data. UAV-mounted GPR systems typically use lightweight ultra-wideband (UWB) antennas and operate at low altitude to maintain signal fidelity. Applications include detecting anti-tank and anti-personnel mines in varied terrain types, including sand, loam, and clay ~\cite{cerquera2017uav,vsipovs2020lightweight,colorado2017integrated,garcia2020airborne,garcia2019autonomous,burr2018design,fernandez2021development,lee2023modeling,sipos2017drone,garcia2022safedrone,schartel2018uav,chen2023ground}. Figure~\ref{fig:gpr_uav_examples} shows two UAV-based implementations of GPR for landmine detection.
+\paragraph{Drone Applications} A variety of lightweight GPR systems have been successfully mounted onto drones and tested for landmine detection in different soil types, including sand, loam, and clay~\cite{cerquera2017uav,vsipovs2020lightweight,colorado2017integrated,garcia2020airborne,garcia2019autonomous,burr2018design,fernandez2021development,lee2023modeling,sipos2017drone,garcia2022safedrone,schartel2018uav,chen2023ground}. Figure~\ref{fig:gpr_uav_examples} illustrates two representative implementations of UAV-mounted GPR for landmine detection.
 
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figs/Huirui/gpr_drone1.png}
+        \includegraphics[height=5cm]{figs/Huirui/gpr_drone1.png}
         \label{fig:gpr_drone1}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figs/Huirui/gpr_drone2.png}
+        \includegraphics[height=5cm]{figs/Huirui/gpr_drone2.png}
         \label{fig:gpr_drone2}
     \end{subfigure}
     \caption{Examples of UAV platforms integrating GPR systems for landmine detection.~\cite{garcia2022safedrone,cerquera2017uav}}
     \label{fig:gpr_uav_examples}
 \end{figure}
 
-\paragraph{Spectral and Thermal Imaging Approaches}
-
-Spectral and thermal imaging techniques detect anomalies in the electromagnetic radiation reflected or emitted from the Earth's surface. These methods aim to identify visual or thermal patterns associated with landmines or disturbed soil above them. The three primary sensor modalities in this class include visible-spectrum (optical) imaging, thermal infrared (IR) imaging, and hyperspectral or multispectral imaging.
-
-\textbf{Optical cameras} operate in the visible light range and capture color or grayscale images of the terrain. They are primarily used to identify surface-laid landmines or areas with disturbed soil resulting from recent burial. These systems rely on texture and shape contrast, and their effectiveness depends on unobstructed ground visibility and minimal vegetation~\cite{cardonalandmine}.
-
-\textbf{Thermal infrared imaging} detects differences in heat emissions between landmines and surrounding soil. Due to variations in thermal conductivity and heat capacity, mines retain or release heat at different rates, producing temperature contrasts that can be sensed with thermal cameras. These contrasts may arise from volume effects (influences on subsurface heat flow) or surface effects (soil disturbance from burial). Thermal infrared imaging is most effective during diurnal transitions, such as early morning or late evening~\cite{Bruschini1997ASO,paik2002image,hutsul2024review}.
-
-\textbf{Hyperspectral and multispectral imaging} collect data across many discrete spectral bands, spanning the visible, near-infrared, and shortwave infrared regions. These sensors are used to detect subtle changes in soil composition, vegetation stress, or camouflage indicative of buried mines~\cite{robledo2009survey,alqudsi2021review}.
+UAV-based GPR systems have demonstrated strong capabilities in detecting both metallic and non-metallic buried landmines~\cite{vsipovs2020lightweight,colorado2017integrated}. They are relatively robust against surface clutter and can operate under various weather and lighting conditions~\cite{noviello2022overview}. However, their effectiveness is significantly reduced in highly conductive or moist soils where radar signals experience strong attenuation in underground transmission~\cite{lee2023modeling}. Additionally, rough or cluttered terrain can interfere with signal clarity due to increased scattering and poor coupling with the ground~\cite{yoo2021application}. Signal attenuation from altitude and scattering at the air-soil interface might also obscure returns from shallow targets~\cite{garcia2019autonomous}. Despite recent progress in lightweight system development (e.g., 250 g and 5 W GPR systems)~\cite{colorado2017integrated}, low-altitude operation (typically between 0.5--2.5 meters) remains essential for accurately detecting small or shallow landmines, which increases flight risk and limits area coverage efficiency~\cite{vsipovs2020lightweight,colorado2017integrated,fernandez2021development}.
 
 
-\textbf{Drone-Based Applications:} UAV-based deployment of optical, thermal, and hyperspectral sensors has been demonstrated extensively for minefield surveying and detection~\cite{dena2020image,10.1117/12.2177182,Popov2022MethodFM,rs15040967,Baur2021HowTI,baur2020applying,AgrawalChung2024ComparingSL,10765909,6842242,rs16122046,qiu2023joint,ptsa-qj43-23,TENORIOTAMAYO2023109443,nikulin2018detection,FORERORAMIREZ2022104307,TENORIOTAMAYO2024105567,krause2018diurnal,Fardoulis2020PROOFHS,butt2024uav}. Figure~\ref{fig:thermal_camera_drone} shows an example of a UAV equipped with a thermal camera for landmine detection, while Figure~\ref{fig:optical_camera_drone} illustrates a UAV-mounted multispectral sensors. 
+
+\subsubsection{Spectral and Thermal Imaging Systems}
+
+Spectral and thermal imaging systems utilize differences in electromagnetic radiation reflected or emitted from the Earth's surface to detect surface or near-surface anomalies. These techniques are commonly used to identify thermal or visual signatures associated with landmines, disturbed soil, or stressed vegetation. The three principal sensor types in this class are optical (RGB) cameras, thermal infrared (IR) imagers, and hyperspectral/multispectral sensors.
+
+\textbf{Optical cameras} operate in the visible spectrum and are typically used for detecting surface-laid landmines or areas of disturbed terrain based on color, shape, or texture differences~\cite{cardonalandmine}. \textbf{Thermal infrared imaging} measures variations in surface temperature caused by differing thermal conductivities and capacities between buried mines and the surrounding soil. These differences are most detectable during transitional periods such as early morning or late evening and may stem from either volume effects or surface effects related to burial~\cite{Bruschini1997ASO,paik2002image,hutsul2024review}. \textbf{Hyperspectral and multispectral imaging} systems, which span from visible to shortwave infrared wavelengths, are capable of identifying subtle spectral anomalies in vegetation or soil that could indicate the presence of buried mines~\cite{robledo2009survey,alqudsi2021review}.
+
+\paragraph{Drone Applications} UAV-based spectral imaging systems have been extensively deployed in landmine detection studies~\cite{dena2020image,10.1117/12.2177182,Popov2022MethodFM,rs15040967,Baur2021HowTI,baur2020applying,AgrawalChung2024ComparingSL,10765909,6842242,rs16122046,qiu2023joint,ptsa-qj43-23,TENORIOTAMAYO2023109443,nikulin2018detection,FORERORAMIREZ2022104307,TENORIOTAMAYO2024105567,krause2018diurnal,Fardoulis2020PROOFHS,butt2024uav}. Figures~\ref{fig:thermal_camera_drone} and~\ref{fig:optical_camera_drone} illustrate UAVs equipped with thermal and multispectral sensors, respectively, for aerial landmine detection.
 
 \begin{figure}[h!]
     \centering
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figs/Huirui/thermal_camera_drone.png}
+        \includegraphics[height=3.5cm]{figs/Huirui/thermal_camera_drone.png}
         \caption{Thermal infrared camera mounted on UAV~\cite{nikulin2018detection}.}
         \label{fig:thermal_camera_drone}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figs/Huirui/multispectral_drone.png}
+        \includegraphics[height=3.5cm]{figs/Huirui/multispectral_drone.png}
         \caption{Multispectral camera mounted on UAV~\cite{qiu2023joint}.}
         \label{fig:optical_camera_drone}
     \end{subfigure}
@@ -94,38 +97,46 @@ Spectral and thermal imaging techniques detect anomalies in the electromagnetic 
     \label{fig:spectral_camera_drones}
 \end{figure}
 
-
-\paragraph{Mechanical and Vibro-Acoustic Methods}
-
-This class includes detection technologies that exploit the mechanical or vibrational response of buried mines when stimulated by acoustic, seismic, or ultrasonic energy. These methods differ from electromagnetic and radar-based systems by relying on the physical compliance of buried objects rather than their electromagnetic properties~\cite{Gooneratne2004ARO,gichd2006guidebook}.
-
-Acoustic and seismic techniques operate by transmitting low-frequency sound or seismic waves into the ground and measuring the reflected or re-radiated waves using contact or non-contact sensors. Mines are detected based on differences in their vibrational resonance, which contrasts with that of natural materials such as rocks, roots, or metal debris~\cite{gichd2006guidebook}. Similarly, ultrasound-based systems emit high-frequency acoustic waves (above 20 kHz) that reflect off material boundaries with different acoustic impedances. These reflections can be analyzed to image buried structures~\cite{paik2002image,cardonalandmine}.
+Among the available aerial spectral imaging approaches, thermal infrared cameras is the only one effective for detecting both surface and shallowly buried landmines. They can be deployed at altitudes of 5--10 meters while maintaining satisfactory detection accuracy~\cite{TENORIOTAMAYO2024105567,rs15040967}. Optical (RGB) cameras offer a low-cost and lightweight solution for identifying visible surface anomalies but are limited in vegetated or obscured environments and cannot detect buried landmines~\cite{Baur2021HowTI,6842242,rs16122046}. Hyperspectral and multispectral systems provide richer spectral information and can be used to detect soil or vegetation disturbances with high material specificity~\cite{10765909}. However, they are not optimized for the long-wave infrared (LWIR) range necessary for detecting subsurface objects~\cite{ptsa-qj43-23}. Furthermore, their high cost (up to twelve times greater than thermal infrared cameras) limits their practical use in large-scale UAV demining missions~\cite{rs15040967}.
 
 
-\textbf{Drone-Based Applications:} No practical implementations have been reported to date. Research in this area is still at an early conceptual stage, with ground-based systems dominating current development.
 
-\paragraph{Chemical and Biological Sensing Methods}
+\subsubsection{Other Detection Methods}
 
-These techniques target the detection of explosive compounds or their vapors emitted by buried landmines. The methods include chemical vapor sensors, biosensors, and systems utilizing trained animals or genetically engineered microorganisms~\cite{Gooneratne2004ARO,alqudsi2021review}.
+In addition to the mainstream sensing methods discussed above, several alternative techniques have been explored for landmine detection. These include mechanical, acoustic, chemical, and biological approaches. While some of these methods have demonstrated promising results in controlled or ground-based experiments, they remain largely underexplored in UAV-based applications.
 
-Biological methods involve using animals such as dogs, rats, or bees, or genetically modified bacteria that fluoresce in the presence of explosive molecules like TNT. Bacteria-based systems can be sprayed over a suspected minefield and monitored later for fluorescence~\cite{cardonalandmine}. Chemical sensors, by contrast, use materials such as polymer arrays or photoluminescent compounds to detect vapor signatures of explosives~\cite{alqudsi2021review}.
+\textbf{Mechanical and vibro-acoustic} methods identify landmines by analyzing their unique vibrational or acoustic responses to external stimuli. These techniques typically involve the transmission of low-frequency acoustic or seismic waves into the ground and the measurement of reflected signals using either contact or non-contact sensors. Buried landmines can be distinguished from background materials such as rocks or roots by their characteristic resonant signatures~\cite{Gooneratne2004ARO,gichd2006guidebook}. Ultrasound-based methods follow a similar principle, using high-frequency acoustic waves (above 20 kHz) to image subsurface features based on wave reflections from material boundaries~\cite{paik2002image,cardonalandmine}. Although effective in controlled tests, these methods generally require physical coupling with the ground or close-range proximity, making them unsuitable for most UAV platforms.
 
-
-\textbf{Drone-Based Applications:} No fully developed or fielded systems have yet been reported in practice. Most developments in this area remain at the theoretical level.
+\textbf{Chemical and biological} detection methods aim to identify explosive materials through emitted vapors or chemical markers. Chemical sensors based on polymer films or photoluminescent coatings, as well as biological agents such as trained animals or genetically modified bacteria, have been developed to detect compounds like TNT~\cite{Gooneratne2004ARO,alqudsi2021review}. One example involves the deployment of fluorescent bacteria over suspected minefields, with subsequent monitoring for a visible reaction~\cite{cardonalandmine}. However, these techniques face major challenges in drone integration, including the difficulty of sampling trace vapors from altitude and ensuring consistent sensor performance in variable environmental conditions.
 
 
-\paragraph{Comparative Analysis and Method Selection}
 
-The goal of this project is to develop a UAV-based landmine detection system capable of identifying both surface-laid and shallowly buried anti-personnel landmines. To ensure robustness and operational safety, the sensors should ideally be rigidly mounted onto the drone platform to minimize instability. Moreover, it is desirable to perform aerial scanning at altitudes greater than 1 meter to reduce the risk of ground collision and enhance area coverage efficiency. High scanning altitude improves flight safety and operational throughput but generally reduces the precision and resolution of subsurface sensing. Therefore, a careful trade-off is required between detection capability and system efficiency.
+\subsubsection{Comparative Summary and Method Selection}
 
-In this context, three main sensing modalities have been considered: magnetometers, GPR, and spectral imaging sensors (including optical, thermal, and hyperspectral/multispectral cameras). Additionally, other sensing methods such as biosensors and acoustic/vibro-mechanical sensors are excluded from detailed consideration due to their limited maturity for UAV integration. Existing research on biosensors and acoustic techniques for landmine detection remains largely theoretical, and no practical drone-based implementations have been reported to date.
+The goal of this project is to develop a UAV-based landmine detection system capable of identifying both surface-laid and buried anti-personnel landmines. To ensure operational safety and efficient area coverage, the selected sensors must be suitable for aerial deployment at altitudes above 1 meter and must be rigidly mounted on the drone platform. In this context, three classes of sensing approaches are considered: \textbf{magnetometers}, \textbf{ground-penetrating radar (GPR)}, and \textbf{spectral imaging sensors}, including optical, thermal, and hyperspectral or multispectral cameras. The quantitative comparison of the evaluated sensors (1 = very favorable, 5 = very unfavorable) on detection capability, accuracy, power usage, system complexity, and cost, with is summarized in Table~\ref{tab:sensor_comparison}.
 
-\textbf{Magnetometer-Based Systems:} Magnetometers offer a lightweight and cost-effective option for detecting metallic landmines through magnetic anomaly measurements. However, they suffer from several operational constraints. To reliably detect small metallic objects, the UAV must fly at altitudes below 1 meter, which increases the risk of collisions and introduces challenges in maintaining flight stability~\cite{yoo2020drone,Yoo2024UnmannedAV}. Magnetic sensors are also susceptible to interference from the drone's motors and electronics, requiring physical separation of up to 1--2 meters from the UAV body~\cite{Yoo2024UnmannedAV,rs16162916}. This design increases system complexity and degrades stability, especially in dense environments. Additionally, these systems are ineffective against plastic or low-metal content landmines~\cite{garcia2020airborne,vsipovs2020lightweight}, and they lack imaging capabilities, limiting their utility for buried target identification~\cite{lee2023modeling}.
 
-\textbf{Ground-Penetrating Radar (GPR):} GPR systems are highly effective for detecting both metallic and non-metallic buried landmines~\cite{vsipovs2020lightweight,colorado2017integrated}. They are relatively insensitive to surface clutter and can be used in all-weather, day/night operations~\cite{noviello2022overview}. However, their performance degrades significantly in highly conductive or moist soils~\cite{lee2023modeling}, and in the presence of rough or cluttered terrain~\cite{yoo2021application}. UAV-based GPR systems face challenges in signal attenuation due to altitude and scattering from the air-soil interface~\cite{garcia2019autonomous}. Although recent advancements have produced lightweight GPR units (e.g., 250 g with 5 W power consumption)~\cite{colorado2017integrated}, they still require low-altitude operation (0.5--2.5 m) to detect small or shallow mines accurately~\cite{vsipovs2020lightweight,colorado2017integrated,fernandez2021development}.
+\begin{table}[h]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Quantitative comparison of UAV-compatible landmine detection.}
+    \label{tab:sensor_comparison}
+    \begin{tabular}{l c c c c c c c}
+        \toprule
+        \textbf{Sensor Type} & \textbf{Robustness} & \textbf{Accuracy} & \textbf{Power} & \textbf{Weight} & \textbf{Complexity} & \textbf{Cost} & \textbf{Total} \\
+        \midrule
+        Thermal IR Camera        & 2 & 2 & 2 & 2 & 2 & 2 & 12 \\
+        Ground Penetrating Radar & 1 & 1 & 3 & 3 & 3 & 3 & 14 \\
+        Magnetometer             & 5 & 3 & 1 & 2 & 3 & 1 & 15 \\
+        Optical Camera           & 5 & 4 & 1 & 1 & 1 & 1 & 13 \\
+        Hyperspectral Sensor     & 4 & 3 & 5 & 5 & 5 & 5 & 27 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-\textbf{Spectral Imaging Sensors:} Optical, thermal, hyperspectral, and multispectral cameras provide high-resolution imaging for detecting surface-laid mines or anomalies caused by disturbed soil and vegetation. They can also be flown at high altitudes, enabling efficient scanning of large areas. Optical (RGB) cameras are inexpensive and lightweight but are ineffective for detecting buried objects and suffer from high false negative rates in areas with dense vegetation~\cite{Baur2021HowTI,6842242,rs16122046}. Hyperspectral and multispectral systems offer enhanced material discrimination and are useful for identifying subtle spectral changes~\cite{10765909}. Although hyperspectral sensors theoretically cover a wide spectral range, including near and shortwave infrared, they are typically not optimized for the long wave infrared (LWIR) band required to detect subsurface thermal anomalies~\cite{ptsa-qj43-23}. More importantly, these systems are significantly more expensive than thermal infrared cameras, with reported costs being roughly twelve times higher, which limits their practical deployment on UAVs for widespread demining applications~\cite{rs15040967}. Among all spectral options, thermal infrared imaging has shown the most promise for detecting both surface and shallowly buried landmines due to differences in thermal inertia and conductivity between disturbed and undisturbed soil~\cite{ptsa-qj43-23,10.1117/12.2177182,Fardoulis2020PROOFHS}. UAV-mounted thermal cameras can be flown at altitudes of 5--10 meters and still achieve satisfactory detection accuracy for shallow targets under favorable environmental conditions~\cite{TENORIOTAMAYO2024105567,rs15040967}.
+From Table~\ref{tab:sensor_comparison}, most options except hyperspectral cameras receive similar overall scores. This suggests that no single sensing modality can offer both wide-area coverage and accurate subsurface detection. Since these sensors can be broadly divided into high-altitude imaging systems (thermal or optical cameras) and low-altitude subsurface sensors (magnetometers or GPR), to ensure both efficiency and accuracy, a \textbf{layered sensing strategy} in which a high-altitude scan identifying regions of interest is followed by low-altitude inspections over those areas is adopted.
 
-\textbf{Proposed Layered Detection Architecture:} Given the operational requirements and individual limitations of each sensor type, no single sensing modality provides a complete solution. Magnetometers are limited to low altitudes and metallic targets; GPR systems, while versatile, are sensitive to terrain and moisture and require low-altitude flights; and optical or hyperspectral sensors cannot detect buried targets reliably. Therefore, a layered sensing architecture is proposed.
+For high-altitude scanning, thermal infrared imaging is preferred over optical camera because the later one is limited to detecting visible surface features and cannot identify buried landmines. For low-altitude validation, GPR is selected over magnetometers due to its ability to detect both metallic and non-metallic landmines and a possible safer flight altitude (above 1 m).
 
-In this framework, a thermal infrared camera operating at 5--10 meters altitude is used to perform an initial wide-area scan. Owing to its ability to detect both surface and shallowly buried landmines at high altitudes, the thermal camera effectively identifies thermally anomalous zones for further investigation. Subsequently, a UAV-mounted GPR unit is deployed at lower altitudes (1--5 meters) to conduct detailed subsurface scanning over the suspected regions. This radar system is selected for its ability to detect both metallic and non-metallic landmines with high resolution. By combining the efficiency and coverage of thermal imaging with the accuracy and material-agnostic detection of GPR, the proposed approach ensures both operational efficiency and robust landmine identification. The specific types and parameters of the thermal and GPR sensors used in this system, along with their corresponding flight configurations, will be discussed in the following sections.
+The final system design therefore integrates a thermal infrared camera for high-altitude scanning and a GPR for low-altitude confirmation. Details of the sensors' working principles and system configurations are presented in the following sections.
