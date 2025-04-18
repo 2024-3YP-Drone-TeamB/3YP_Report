@@ -5,7 +5,7 @@
 
 \subsubsection{Datasets Comparison} \label{sec:cv_dataset_comparison}
 
-The thermal dataset consists of 1,080 images sourced from Roboflow\footnote{\url{https://universe.roboflow.com/xamurani/landmines_detection}}, captured from altitudes between 1 and 10\,m, with mines of a wide variety, and buried between 0 and 5\,cm deep. This diversity allows the network to learn robust and generalisable features. In contrast, the radar dataset, again sourced from Roboflow\footnote{\url{https://universe.roboflow.com/hassan-sdqop/gpr-data-n3n5u}} comprises only 100 raw Bscans generated from simulated data. These Bscans are extremely \textit{'clean'}, and lack noisy effects caused by real-world conditions such as soil heterogeneity, surface roughness and vegetation, that would be seen by an operational radar sensor. The effect of soil heterogeneity on the radar Bscans is investigated in Section \ref{compvis_radarsims}. 
+The thermal dataset consists of 1,080 images sourced from Roboflow\footnote{\url{https://universe.roboflow.com/xamurani/landmines_detection}}, captured from altitudes between 1 and 10\,m, with mines of a wide variety, and buried between 0 and 5\,cm deep. This diversity allows the network to learn robust and generalisable features. In contrast, the radar dataset, again sourced from Roboflow\footnote{\url{https://universe.roboflow.com/hassan-sdqop/gpr-data-n3n5u}} comprises only 100 raw B-scans generated from simulated data. These B-scans are extremely \textit{'clean'}, and lack noisy effects caused by real-world conditions such as soil heterogeneity, surface roughness and vegetation, that would be seen by an operational radar sensor. The effect of soil heterogeneity on the radar B-scans is investigated in Section \ref{compvis_radarsims}. 
 
 \begin{figure}[htbp]
   \centering
@@ -28,7 +28,7 @@ The thermal dataset consists of 1,080 images sourced from Roboflow\footnote{\url
 
 \subsubsection{Architecture Comparison} \label{sec:cv_architecture_comparison}
 
-Both models are built on the YOLOv11 Large model\footnote{\url{https://github.com/ultralytics/ultralytics}}, which prescribes the final network architecture; the thermal model results in a deeper network with 464 layers and 25,280,083 parameters, while the radar model, despite having the same parameter count, is shallower, with only 190 layers. This difference likely reflects the greater complexity required to extract features from the diverse thermal images, compared to the more uniform raw radar Bscans. For more detail of the YOLOv11 model, see \cite{khanam2024yolov11}
+Both models are built on the YOLOv11 Large model\footnote{\url{https://github.com/ultralytics/ultralytics}}, which prescribes the final network architecture; the thermal model results in a deeper network with 464 layers and 25,280,083 parameters, while the radar model, despite having the same parameter count, is shallower, with only 190 layers. This difference likely reflects the greater complexity required to extract features from the diverse thermal images, compared to the more uniform raw radar B-scans. For more detail of the YOLOv11 model, see \cite{khanam2024yolov11}
 
 \subsubsection{Training} \label{sec:cv_training_comparison}
 
@@ -95,7 +95,7 @@ Chosen confidence threshold & 0.299 & 0.405 \\
         
         \paragraph{RADAR} 
 
-            \noindent The motivation behind the radar computer vision simulations is clear. The publicly available datasets are so limited in their diversity and size that they may not be useful for training models to detect landmines in real, noisy Bscans. Bscans need to be produced in simulation using as few assumptions as possible, attempting to replicate some of the physical noise-generating processes, as opposed to solely adding statistical noise to a 'clean' Bscan. In Section \ref{compvis_radarsims}, the effect of heterogeneous soil variability is investigated. This has not been thoroughly investigated in literature, as noted by Van Dam et al. \cite{van2003effects}: \textit{“The important role of soil variability has hardly been systematically studied.”}
+            \noindent The motivation behind the radar computer vision simulations is clear. The publicly available datasets are so limited in their diversity and size that they may not be useful for training models to detect landmines in real, noisy B-scans. B-scans need to be produced in simulation using as few assumptions as possible, attempting to replicate some of the physical noise-generating processes, as opposed to solely adding statistical noise to a 'clean' B-scan. In Section \ref{compvis_radarsims}, the effect of heterogeneous soil variability is investigated. This has not been thoroughly investigated in literature, as noted by Van Dam et al. \cite{van2003effects}: \textit{“The important role of soil variability has hardly been systematically studied.”}
             This would allow for validation of whether the model is robust to noise not represented in its training data. If it is, then a more advanced model trained on real experimental data would outperform this model significantly, and be effective in operation.
     
     
