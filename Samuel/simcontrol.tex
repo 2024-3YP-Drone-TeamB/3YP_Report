@@ -44,7 +44,7 @@ fill=green!30]
 
 \section{Simulation and Control}
 
-\subsection{Overview}
+\subsection{Introduction and Overview}
 
 In this section of the project, software was developed to simulate the multi-agent aerial robotic system. For a drone to be able to capture useful images, it is essential that the drone can hover with minimal disturbance to its position. Achieving this stability requires a controller that is robust against sensor noise and environmental disturbances. The development of the flight control system focused on ensuring that the \gls{uav} was sufficiently stable during a period of hovering while also making the controller robust for general flight.
 
@@ -54,7 +54,7 @@ The results obtained in this section were generated solely from simulations run 
 
 Real-time environmental conditions were also modelled in the simulations. The controller would then be implemented onboard the drone using embedded C. The details of the hardware and software used to perform these simulations are outlined in Table \ref{tab:computersetup}. The ARM GNU Toolchain is used to test the C code developed for use onboard the drone.  
 \begin{table}[h]
-\vspace{10mm}
+\vspace{5mm}
 \begin{center}
 \begin{tabular}{| p{6cm}|p{10cm}|}
  \hline
@@ -65,7 +65,8 @@ Real-time environmental conditions were also modelled in the simulations. The co
  Operating System and Version & Windows 11 Home, Version 23H2, OS Build 22631.4460 \\ 
  Memory (RAM)                 & 16 GB DDR4-3200 SDRAM (2x8GB)      \\  
  Storage                      & HP 512GB PCIe NVMe M.2 SSD            \\ 
- MATLAB Version               & 24.2.0.2712019 (R2024b) \\ 
+ MATLAB Version               & 24.2.0.2712019 (R2024b) \\
+ Simulink Control Loop Rate&400 Hz\\ 
   Python Version& Python 3.12.1\\
  C Version&C17 (ISO/IEC 9899:2018)\\ 
  GNU Toolchain& ARM GNU Toolchain 12.3.Rel1 (for STM32H7)\\ 
@@ -78,7 +79,7 @@ Real-time environmental conditions were also modelled in the simulations. The co
 
 Figure \ref{fig:simctrloverview} shows the overall scheme of the simulation and control process. First, the location coordinates were passed into the software to enable environmental, weather and climate effects to be accurately modelled. Next, the \gls{cad} model of the drone was analysed to represent the drone's dynamics within the simulation.
 
-An iterative simulation and refinement process was then used to determine the required parameters for the cascade \gls{pid} controller used. These steps made use of the Meteomatics API to provide accurate weather data, as explained in Section \ref{gust}. Deployment of the optimised controller was then simulated in conjunction with the \gls{bms} to ensure that the drone had adequate battery capacity for the planned mission. 
+An iterative simulation and refinement process was used to determine the required parameters for the cascade \gls{pid} controller used. These steps made use of the Meteomatics API to provide accurate weather data, as explained in Section \ref{gust}. Deployment of the optimised controller was then simulated in conjunction with the \gls{bms} to ensure that the drone had adequate battery capacity for the planned mission. 
 
 Once a single drone had been modelled, the simulation was then extended to model the multi-agent operation in the presence of motor nonidealities and environmental disturbances. The increased complexity introduced by this approach was worthwhile since it provided additional confidence that each agent could carry out their mission while maintaining a safe distance from other agents. The controller parameters could then be uploaded to the drone instantaneously; the software implementation of the cascaded \acrshort{pid} controller is fixed, allowing the loop gains to be uploaded to the microcontroller as floating-point numbers.
 
@@ -163,7 +164,7 @@ In the hovering condition, position (\(x_c, y_c, z_c\)) and orientation (\(\phi,
 J = \int_0^\infty \left( x^\top Q x + u^\top R u \right) \, dt 
 \end{equation}
 
-$Q$ and $R$ represent the running state and input penalties, respectively. It is necessary to achieve a balance between minimising disturbances and having input demands that can reasonably be met by the actuators and battery, meaning that there is an inherent compromise between control effort and performance. As there is no set method for selecting the state and input costs, \textbf{Bryson's rule} is used to heuristically select appropriate diagonal $Q$ and $R$ matrices by setting $Q_{ii} = \frac{1}{\text{maximum acceptable}( [x_i]^2 )}$ and $R_{ii} = \frac{1}{\text{maximum acceptable}( [u_i]^2 )}$ where $[x_i]$ and $[u_i]$ are the states and inputs respectively \cite{chibum2014adv09designofsfb1}. These values are selected according to the drone's sensing capabilities and flight hardware. $Q$ and $R$ are then tuned iteratively to produce the final LQR controller design.
+$Q$ and $R$ represent the running state and input penalties, respectively. It is necessary to achieve a balance between minimising disturbances and having input demands that can reasonably be met by the actuators and battery, meaning that there is an inherent compromise between control effort and performance. Because there is no set method for selecting the state and input cost matrices, \textbf{Bryson's rule} is used to heuristically select appropriate diagonal $Q$ and $R$ matrices by setting $Q_{ii} = ({\text{maximum acceptable}( [x_i]^2 )})^{-1}$ and $R_{ii} = ({\text{maximum acceptable}( [u_i]^2 )})^{-1}$ where $[x_i]$ and $[u_i]$ are the states and inputs respectively \cite{chibum2014adv09designofsfb1}. These values are selected according to the drone's sensing capabilities and flight hardware. $Q$ and $R$ are then tuned iteratively to produce the final LQR controller design.
 
 \subsubsection{Evaluation of Control Strategies}
 
@@ -296,7 +297,7 @@ To provide a consistent example throughout the report, a specific location and t
 \subsubsection{Simulation Results and Analysis}
 \label{simdata}
 
-The hardware and software designed for the drones were tested, and the results generated are shown in Table \ref{tab:mission_summary_extended} for the agents (\gls{uav}s) performing this mission. The \textbf{Flight Time Margin} is defined as the remaining flight time available at the end of the mission \cite{technologies11010012}. Standard practice is to have a \textbf{Flight Time Margin} of around 30\% of the total available flight time, however, a higher margin of roughly 40\% is targeted here since the drones are operating over hazardous minefields and carry expensive, sophisticated sensors. The results shown in Figure \ref{tab:mission_summary_extended} are consistent with expectations. They show that the designed battery can power the onboard sensors and a control system that keeps the drone sufficiently stable.
+The hardware and software designed for the drones were tested, and the results generated are shown in Table \ref{tab:mission_summary_extended} for the agents (\gls{uav}s) performing this mission. The power consumption of the motors and flight controller was monitored within Simulink, and for the remaining components, the average power draw stated by the manufacturer was used. The \textbf{Flight Time Margin} is defined as the remaining flight time available at the end of the mission \cite{technologies11010012}. Standard practice is to have a \textbf{Flight Time Margin} of around 30\% of the total available flight time, however, a higher margin of roughly 40\% is targeted here since the drones are operating over hazardous minefields and carry expensive, sophisticated sensors. The results shown in Table \ref{tab:mission_summary_extended} are consistent with expectations. They show that the designed battery can power the onboard sensors and a control system that keeps the drone sufficiently stable.
 
 \begin{table}[H]
 \centering
@@ -309,8 +310,7 @@ Energy Consumed (Wh)              & 179.8             & 188.5             & 176.
 Average Power Draw (W)            & 307.4             & 310.7             & 304.7             & 306.5             \\
 Flight Time Margin (minutes)      & 22.6              & 23.8              & 21.9              & 22.4              \\
 Average Battery Temperature ($^\circ$C) & 38.2              & 39.1              & 37.8              & 38.5              \\
-Max Battery Temperature ($^\circ$C)    & 45.6              & 46.3              & 44.9              & 45.2              \\
-Min Battery Temperature ($^\circ$C)    & 30.4              & 31.1              & 29.8              & 30.7              \\
+Maximum Battery Temperature ($^\circ$C)    & 45.6              & 46.3              & 44.9              & 45.2              \\
 \bottomrule
 \end{tabular}
 \caption{Mission Performance Summary for Multiple Agents}
@@ -344,7 +344,7 @@ The software can model an arbitrary number of drones operating simultaneously, a
 
 
 
-\subsection{Wind Mitigation}
+\subsection{Wind Gust Mitigation}
 \label{gust}
 Modelling the effects of wind disturbances is crucial to assessing the viability of a mission. Within the range of acceptable wind speeds, the controller must be sufficiently robust to wind disturbances so that the drone can maintain a steady hovering position. This requirement is necessary because a key constraint on the drone's sensing capabilities is its ability to accurately maintain a set reference position. The approach taken uses an Application Programming Interface (API) to access current and future weather data for the specified coordinates of the drone's mission and then takes the maximum wind speed as an input to the simulation. 
 
@@ -362,7 +362,7 @@ The  \textbf{Synthetic Minority Oversampling Technique (SMOTE)} algorithm can be
 
 In this instance, a basic implementation of the random forest classifier \cite{scikit-learn} is used in Python to classify the data. A labelled dataset is utilised from a previous implementation of drone gust detection \cite{gu2018wind}, and the data is preprocessed by introducing additive Gaussian noise (AGN) to simulate real-world sensor inaccuracies. The data is split using an \textbf{80/20 train-test split}, and the random forest model is then trained on the data. 
 
-To perform a comparative evaluation on the effect of the number of trees used in the random forest, the F-2 score is used as the performance metric because it prioritises recall over precision. The model's F-2 score is evaluated while varying the number of trees used. Figure \ref{fig:radchart} shows the average variation of performance metrics (including the F2 score) with an increasing number of trees. 
+To perform a comparative evaluation on the effect of the number of trees used in the random forest, the F-2 score is used as the performance metric because it prioritises recall over precision. The model's F-2 score is evaluated while varying the number of trees used. Figure \ref{fig:radchart} shows the average variation of performance metrics (including the F-2 score) with an increasing number of trees. 
 
 \subsubsection{Evaluation}
 
@@ -447,7 +447,7 @@ A \gls{uml} class diagram summarising the implementation is shown in Figure \ref
 
 
 
-\subsection{Ideas for Future Work}
+\subsection{Conclusion and Ideas for Future Work}
 
 \subsubsection{Control Techniques}
 

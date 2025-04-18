@@ -25,6 +25,7 @@
 
 \section{Battery Management System (BMS) and Battery Hardware}
 \label{sec:bms}
+\subsection{Introduction and Motivation}
 
 Although most drones do not contain one, an inbuilt \acrshort{bms} \cite{SON2023120186} provides many key advantages when performing landmine detection. A \acrshort{bms}, along with the corresponding bespoke circuit topology, supports the complex control system, high-quality sensor requirements and extended mission duration capabilities necessary for effective landmine detection. Additionally, it is possible to program a \acrshort{bms} to optimise the battery cells’ lifespan; both reducing the operating cost and the environmental impact of the drone.
 
@@ -35,9 +36,7 @@ Design of the \acrshort{bms} and selection of the associated components are cruc
 
 \subsubsection{Cell Comparison and Selection}
 
-The most important decision is selecting a battery cell chemistry. Drones typically use \gls{lipo} batteries\footnote{\acrshort{lipo} batteries are a subset of \acrshort{liion} batteries. Conventionally, \acrshort{liion} cells are taken to be those with a liquid electrolyte, whereas \acrshort{lipo} cells have a polymer electrolyte.} due to their high maximum discharge current \cite{10808488}. However, following recent developments, \gls{liion} batteries now have approximately 30\% higher gravimetric energy density than \acrshort{lipo} cells  \cite{Agrawal_2008}. Higher energy density permits longer flight times and carrying more sophisticated sensors, improving both the quality and quantity of the data gathered. \acrshort{liion} cells are also more durable and safer than \acrshort{lipo} cells, as they are more thermally stable and have a more rigid internal structure \cite{bergveld2014battery}.
-
-A decision matrix compares different components based on set criteria to select the specific type of \acrshort{liion} cell, as shown in Table \ref{tab:battery_comparison}. The process involves weighting different factors according to their relative importance. The total energy of the cell is the most important factor as it is directly proportional to the flight time and also affects how much power is available for sensing. Weight is the next most significant factor since it affects both flight time and stability. Cost is the least important factor because the price of the cells is low compared to the price of other components of the drone. The scores for each factor are calculated by normalising relative to the \textit{best} of the three values and multiplying the normalised score by 10. The \textit{best} energy value is the highest, whereas the \textit{best} weight and the \textit{best} price values are the lowest. 
+The most important decision is selecting a battery cell chemistry. Drones typically use \gls{lipo} batteries\footnote{\acrshort{lipo} batteries are a subset of \acrshort{liion} batteries. Conventionally, \acrshort{liion} cells are taken to be those with a liquid electrolyte, whereas \acrshort{lipo} cells have a polymer electrolyte.} due to their high maximum discharge current \cite{10808488}. However, following recent developments, \gls{liion} batteries now have approximately 30\% higher gravimetric energy density than \acrshort{lipo} cells  \cite{Agrawal_2008}. Higher energy density permits longer flight times and carrying more sophisticated sensors, improving both the quality and quantity of the data gathered. \acrshort{liion} cells are also more durable and safer than \acrshort{lipo} cells, as they are more thermally stable and have a more rigid internal structure \cite{bergveld2014battery}. The decision matrix shown in Table \ref{tab:battery_comparison} compares different components based on set criteria to select the specific type of \acrshort{liion} cell. The process involves weighting different factors according to their relative importance. The total energy of the cell is the most important factor, as it is directly proportional to the flight time and affects how much power is available for sensing. Weight is the next most significant factor since it affects both flight time and stability. Cost is the least important factor because the price of the cells is low compared to the price of other components of the drone. The scores for each factor are calculated by normalising relative to the \textit{best} of the three values and multiplying the normalised score by 10. The \textit{best} energy value is the highest, whereas the \textit{best} weight and the \textit{best} price values are the lowest. 
 
 \begin{table}[h!]
 \centering
@@ -87,9 +86,9 @@ A variety of measurements are required to provide the \acrshort{bms} with the re
 \subsubsection{Kalman Filtering Techniques}
 \label{kalm}
 
-Kalman Filters are implemented on the \textbf{STM32F405} microcontroller to estimate the various states in the battery, such as temperatures, voltages and currents. The Kalman filter's purpose is to estimate the states using indirect, uncertain measurements. 
+Kalman Filters are implemented on the \textbf{STM32F405} microcontroller to estimate the various states in the battery, such as temperatures, voltages and currents. The Kalman filter's purpose is to estimate the states using indirect, uncertain measurements \cite{kalfilt}. 
 
-For each state, the underlying physical process is modelled in state-space form, and the system is discretised to allow a Kalman filter to be implemented in C using a Kalman filtering library designed for embedded systems \cite{computers11110165}. As an example of the process, the estimation of the \gls{soc} using an \gls{ekf} was simulated. The \gls{soc} is defined by Equation \ref{eq:soc}, where $C$ represents the battery's capacity.
+For each state, the underlying physical process is modelled in state-space form, and the system is discretised to allow a Kalman filter to be implemented in C using a Kalman filtering library designed for embedded systems \cite{computers11110165}. As an example of the process, the estimation of the \gls{soc} using an \gls{ekf} was simulated. The \gls{ekf} algorithm is explained in detail by Qiang Li et al. \cite{kalfilt}.  The \gls{soc} is defined by Equation \ref{eq:soc}, where $C$ represents the battery's capacity.
 
 \begin{equation}
 \label{eq:soc}
@@ -116,7 +115,7 @@ For the \gls{soc} measurement, an \gls{ekf} is used in conjunction with the Coul
         \caption{Estimate additionally using \gls{ekf}.}
         \label{fig:kalmeff}
     \end{subfigure}
-    \caption[Comparison of State of Charge Estimates]{Comparison of State of Charge estimates using the Simulink example shown in the footnote.}
+    \caption[Comparison of State of Charge Estimates]{Comparison of State of Charge estimates using the Simscape Kalman Filter Template}
     \label{fig:bmsestimefk}
 \end{figure}
 
@@ -307,7 +306,7 @@ For each of the voltages tested in Table \ref{tab:converter_performance} above, 
 \label{fig:cukmatlab}
 \end{figure}
 
-\subsection{Overall Circuit Layout and Simulations}
+\subsection{Overall Circuit Layout}
 
 A high-fidelity simulation of the \gls{bms} was constructed using MATLAB, Simulink and Simscape. This model was then integrated into the overall system to allow the multi-agent system to be modelled using the designed \gls{bms}; the results obtained are shown in Section \ref{mocs}. Figure \ref{fig:bms_ovrlayout} shows a simplified version of the \gls{bms} location within the drone's circuitry, as modelled in the simulation.
 
