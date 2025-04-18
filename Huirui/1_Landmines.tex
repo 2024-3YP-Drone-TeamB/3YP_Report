@@ -1,104 +1,60 @@
 \subsection{Landmines}
 
-The choice of sensing hardware in our multi-aerial drone landmine detection system must be driven by a thorough understanding of the target (landmines). These devices vary significantly in size, construction materials, detonation mechanisms, and target types. Their structural and material differences have a direct impact on detectability, especially when using aerial platforms with limited payload capacity. This section presents an overview of the main types of landmines, focusing on their physical properties and implications for detection, in order to inform the sensor selection and data acquisition approach of our system.
+The selection of sensing hardware in our multi-drone landmine detection system relies on a clear understanding of the target: landmines. Landmines differ widely in size, materials, triggering mechanisms, and intended targets. These physical differences strongly affect how detectable they are, especially when using drones with limited payload capacity. This section outlines the main landmine types and highlights the features that influence detection. This overview supports informed decisions on sensor selection and data acquisition in our system.
 
-Landmines are generally classified into two primary categories based on their intended targets: anti-tank landmines (ATLs) and anti-personnel landmines (APLs) \footnote{\url{https://en.wikipedia.org/wiki/Land_mine}}. ATLs are designed to disable or destroy heavy vehicles, requiring high detonation pressures and containing large explosive charges. In contrast, APLs are triggered by the presence or pressure of a person and are often much smaller and less detectable. The structural differences between these two types, including size, shape, and especially material composition, result in vastly different detection challenges. Table~\ref{tab:general_specs} summarizes the typical specifications for AT and AP mines.
+Landmines are commonly classified into two main categories based on their intended targets: anti-tank landmines (ATLs) and anti-personnel landmines (APLs).
+\footnote{\url{https://en.wikipedia.org/wiki/Land_mine}}
 
-\begin{table}[h]
-    \centering
-    \caption{Typical Specifications of ATL and APL \cite{paik2002image}}
-    \label{tab:general_specs}
-    \begin{tabular}{lcc}
-        \toprule
-        \textbf{Type} & \textbf{ATL} & \textbf{APL} \\
-        \midrule
-        Target & Vehicle & Human \\
-        Weight & Heavy (6--11 kg) & Light (0.1--4 kg) \\
-        Size (in diameter) & Large (13--40 cm) & Small (6--15 cm) \\
-        Case material & Metal, plastic & Plastic \\
-        Detonation pressure & 120 kg\textsuperscript{a} & 0.5 kg\textsuperscript{a} \\
-        \bottomrule
-    \end{tabular}
-    \begin{flushleft}
-        \vspace{1mm}
-        \textsuperscript{a}Minimum pressure to detonate the most sensitive mine in each category.
-    \end{flushleft}
-\end{table}
+ATLs are designed to disable or destroy heavy vehicles such as tanks or armored transports. They are typically large, with diameters ranging from 13 to 40 cm, and contain 6 to 11 kg of explosives\cite{paik2002image}. These mines are generally triggered by high pressures and are often buried beneath roadways or terrain. Traditional ATLs use metal casings, but modern designs may incorporate plastic or composite materials to reduce detectability \cite{evans2024detection}. Based on their activation mechanisms, ATLs can be classified into pressure-activated blast mines, tilt-rod or magnetic mines, and side-attack mines.
 
-\subsubsection{Anti-Tank Landmines}
-
-ATLs are designed to detonate under the pressure of heavy vehicles such as tanks and armored transports. These mines are typically large, ranging from 13 to 40~cm in diameter, and contain 6–11~kg of explosives. While traditional ATLs have metal casings, modern designs may use plastic or composite materials to reduce detectability \cite{evans2024detection}.
-
-ATLs can be further categorized based on their function and deployment mechanisms:
-\begin{itemize}
-    \item \textbf{Pressure-activated blast mines}, such as the TM-62M, rely on the pressure of the vehicle weight to detonate. These often have metallic casings and are circular in shape.
-    \item \textbf{Tilt-rod and magnetic mines} use advanced triggering mechanisms that respond to the presence or disturbance of vehicles without requiring direct contact.
-    \item \textbf{Side-attack mines} are often mounted on tripods and use explosively formed projectiles to strike vehicle sides.
-\end{itemize}
-
-Figure~\ref{fig:atm_examples} shows two common ATLs: the TM-62M and TMA-2. Although the TM-62M uses a steel casing, the TMA-2 is encased in plastic, demonstrating the variability of the material even within the same class. The specifications for these mines are summarized in Table~\ref{tab:atm_specs}.
+APLs are intended to injure or kill individuals on foot. They are much smaller than ATLs, typically ranging from 6 to 15 cm in diameter, and contain only 0.1 to 4 kg of explosives\cite{paik2002image}. These mines are triggered by very low force, often less than 10~kg of weight to be activated, which makes them highly dangerous and difficult to detect. APLs are commonly constructed from plastic, rubber, or other low-metal-content materials, further reducing their detectability \cite{kaya2017buried}. Like ATLs, APLs are also divided into subtypes, including blasting mines, bounding fragmentation mines, and directional fragmentation mines.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{figs/Huirui/atm_examples.png}
-    \caption{Two typical AT Landmines: (a) TM-62M and (b) TMA-2 \cite{paik2002image}.}
-    \label{fig:atm_examples}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \centering
+        \includegraphics[height=2cm]{figs/Huirui/tm62m.png}
+        \subcaption*{(a)}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \centering
+        \includegraphics[height=2cm]{figs/Huirui/tma2.png}
+        \subcaption*{(b)}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \centering
+        \includegraphics[height=2cm]{figs/Huirui/prbm35.png}
+        \subcaption*{(c)}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \centering
+        \includegraphics[height=2cm]{figs/Huirui/mon100.png}
+        \subcaption*{(d)}
+    \end{subfigure}
+
+    \caption{Typical ATLs and APLs: (a) TM-62M, (b) TMA-2, (c) PRB-M35, and (d) MON-100~\cite{paik2002image}.}
+    \label{fig:mine_examples}
 \end{figure}
 
-\begin{table}[h]
-    \centering
-    \caption{Specifications for Two Different ATMs (TM-62M and TMA-2) \cite{paik2002image}}
-    \label{tab:atm_specs}
-    \begin{tabular}{lcc}
-        \toprule
-        \textbf{Model No.} & \textbf{TM-62M} & \textbf{TMA-2} \\
-        \midrule
-        Dimensions & Height 112 mm, diameter 316 mm & Height 140 mm, width 260 × 200 mm \\
-        Weight & 8.47 kg & 7.5 kg \\
-        Case & Steel & Plastic \\
-        Sensitivity & 200 kg & 120 kg \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-\subsubsection{Anti-Personnel Landmines}
-
-APLs are designed to injure or kill individuals on foot. These mines are typically much smaller than ATLs, with diameters ranging from 6 to 15~cm and explosive weights as low as 0.1–0.5~kg. APLs are generally triggered by very low pressures (often less than 10~kg), making them extremely dangerous and difficult to detect.
-
-APLs can be classified into several subtypes:
-\begin{itemize}
-    \item \textbf{Blasting mines} (e.g., PRB-M35, PMN) are small, pressure-activated devices buried just beneath the ground surface. They often use plastic or rubber casings to minimize detectability.
-    \item \textbf{Bounding fragmentation mines} (e.g., VALMARA-69) are launched into the air before detonation, releasing metal fragments across a wide area.
-    \item \textbf{Directional fragmentation mines} (e.g., MON-100) are mounted on the surface and project shrapnel in a specific direction, often over long distances.
-\end{itemize}
-
-Figure~\ref{fig:apm_examples} presents four common types of APLs, and Table~\ref{tab:apm_specs} summarizes their technical specifications. Note that blasting types tend to be the smallest and most common in post-conflict zones, whereas bounding and directional mines vary in shape, size, and lethality. Importantly, most APLs are constructed from low- or non-metallic materials such as plastic or rubber, making them highly resistant to conventional metal detection \cite{kaya2017buried}.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/Huirui/apm_examples.png}
-    \caption{Typical APLs: (a) PRB-M35, (b) PMN, (c) VALMARA-69, and (d) MON-100 \cite{paik2002image}.}
-    \label{fig:apm_examples}
-\end{figure}
 
 \begin{table}[h]
     \centering
     \small
-    \caption{Specifications for APLs in Figure~\ref{fig:apm_examples} \cite{paik2002image}}
-    \label{tab:apm_specs}
-    \begin{tabular}{l p{2.5cm} p{2.5cm} p{3cm} p{3cm}}
+    \renewcommand{\arraystretch}{1.3}
+    \caption{Specifications for selected ATLs and APLs~\cite{paik2002image}.}
+    \label{tab:mine_specs}
+    \begin{tabular}{l p{2.8cm} p{2.8cm} p{2.8cm} p{2.8cm}}
         \toprule
-        \textbf{Model No.} & \textbf{PRB-M35} & \textbf{PMN} & \textbf{VALMARA-69} & \textbf{MON-100} \\
+        \textbf{Model No.} & \textbf{TM-62M} & \textbf{TMA-2} & \textbf{PRB-M35} & \textbf{MON-100} \\
         \midrule
-        Type & Blasting & Blasting & Bounding fragment & Directional fragment \\
-        Height & 58 mm & 56 mm & 105 mm & 82 mm \\
-        Diameter & 64 mm & 112 mm & 130 mm & 236 mm \\
-        Weight & 158 g & 600 g & 3.3 kg & 5.0 kg \\
-        Case & Plastic & Rubber & Plastic & Steel \\
-        Sensitivity & 8 kg & 8 kg & 10.8 kg (direct), 6 kg (trip wire) & Depends on fuses \\
-        Lethal range & N/A & N/A & Radius 27 m & 100 m by 9.5 m arc \\
+        Type & ATL & ATL & APL & APL \\
+        Height (cm) & 11.2 & 14.0 & 5.7 & 8.2 \\
+        Diameter / Width (cm) & 31.6 & 26.0 × 20.0 & 6.4 & 23.6 \\
+        Weight (kg) & 8.5 & 7.5 & 0.16 & 5.0 \\
+        Material & Steel & Plastic & Plastic & Steel \\
+        Sensitivity & 200 kg & 120 kg & 8 kg & Depends on fuses \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Given their smaller size, lower detonation pressure, and frequent use of low- or non-metallic casings, APLs present a considerably more challenging detection problem than ATLs, making them ideal test cases for evaluating the effectiveness of our airborne sensing systems. From a technical point of view, designing the system to reliably detect smaller APLs ensures that larger and more detectable ATLs can also be identified with relative ease. Furthermore, APLs are responsible for the vast majority of landmine-related civilian injuries and deaths in post-conflict zones \cite{unmas2021handbook}, which amplifies the humanitarian importance of targeting this category. For these reasons, our project focuses on the detection of anti-personnel landmines.
+Figure~\ref{fig:mine_examples} shows four representative examples of ATLs and APLs, and Table~\ref{tab:mine_specs} summarizes their key structural specifications. As the table indicates, both ATLs and APLs can be constructed from metallic, low-metallic, or non-metallic materials. However, APLs are significantly smaller in size, which make them more difficult to detect, especially from aerial platforms. And from a technical perspective, a system capable of reliably detecting small APLs is also likely to detect the larger ATLs. Also, nowadays APLs are more responsible for the vast majority of civilian injuries and deaths in post-conflict areas compared with ATLs \cite{unmas2021handbook}, which underscores their humanitarian significance. For these reasons, our project focuses on the detection of anti-personnel landmines.
