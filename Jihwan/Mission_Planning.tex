@@ -7,6 +7,7 @@
 \label{sec:msp_introduction}
 
 \subsubsection{Objectives}
+\label{sec:msp_objectives}
 
 The mission planning of the multi-aerial drone system focuses on how to efficiently plan the paths of the drones to fully survey the \gls{roi} using the chosen suite of sensors. The input will be the user-defined \gls{roi} and the specifications of the drone dynamics and sensors, which go through the mission planning algorithm to output the set of coordinates each drone must follow (Figure~\ref{fig:msp_objective}).
 
@@ -426,6 +427,7 @@ As a solution, image segmentation algorithms can be implemented to partially aut
 \cite{patil2022segment} proposes a more specialised semantic segmentation model to automatically segment satellite images into regions and identify its class (building, land, road, vegetation, water, or miscellaneous). This can speed up the progress of defining the \gls{roi} by removing areas such as bodies of water and buildings which are unlikely to be populated by landmines. 
 
 \subsubsection{Use of Satellite Image Databases}
+\label{sec:msp_satellite_database_limitation}
 
 The current mission planning framework uses openly available satellite databases during the Define step of the layered approach. However, outdated satellite images may result in missing out newly introduced or removed obstacles in the \gls{roi}. 
 
