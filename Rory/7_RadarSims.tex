@@ -4,7 +4,7 @@
     
         \noindent As described in Section \ref{simulation_justification}, the limited diversity of the radar dataset necessitates physics-driven simulations to replicate the noise and clutter encountered in real-world environments. The simulations in this section aim to test the radar model's robustness to the physical processes not represented in the training data, that degrade B-can clarity: scattering, attenuation, antenna and transmission losses.
         
-        \noindent To model these effects, finite-difference time-domain (FDTD) simulations were conducted using \textit{gprMax} \cite{warren2016gprmax}, an open-source framework for solving Maxwell’s equations in 3D. These simulations capture full-wave electromagnetic behaviour, including wave propagation, reflection, and attenuation, and explicitly account for soil heterogeneity. Surface roughness is not considered in this section, but for the purposes of validating the models robustness it is not required. This is however a significant contribution to the clutter in an actual Bscan, and future work should consider this aspect.
+        \noindent To model these effects, finite-difference time-domain (FDTD) simulations were conducted using \textit{gprMax} \cite{warren2016gprmax}, an open-source framework for solving Maxwell’s equations in 3D. These simulations capture full-wave electromagnetic behaviour, including wave propagation, reflection, and attenuation, and explicitly account for soil heterogeneity. Surface roughness is not considered in this section, but for the purposes of validating the models robustness it is not required. This is however a significant contribution to the clutter in an actual B-scan, and future work should consider this aspect.
      
     
     \subsubsection{gprMax Implementation}
@@ -26,14 +26,14 @@
             \begin{minipage}[b]{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figs/Rory/radar_domain.pdf}
-                \caption{(a) Simulation domain viewed in ParaView \tablefootnote{\url{https://www.paraview.org/}}}
+                \caption{Simulation domain viewed in ParaView \tablefootnote{\url{https://www.paraview.org/}}}
                 \label{fig:radar_domain}
             \end{minipage}
             \hfill
             \begin{minipage}[b]{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figs/Rory/sim_bscan_cropped.png}
-                \caption{(b) Raw simulated B-scan (no digital enhancement)}
+                \caption{Raw simulated B-scan (no digital enhancement)}
                 \label{fig:original_bscan}
             \end{minipage}
         \end{figure}    
@@ -66,7 +66,7 @@
     
     \subsubsection{Simulation Results and Validation}
 
-        \noindent Figure~\ref{fig:original_bscan} shows the simulated noisy radar Bscan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the 'clean' Bscans in the training set (Section \ref{computervision}) shows that the simulated Bscan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
+        \noindent Figure~\ref{fig:original_bscan} shows the simulated noisy radar B-scan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the 'clean' B-scans in the training set (Section \ref{computervision}) shows that the simulated B-scan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
 
     
     \subsubsection{Data Augmentation}
@@ -94,13 +94,13 @@
     
     \subsubsection{CV Results}
     
-        The augmented radar data were then fed into the radar CV model (Section \ref{compvis_implementation}) to evaluate the robustness of the model to the physical loss processes described in Section \ref{rory_radar_principles}. Precision and recall metrics were calculated on the augmented dataset, with the results summarised in Table~\ref{tab:cv_results}. The high precision of 91.5\% indicates that the combined approach of GPR and YOLOv11 is well-suited for practical landmine detection. In particular the high precision is achieved with a moderately high recall of 83.3\%, which shows that although the radar computer vision model was trained on a homogenous, 'clean' dataset, it generalised well to a more varied dataset from simulations that directly model noise processes. Therefore, a radar computer vision model trained on a larger dataset of experimentally obtained noisy Bscans should be robust to features not present in the training data, and will generalise well across a range of environmental conditions.
+        The augmented radar data were then fed into the radar CV model (Section \ref{compvis_implementation}) to evaluate the robustness of the model to the physical loss processes described in Section \ref{rory_radar_principles}. Precision and recall metrics were calculated on the augmented dataset, with the results summarised in Table~\ref{tab:cv_results}. The high precision of 91.5\% indicates that the combined approach of GPR and YOLOv11 is well-suited for practical landmine detection. In particular the high precision is achieved with a moderately high recall of 83.3\%, which shows that although the radar computer vision model was trained on a homogenous, 'clean' dataset, it generalised well to a more varied dataset from simulations that directly model noise processes. Therefore, a radar computer vision model trained on a larger dataset of experimentally obtained noisy B-scans should be robust to features not present in the training data, and will generalise well across a range of environmental conditions.
 
         Overall, this system offers a highly accurate and robust solution for detecting landmines, that can improve as more context specific training data becomes available.
 
         \begin{table}[htbp]
           \centering
-          \caption{Augmented Simulation Bscan Results}
+          \caption{Augmented Simulation B-scan Results}
           \label{tab:cv_results}
           \begin{tabular}{@{} l l @{}} 
             \toprule
