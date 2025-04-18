@@ -60,7 +60,7 @@ A decision matrix compares different components based on set criteria to select 
 \textbf{Total Score} & 7.7& 6.5& 8.1& 100\% \\
 \hline
 \end{tabular}
-\caption{Comparison for energy capacity, weight, and price, with normalised scores and weighted totals.}
+\caption[Battery Cell Comparison]{Comparison for energy capacity, weight, and price, with normalised scores and weighted totals.}
 \label{tab:battery_comparison}
 \end{table}
 
@@ -116,7 +116,7 @@ For the \gls{soc} measurement, an \gls{ekf} is used in conjunction with the Coul
         \caption{Estimate additionally using \gls{ekf}.}
         \label{fig:kalmeff}
     \end{subfigure}
-    \caption{Comparison of cell equalisation strategies using the Simulink example shown in the footnote.}
+    \caption[Comparison of State of Charge Estimates]{Comparison of State of Charge estimates using the Simulink example shown in the footnote.}
     \label{fig:bmsestimefk}
 \end{figure}
 
@@ -130,7 +130,7 @@ The Master Control Unit represents the \textbf{STM32F405} microcontroller chosen
   \centering
   \vspace{5mm}
   \includegraphics[width=0.95\textwidth]{figs/Samuel/Figures/BMS Internal (1)-cropped.pdf}
-  \caption{Battery Management System Layout adapted from Buccolini et al. \cite{7555475}}
+  \caption[Battery Management System Layout]{Battery Management System Layout adapted from Buccolini et al. \cite{7555475}}
   \label{fig:bms_layout}
 \end{figure}
 
@@ -149,7 +149,7 @@ The use of capacitors, inductors and resistors allows for reduced equalisation t
 \centering
 \vspace{5mm}
 \includegraphics[width=0.99\textwidth]{figs/Samuel/Figures/resc1-cropped.pdf}
-\caption{Simplified battery cell stack configuration, adapted from Moghaddam et al. \cite{8467638}}
+\caption[Simplified Battery Cell Stack Configuration]{Simplified battery cell stack configuration, adapted from Moghaddam et al. \cite{8467638}}
 \label{fig:bcs}
 \end{figure}
 
@@ -176,7 +176,7 @@ The results produced by the simulation are consistent with results from similar 
         \caption{Simpler switched-capacitor strategy}
         \label{fig:reccrop}
     \end{subfigure}
-    \caption{Comparison of cell equalisation strategies using the method outlined in Moghaddam et al. \cite{8467638}}
+    \caption[Comparison of Cell Equalisation Strategies]{Comparison of cell equalisation strategies using the method outlined in Moghaddam et al. \cite{8467638}}
     \label{fig:rescvrec}
 \end{figure}
 
@@ -200,7 +200,7 @@ Designing an efficient thermal management system has numerous advantages for bat
         \caption{Variation of cycle life vs. temperature \cite{REZVANIZANIANI2014110}}
         \label{fig:tempy2}
     \end{subfigure}
-    \caption{Effects of temperature variation on cell properties, figures from \cite{chen2013heat} (a) and \cite{REZVANIZANIANI2014110} (b).}
+    \caption[Effects of Temperature Variation on Cell Properties]{Effects of temperature variation on cell properties, figures from \cite{chen2013heat} (a) and \cite{REZVANIZANIANI2014110} (b).}
     \label{fig:tempythings}
 \end{figure}
 
@@ -235,7 +235,7 @@ The layout of the non-isolated Ćuk converter circuit is shown in Figure \ref{fi
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.68\textwidth]{figs/Samuel/Figures/cuk mosfet labelled (1).pdf}
-  \caption{Ćuk converter circuit topology}
+  \caption{Ćuk Converter Circuit Topology}
   \label{fig:cukdiagram}
 \end{figure}
 
@@ -280,7 +280,7 @@ Modelling the \gls{esr} of each component is an important aspect of the simulati
         25.2 & 5.63 & 0.106 & 0.166 \\
         \bottomrule
     \end{tabular}
-    \caption{Output ripple characteristics and duty cycle relationship.}
+    \caption{Output Ripple Characteristics and Duty Cycle Relationship}
     \label{tab:converter_performance}
 \end{table}
 
@@ -303,7 +303,7 @@ For each of the voltages tested in Table \ref{tab:converter_performance} above, 
     \includegraphics[width=\textwidth]{figs/Samuel/Figures/CukPlots (cropped) (pdfresizer.com) (1).pdf}
     \label{fig:cukmatlab_b}
 }
-\caption{Simscape simulation results for the Ćuk converter.}
+\caption{Simscape simulation results for the Ćuk converter}
 \label{fig:cukmatlab}
 \end{figure}
 
