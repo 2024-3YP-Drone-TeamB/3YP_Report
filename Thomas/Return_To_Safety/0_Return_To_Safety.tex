@@ -2,7 +2,7 @@
 \fancyhead[C]{Thomas Turner}
 \section{Return to Safety} \label{Return to Safety}
 
-\subsection{Introduction and Philosophy}
+\subsection{Introduction and Philosophy}\label{sub_section:tgt_RTS_intro}
 Traditionally, \gls{RTH} is executed in commercial drone products in case of detected faults however, this specific use case provides cause to expand this functionality. In cases of partial thrust failure the device will have to use less aggressive control in order to cause no further degeneration and compensate for lower actuator saturation levels. Therefore, the device is less robust to disturbances and introducing a significant probability of crashing. Similarly, in adverse weather conditions, the device can no longer be assumed to be robust to the environmental disturbances and has a significant probability of crashing. Given the difficulty of retrieval, this means that traditional \gls{RTH} is not the optimal strategy in these specific cases and instead a \gls{RTS} strategy is more appropriate.
 \paragraph{When to use \gls{RTH}}
 \gls{RTH} is preferable to to \gls{RTS} as by tracing back the original path returns the device to the base on an obstacle free path. Therefore, \gls{RTH} should be used when the device is robust to the environmental conditions, and  has accurate location sensing. This means in cases of redundant sensor or communication faults, state of charge being outside the expected range, non safety critical sensor faults, or if commanded by the base station \gls{RTH} should be executed.
