@@ -1,6 +1,6 @@
-\subsection{Emergency Path Planning}
+\subsection{Emergency Path Planning}\label{sub_section:tgt_path_planning}
 
-\subsubsection{Cost Function}
+\subsubsection{Cost Function}\label{sub_sub_section:tgt_cost_function}
 The key objective is to reduce the downtime and cost of operation of the drone. This means both the cost of damage to the drone through crashing and the difficulty of retrieval need consideration. Considering the centre of each hexagon in the cost map as a node and modelling the probability of surviving half of a node node traversal between adjacent nodes as constant, $p$, the cost function of any path of length $D$ is shown in \ref{eq:cost function}. The specific $c_{crashing}$ and $c_{landing}$ can be defined by the ground operators for each classification. The ones used in testing are shown in \ref{tab:cost_values}.
 \begin{equation}\label{eq:cost function}
     E(x) 
@@ -21,7 +21,7 @@ The key objective is to reduce the downtime and cost of operation of the drone. 
     \label{tab:cost_values}
 \end{table}
 
-\subsubsection{Weather induced failure}
+\subsubsection{Weather induced failure}\label{sub_sub_section:tgt_weather_failure}
 \paragraph{Cause}
 When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault due to the less aggressive control strategies deployed meaning that the maximum rejected gust becomes lower in magnitude and therefore more likely to occur. 
 \paragraph{Gust Modelling}
@@ -30,7 +30,7 @@ Using forecasts and modelling in \ref{SAM GRACE} the gustiness of the operating 
     p = (1-\lambda)^{\frac{nodal\_distance}{speed}}
 \end{equation}
 
-\subsubsection{Search Algorithms}
+\subsubsection{Search Algorithms}\label{sub_sub_section:tgt_search}
 \input{Thomas/Return_To_Safety/search_algo}
 \input{Thomas/Return_To_Safety/flow_algo}
 \paragraph{Exhaustive Search}
@@ -38,7 +38,7 @@ The simplest algorithm is the recursive function shown in \ref{alg:search}. Ther
 \paragraph{Bellman-Ford}
 To combat the issues with \ref{alg:search}, I developed \ref{alg:flow}. This algorithm smooths out the differences in path cost between neighbouring nodes following the Bellman-Ford algorithm. This guarantees correct answers when the nodes have fully converged. Bellman-Ford algorithms have a time complexity of $O(|E|\times |V|)$. In dense graphs this becomes  $O(|V|^3)$ however, we know $|E| \leq |V| \times 7$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual complexity is $O(|V|^2)$\cite{cormen2009}. This means it is practical to generate guaranteed optimal path results.
 
-\subsubsection{Real-time application}
+\subsubsection{Real-time application}\label{sub_sub_section:tgt_real_time}
 \paragraph{Pre-Compute}
 Carrying out memory and time complex operations on real-time hardware should always be avoided as operations require specific timings for optimal use. If all the values are pre-computed and uploaded to the device, the time and memory complexity becomes $O(1)$ which supports precise, timed operations. Within the path planning workflow, as much as possible should be pre-computed and simply accessed, however, if any algorithms are deployed they should be $O(1)$.
 \paragraph{$p$ ranges}

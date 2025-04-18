@@ -1,18 +1,18 @@
-\subsection{Protocol Selection}
+\subsection{Protocol Selection}\label{sub_section:tgt_protocol_selection}
 
-\subsubsection{Requirements and Options}
+\subsubsection{Requirements and Options}\label{sub_sub_section:tgt_requirements}
 \paragraph{Message Requirements}
 Table \ref{tab:messages} shows the required messages for flight and imaging. From this it is clear that imaging requires a far higher data transfer speeds. This means a network of low speed modules could be used with a separate imaging network.
 \input{Thomas/Intra_Communication/communication_options}
 \input{Thomas/Intra_Communication/messages}
 
-\subsubsection{Communication between Modules}
+\subsubsection{Communication between Modules}\label{sub_sub_section:tgt_comms_modules}
 \paragraph{Architecture}
 Centralised architectures consist of a central node directly connected to all the relevant devices, creating a single point of failure. while this is a simple and cost effective method it leaves the device to single points of failure. In order to build robustness, the custom \gls{GNSS} module is capable of independently executing landing and \gls{RTS}.  
 \paragraph{Bus Selection}
 FlexRay has some clear advantages including built in redundancy and higher data transfer speeds \ref{tab:communication_options}. However, due to its added complexity, cost and the fact it is compatible with far fewer components, a \gls{CAN} bus is the better option. This may change if the data transfer rates needed to increase or if the technology behind FlexRay becomes cheaper and more widespread. Further, there are two key options for \gls{CAN}, time triggered or flexible data. Time triggered is an attractive as it supports higher data transfer rates however, flexible data is more widely supported and is sufficient for the application.\cite{CANFlexRay}
  
-\subsubsection{Communication with sensors}
+\subsubsection{Communication with sensors}\label{sub_sub_section:tgt_comms_sensors}
 \paragraph{High Speed Sensors}
 The simple but high speed \gls{SPI} protocol should be used whenever possible. This is because it is widely supporting by commercially available sensors and \gls{MCU}s. Uniformly using similar sensor sets also has the benefit of simplicity of implementation.
 \paragraph{Low Speed Sensors}

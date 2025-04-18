@@ -1,6 +1,6 @@
-\subsection{Custom Components}
+\subsection{Custom Components}\label{sub_sub_section:tgt_custom_components}
 
-\subsubsection{Component Selection}
+\subsubsection{Component Selection}\label{sub_sub_section:tgt_component_selection}
 \input{Thomas/Custom_Hardware/component_choices}
 \paragraph{\gls{IMU}}
 While the BMI323 is cheaper it has higher noise characteristics than the the ICM-42688-P, therefore the latter was selected for use on all boards due to its low price point and high performance. The use of the same \gls{IMU} over all modules should be maintained if possible so that the control characteristics are unchanged across devices and lower costs due to higher order quantities.
@@ -9,7 +9,7 @@ For the flight controller the STM32H743VGT6 is the best option given its \gls{RA
 \paragraph{\gls{GNSS} Module}
 Exact positions for where the images were taken is required, this is possible using a \gls{RTK} setup with a base station sending out correction vectors over LoRA getting within cm accuracy\cite{RTK_LORA}. Furthermore, in the case of the loss of all \gls{GNSS} signal built in dead reckoning, allowing \gls{RTS}, is also a desirable feature. Therefore, the LG69T-AP is selected. However, when not executing imaging tasks, this precision is not needed and the modules are more expensive than the \gls{GNSS} modules without these features. Therefore, for the redundant device the MAX-F10S-00B was selected, and is shown in \ref{fig:custom_hardware_overview}, due to the significantly better documentation available and similar price points when compared to the LC29HAAMD.
 
-\subsubsection{Power Supply}
+\subsubsection{Power Supply}\label{sub_sub_section:tgt_power_supply}
 \input{Thomas/Custom_Hardware/current_draws}
 \paragraph{Main Power Supply}
 In both the GNSS module and the flight controller module the same power setup was used, created in Webench Power Designer\footnote{\url{https://webench.ti.com/power-designer/switching-regulator}}. The key decision metrics were efficiency and cost.  Efficiency is of high importance due to the thermal management on the board. The design selected has over 90\% efficiency \ref{fig:power_graphs} throughout the expected operating current window. As shown in the schematic \ref{fig:power_supply_schematic} there is a fuse to protect from short circuits and a \gls{TVS} diode to protect against \gls{ESD} that someone connecting the power might cause. There are also capacitors of 22uF and 4.7uF to provide current during spikes and smooth the power supply current.
@@ -37,6 +37,6 @@ t_{\text{worst-case}} = \frac{0.47 \cdot (3.3 - 2.8)}{1} = 0.235\ \text{seconds}
 \end{equation}
 The time before dropout, with the worst case conditions is over 0.2 seconds \ref{eq:worst_case_time}, this will provide sufficient time to record any last messages. Furthermore, the time constant is 9.4s \ref{eq:charging_tau_result} meaning that there are current spikes when turning the device on but it is still charged over 3V within 30 seconds \ref{fig:charging_curve}.
 
-\subsubsection{Comparison to Commercial Options}
+\subsubsection{Comparison to Commercial Options}\label{sub_sub_section:tgt_commercial_options}
 \input{Thomas/Custom_Hardware/BOMs}
 The CUAV X7+\footnote{\url{https://store.cuav.net/shop/x7/}} GPS compatible option costs £339.75 and provides the same core functionality as the custom flight controller including dual \gls{CAN} ports. This can be combined with the flight controller compatible with the CUAV C-RTK 9Ps Positioning Module\footnote{\url{https://store.cuav.net/shop/c-rtk-9ps/}} that costs £332.91 for a drone-base station pair and provides \gls{RTK} \gls{GNSS}. This is a significant increase in cost however, it would not require development and may be a superior option in the testing phase. However, for deployment the custom components should be used given the cost implications and that the custom \gls{GNSS} module is fully control capable and the commercial option is not. 

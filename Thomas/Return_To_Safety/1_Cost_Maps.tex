@@ -1,21 +1,21 @@
-\subsection{Cost Maps}
-\subsubsection{Source data}
+\subsection{Cost Maps}\label{sub_section:tgt_cost_maps}
+\subsubsection{Source data}\label{sub_sub_section:tgt_source_data}
 When considering \gls{RTS} it requires prior knowledge of the operating environment which is loaded into the drone using ground operators before flight. This is accomplished using bird's eye images of the operating areas and marking the obstructions, suspected mined regions, mildly dangerous regions, and safe landing regions, with corresponding \gls{GNSS} co-ordinates.
 Where satellite images are available and accurate they are the easiest option. However, given the nature of environments effected by war, there may have been significant changes to the local environment since the last satellite image. Furthermore, seasonal changes can make satellite images less effective as trees may be less visible from winter images due to a lack of leaves.
 Standard consumer level drones can provide images with tagged \gls{GNSS} co-ordinates that can be used, however, this requires extra hardware and time to execute. Therefore, this should be avoided where satellite images are sufficient.
 
-\subsubsection{Graphical User Interface}
+\subsubsection{Graphical User Interface}\label{sub_sub_section:tgt_GUI}
 \paragraph{Platform} 
 The \gls{GUI} was considered from the start to maximise usability by untrained ground operators. I built the \gls{GUI} using a simple python script that takes an image path and uses hardware-independent click locations and keystrokes to operate. It then gives the output as a $.txt$ file with a standard format. This means that the process can be run on any local hardware available.
 \paragraph{User interactions}
 The user can click on a region to set it a colour representing the classification, there is also a separate mode that uses intensities not colours to support colour-blind ground operators. Semi-transparent shades are used so the base image can be seen through the shade of classification colour allows for a more natural filling experience. Furthermore, some utility functions including multi-zone filling, clicking on already classified regions to deselect and auto-filling regions were added to make the process easier and faster. The process from satellite image (from Google Earth), to cost map, to a flow map is shown in \ref{fig:cost map net}. The only information uploaded to the drone is \ref{fig:cost map flow} where the arrows denote where to go next and the circles denote where, if there, the device should land.
 
-\subsubsection{Tessellated surfacing}
+\subsubsection{Tessellated surfacing}\label{sub_sub_section:tgt_hexagons}
 \paragraph{Hexagons} While squares and triangles are more widely used, they are worse than hexagons for this application as they are less intuitive. Travelling centre to centre on the diagonals of squares goes through a point of four intersection where the classification is undefined. Therefore if the user added two obstacles diagonally connected it is unknown if you could travel diagonally between them, this ambiguity creates issues that you do not face when using hexagons as while at the intersections the classifications are still undefined, when travelling centre to centre you never cross an intersection of more than two hexagons.
 \paragraph{Mapping hexagons to \gls{GNSS}} \label{para:Mapping hexagons}
 The two key methods of mapping from hexagons to Cartesians either uses two axial co-ordinates or using row and column values with an offset described in previous work\cite{MappingHexagons}. Once the converted into Cartesian form you multiply the values by the scaling factor to get offset from the origin. This is combined with the known location of the origin to generate the \gls{GNSS} tags for the centre of each hexagon.
 
-\subsubsection{Efficient filling}
+\subsubsection{Efficient filling}\label{sub_sub_section:tgt_filling}
 \paragraph{Auto-filling from Path Planning}
 Having the ground user filling in both the path planning polygonal zones and the cost map is inefficient due to the shared information. Therefore, provided the images used are the same, the cost map automatically classifies hexagons with an obstacle listed within its bounds as an obstacle region. It also automatically classifies the region of interest as dangerous to land as it is a mined area. This reduces the number of zones required to be filled by the ground operator. 
 \paragraph{Dynamic Zooming}
