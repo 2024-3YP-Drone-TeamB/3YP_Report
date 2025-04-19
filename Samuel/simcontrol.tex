@@ -137,7 +137,7 @@ By using the mass properties modelled in Section \ref{cad}, it was possible to c
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.71\textwidth]{figs/Samuel/Figures/nekoo1-0005-large.png}
+\includegraphics[width=0.66\textwidth]{figs/Samuel/Figures/nekoo1-0005-large.png}
 \caption[Diagram of the drone's dynamics in inertial and body coordinates]{Diagram of the drone's dynamics in inertial and body coordinates. Source: Nekoo et al. \cite{nekoo}}
 \label{fig:nekoodiag}
 \end{figure}
@@ -147,7 +147,7 @@ Since cascade \gls{pid} is ubiquitous in commercial drones, this technique was c
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.95\textwidth]{figs/Samuel/Figures/Control Loop-cropped.pdf}
+\includegraphics[width=0.79\textwidth]{figs/Samuel/Figures/Control Loop-cropped.pdf}
 \caption{Cascade \gls{pid} control diagram (simplified)}
 \label{fig:pidloop}
 \end{figure}
@@ -173,17 +173,13 @@ Both strategies were implemented in Simulink, with the methods performing simila
 \subsubsection{Cascade PID Analysis}
 \label{sec:cascpid}
 
-The strategy selected for implementation onboard the drone is cascade \gls{pid} control; this strategy is easily implemented using lightweight code on the microcontroller and can be readily optimised for any given weather and mass properties. Also, cascade \gls{pid} control is near ubiquitous within the \gls{uav} industry, which further suggests that it is a sensible choice. The model used for the MATLAB and Simulink simulations was modified from a cascade \gls{pd} implementation by Nekoo et al. \cite{nekoo} by incorporating an integral term into each feedback loop. The results obtained from this simulation are shown in Figure \ref{fig:12sims}, with the symbols used defined in Section \ref{sec:symbs}. 
-
-The simulation data was obtained from the case study detailed in Section \ref{mocs} and shows the drone's first 10 seconds of motion, during which it travels 10 metres in the X, Y and Z axes before settling in a constant hovering position. 
-
-Overall, the simulation data seems feasible and suggests that the model has been constructed accurately. The effects of noise and disturbances can be seen most clearly on the linear and angular velocities, which is to be expected. Around 3 seconds into the simulation, there are relatively large disturbances to the roll and pitch, which suggests a sudden gust of wind. The disturbance of up to 0.4 rad would ideally be mitigated, and this nonideality is discussed further in Section \ref{gust}. 
+The strategy selected for implementation onboard the drone is cascade \gls{pid} control. This strategy is easily implemented using lightweight code on the microcontroller and can be readily optimised for any given weather and mass properties. In addition, cascade \gls{pid} control is near ubiquitous within the \gls{uav} industry, which further suggests that it is a sensible choice. The model used for the MATLAB and Simulink simulations was modified from a cascade \gls{pd} implementation by Nekoo et al. \cite{nekoo} by incorporating an integral term into each feedback loop. The results obtained from this simulation are shown in Figure \ref{fig:12sims}, with the symbols used defined in Section \ref{sec:symbs}. The simulation data was obtained from the case study detailed in Section \ref{mocs} and shows the drone's first 10 seconds of motion, during which it travels 10 metres in the X, Y and Z axes before settling in a constant hovering position. The disturbance of 0.4 m in the X direction during take-off is due to a gust of wind; the controller then rapidly settles to track the reference with high accuracy. The oscillation with an amplitude of 0.2 m in the Y direction is caused by the nonlinear dynamics which the simulation models, but are neglected in the \gls{pid} controller used. The dynamics in the Z-direction are less significantly affected by wind, and the output trajectory remains within 0.1 m of the reference after take-off. Around 3 seconds into the simulation, there are relatively large disturbances to the roll and pitch of up to 0.4 rad, which suggests a sudden gust of wind. The disturbance would ideally be mitigated, and this nonideality is discussed further in Section \ref{gust}. The linear velocities in the X, Y and Z directions all reach between 3 and 4 ms${^{-1}}$, before decreasing towards the hovering condition of 0 ms${^{-1}}$ in all directions. The constant offset of around 0.2 ms${^{-1}}$ visible in the velocities suggests that, despite the integrator element, a non-decaying error is present in the velocity. The use of a model-free controller discussed in Section \ref{sec:modelfree} may help to alleviate this issue. Overall, the simulation produces feasible results and suggests that the model has been constructed accurately.
 
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.86\textwidth]{figs/Samuel/Figures/twelveplotsvectorgraphic.pdf}
+\includegraphics[width=0.75\textwidth]{figs/Samuel/Figures/twelveplotsvectorgraphic.pdf}
 \caption[State Responses from the MATLAB Simulation]{State responses from the MATLAB simulation, using software adapted from Nekoo et al. \cite{nekoo}}
 \label{fig:12sims}
 \end{figure}
@@ -358,7 +354,7 @@ One of the key constraints on the drone's ability to gather reliable sensor data
 
 To make the gust prediction, a \textbf{binary classifier} is required to decide whether the conditions indicate the presence or absence of an incoming gust. The dataset chosen to train the machine learning model is labelled, so a \textbf{supervised learning algorithm} is appropriate. The use of drone sensor data in predicting wind gusts has been attempted previously \cite{gu2018wind}. However, this approach will consider the application of additional algorithms which, to the best of the author's knowledge, have not been utilised in this context before. Although deep neural networks (DNN) have now become ubiquitous in the field of machine learning, the dataset being considered here contains too few data samples for DNNs to provide useful results \cite{golestaneh2024samplesneededtraindeep}. Instead, a simpler approach needs to be considered. 
 
-The  \textbf{Synthetic Minority Oversampling Technique (SMOTE)} algorithm can be used to improve the performance of a classifier operating on an imbalanced dataset \cite{chawla2002smote}. As is often the case, the real-world dataset for gust conditions contains many datapoints for the absence of a gust, but only a small percentage of the readings correspond to the \textit{interesting case} of the presence of a gust. The use of SMOTE allows for the dataset to be artificially rebalanced and has the potential to improve the performance of the binary classifier significantly.
+The  \textbf{Synthetic Minority Oversampling Technique (SMOTE)} algorithm can be used to improve the performance of a classifier operating on an imbalanced dataset, by generating additional minority datapoints using interpolation \cite{chawla2002smote}. As is often the case, the real-world dataset for gust conditions contains many datapoints for the absence of a gust, but only a small percentage of the readings correspond to the \textit{interesting case} of the presence of a gust. The use of SMOTE allows for the dataset to be artificially rebalanced and has the potential to improve the performance of the binary classifier significantly.
 
 In this instance, a basic implementation of the random forest classifier \cite{scikit-learn} is used in Python to classify the data. A labelled dataset is utilised from a previous implementation of drone gust detection \cite{gu2018wind}, and the data is preprocessed by introducing additive Gaussian noise (AGN) to simulate real-world sensor inaccuracies. The data is split using an \textbf{80/20 train-test split}, and the random forest model is then trained on the data. 
 
@@ -450,8 +446,9 @@ A \gls{uml} class diagram summarising the implementation is shown in Figure \ref
 \subsection{Conclusion and Ideas for Future Work}
 
 \subsubsection{Control Techniques}
+\label{sec:modelfree}
 
-Despite cascade \gls{pid} being simpler to implement and easier to modify than most other control strategies, the ongoing increase in microcontroller processing power will enable more sophisticated methods to be implemented onboard the drone. 
+Despite cascade \gls{pid} being simpler to implement and easier to modify than most other control strategies, the ongoing increase in microcontroller processing power will enable more sophisticated methods to be implemented onboard the drone.
 
 The first potential improvement could be made by combining the \gls{lqr} and \gls{pid} control techniques onboard the drone, so that the drone can benefit from the robustness of the \gls{pid} controller in general flight, while being able to hover more steadily using a finely tuned \gls{lqr}. Model predictive control (\acrshort{mpc}) could also be investigated to allow the drone's controller to be updated during the mission, although this method would require a significant increase in onboard processing power. 
 
