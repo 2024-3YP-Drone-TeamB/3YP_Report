@@ -50,7 +50,9 @@ Given the need to detect subtle temperature differences under ambient conditions
 
 NETD is defined as the smallest temperature difference that a thermal camera can detect, corresponding to a signal-to-noise ratio (SNR) of 1. For example, a camera with a NETD of 100~mK (0.1~\textdegree C) can theoretically distinguish a 25.1~\textdegree C object from a 25.0~\textdegree C background\footnote{\url{https://sierraolympia.com/what-is-netd-and-why-does-it-matter/}}. In practice, NETD determines the sensitivity of the sensor to small thermal contrasts, which is critical for detecting the subtle temperature anomalies associated with landmines.
 
-To estimate a realistic NETD requirement, we refer to a laboratory study in which researchers used an infrared lamp to heat sand containing buried landmines, then monitored thermal signatures during passive cooling, which is an analog to solar heating in field conditions~\cite{lamorski2002thermal}. Table~\ref{tab:netd_table} summarizes the observed temperature differences at various burial depths and moisture levels.
+To estimate a realistic NETD requirement, we refer to a laboratory study in which researchers used an infrared lamp to heat sand containing buried landmines, then monitored thermal signatures during passive cooling, which is an analog to solar heating in field conditions~\cite{lamorski2002thermal}. Table~\ref{tab:netd_table} summarizes the observed temperature differences at various burial depths and moisture levels from this research.
+
+Although the experiment used a controlled heat source which is stronger than natural sunlight, it provides an upper bound on expected thermal contrast. In real-world outdoor settings, thermal differences are likely to be smaller due to deeper burial depth, slower heating, variable soil properties, and changing environmental conditions.
 
 \begin{table}[H]
     \centering
@@ -82,9 +84,9 @@ To estimate a realistic NETD requirement, we refer to a laboratory study in whic
     \end{tabular}
 \end{table}
 
-Although the experiment used a controlled heat source which is stronger than natural sunlight, it provides an upper bound on expected thermal contrast. In real-world outdoor settings, thermal differences are likely to be smaller due to deeper burial depth, slower heating, variable soil properties, and changing environmental conditions.
 
-Accounting for these factors and the minimum temperature difference recorded from Table~\ref{tab:netd_table} (1.1~\textdegree C), a conservative estimate for detectable temperature anomalies in practice is 0.5–1.0~\textdegree C. To resolve such differences reliably, this project recommends a thermal camera with \textbf{NETD ≤ 500~mK}.
+Accounting for these factors and the minimum temperature difference recorded from Table~\ref{tab:netd_table} (1.1~\textdegree C), and simulation results in~\ref{therm_sim_result}, a conservative estimate for detectable temperature anomalies in practice is 0.5–1.0~\textdegree C. To resolve such differences reliably, a thermal camera with \textbf{NETD ≤ 500~mK} is decided.
+
 
 
 \paragraph{Pixel Resolution}
@@ -109,24 +111,25 @@ Figure~\ref{fig:fov_ifov} illustrates the two-dimensional geometry of FOV and IF
     \label{fig:fov_ifov}
 \end{figure}
 
-The angular FOV and IFOV can be calculated as follows:
+Based on Figure~\ref{fig:fov_ifov}, the angular FOV and IFOV can be calculated as follows:
 
 \begin{equation}
-    FOV = 2 \cdot \tan^{-1} \left( \frac{a}{2f} \right)\footnote{\label{FOV}\url{https://hvoltbb.github.io/random/posts/fov.html}}
+    FOV = 2 \cdot \tan^{-1} \left( \frac{a}{2f} \right) = 2 \cdot \tan^{-1} \left( \frac{A}{2S} \right)
+    \label{eq:fov}
 \end{equation}
-
+\vspace{-1em}
 \begin{equation}
-    IFOV = 2 \cdot \tan^{-1} \left( \frac{\delta a}{2f} \right)\textsuperscript{\ref{FOV}}
+    IFOV = 2 \cdot \tan^{-1} \left( \frac{\delta a}{2f} \right) = 2 \cdot \tan^{-1} \left( \frac{\delta A}{2S} \right)
 \end{equation}
 
-where \( f \) is the focal length of the lens, \( a \) is the sensor width, and \( \delta a \) is the pixel pitch.
+where \( f \) is the focal length of the lens, \( S \) is the height of sensor, \( a \) is the sensor width, \( \delta a \) is the pixel pitch, \( \delta A \) is the physical length represented between pixels, and \( A \) is total width of the ground area captured in the image.
 
 For a fixed flying height and sensor resolution, a wider FOV allows the drone to scan a larger area per frame, improving survey efficiency. However, it also increases the IFOV, reducing the spatial detail of each pixel. Conversely, a narrower FOV enhances resolution but limits coverage per frame. This trade-off is critical in drone-based landmine detection and must be evaluated collectively with the selection of flight altitude for this project in the section later.
 
 
 \paragraph{Ground Sample Distance (GSD)}
 
-Ground Sample Distance (GSD) is the physical ground area represented by a single pixel in an image. For example, in an image with a 1~m GSD, adjacent pixels image locations are 1~m apart on the ground\footnote{\url{https://en.wikipedia.org/wiki/Ground_sample_distance}}. GSD is determined by the drone’s altitude, the camera’s field of view, and the pixel resolution of the sensor.
+Ground Sample Distance (GSD) is the physical ground distance between each pixel in an image (represented as \( \delta A \) in Figure~\ref{fig:fov_ifov}). For example, in an image with a 1~m GSD, adjacent pixels image locations are 1~m apart on the ground\footnote{\url{https://en.wikipedia.org/wiki/Ground_sample_distance}}. GSD is determined by the drone’s altitude, the camera’s field of view, and the pixel resolution of the sensor.
 
 Since APLs typically have diameters ranging from 6 to 15~cm, as shown in Landmine section before, and we aim to achieve a resolution where at least 5–6 pixels span the width of a landmine, this leads to a target GSD of approximately \textbf{1.4~cm/pixel}. This requirement directly informs our selection of flight altitude and FOV, which will be discussed in the flight configuration section later.
 
@@ -141,11 +144,17 @@ Due to time constraints and the complexity of hardware design, this project does
 
 Four models meet the minimum resolution requirement of 640×512 pixels: FLIR Vue Pro, FLIR Duo Pro R, FLIR Tau 2, and DJI Zenmuse XT. All fall within the estimated 4kg payload capacity of standard multi-rotor drones and offer excellent thermal sensitivity, with NETD values below 50mK.
 
-\newcounter{fnstart}
-\setcounter{fnstart}{\value{footnote}}
+Among them, the FLIR Tau 2 provides the highest sensitivity (<30~mK) and is also the lightest (72~g), followed by the FLIR Vue Pro (92–113.4~g), DJI Zenmuse XT (270~g), and FLIR Duo Pro R (325–375~g). In terms of cost, the FLIR Vue Pro is the most affordable (3895~USD), while the DJI Zenmuse XT is the most expensive (9900~USD).
+
+Although the DJI Zenmuse XT offers good performance, it is designed specifically for DJI drones and requires proprietary mounts, power connectors, and software protocols. Integration it with a custom UAV would require hardware adaptation or even reverse engineering, which is not feasible within the time constraints of this project.
+
+This leaves three practical options: FLIR Vue Pro, FLIR Duo Pro R, and FLIR Tau 2. All support standard PWM or serial interfaces and allow real-time video output via USB or analog ports. FLIR Duo Pro R is heavier and more costly than the Vue Pro, with no major performance advantage. FLIR Tau 2 offers slightly better sensitivity and weight, but is nearly twice as expensive.
+
+Considering all these trade-offs, we select the \textbf{FLIR Vue Pro} as the thermal imaging solution for our system.
+
 
 \renewcommand{\arraystretch}{0.9}
-\setlength{\tabcolsep}{5pt}   
+\setlength{\tabcolsep}{5pt}
 
 \begin{table}[H]
     \centering
@@ -157,74 +166,48 @@ Four models meet the minimum resolution requirement of 640×512 pixels: FLIR Vue
     \textbf{Thermal Camera} & \textbf{Pixel Resolution} & \textbf{NETD (mK)} & \textbf{Lens \& FOV (H × V)} & \textbf{Weight (g)} & \textbf{Price} \\
     \hline
 
-    \textbf{FLIR Vue Pro\footnotemark[\numexpr\value{fnstart}+1\relax]} 
+    \textbf{FLIR Vue Pro\tablefootnote{\url{https://flir.netx.net/file/asset/10907/original/attachment}}} 
     & 640 × 512 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 92–113.4 & 3895 (USD)\footnotemark[\numexpr\value{fnstart}+2\relax] \\
+    & 92–113.4 & 3895 (USD)\tablefootnote{\url{https://groupgets.com/products/flir-vue-pro}} \\
     \hline
 
-    \multirow{2}{*}{\textbf{FLIR Duo Pro R\footnotemark[\numexpr\value{fnstart}+3\relax]}} 
+    \multirow{2}{*}{\textbf{FLIR Duo Pro R\tablefootnote{\url{https://flir.netx.net/file/asset/8136/original/attachment}}}} 
     & 640 × 512 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}13 mm: 45° × 37° \\ 19 mm: 32° × 26° \\ 25 mm: 25° × 20° \end{tabular} 
-    & 325–375 & 6599 (USD)\footnotemark[\numexpr\value{fnstart}+4\relax] \\
+    & 325–375 & 6599 (USD)\tablefootnote{\url{https://www.tequipment.net/FLIR/DUO-PRO-R-640-19mm-9Hz/UAVs-and-Drones/}} \\
     \cline{2-6}
     & 336 × 256 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
-    & 325 & 4499 (USD)\footnotemark[\numexpr\value{fnstart}+5\relax] \\
+    & 325 & 4499 (USD)\tablefootnote{\url{https://dronedoctorusa.com/products/flir-duo-pro-r-336-30hz-19mm-open-box}} \\
     \hline
 
-    \textbf{FLIR One Pro\footnotemark[\numexpr\value{fnstart}+6\relax]} 
-    & 160 × 120 & 70 & 50° × 43° & 36.5 & 349 (GBP)\footnotemark[\numexpr\value{fnstart}+7\relax] \\
+    \textbf{FLIR One Pro\tablefootnote{\url{https://flir.netx.net/file/asset/14770/original/attachment}}} 
+    & 160 × 120 & 70 & 50° × 43° & 36.5 & 349 (GBP)\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-pro/?model=435-0006-03&vertical=condition+monitoring&segment=solutions}} \\
     \hline
 
-    \textbf{FLIR One Edge Pro\footnotemark[\numexpr\value{fnstart}+8\relax]} 
-    & 160 × 120 & 70 & 54° × 42° & 153 & 435 (GBP)\footnotemark[\numexpr\value{fnstart}+9\relax] \\
+    \textbf{FLIR One Edge Pro\tablefootnote{\url{https://flir.netx.net/file/asset/5631/original/attachment}}} 
+    & 160 × 120 & 70 & 54° × 42° & 153 & 435 (GBP)\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-edge-pro/}} \\
     \hline
 
-    \textbf{FLIR Tau 2\footnotemark[\numexpr\value{fnstart}+10\relax]} 
+    \textbf{FLIR Tau 2\tablefootnote{\url{https://www.unmannedsystemstechnology.com/wp-content/uploads/2012/04/FLIR-Tau2-Brochure.pdf}}} 
     & 640 × 512 & < 30 & 
     \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 69° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 72 & 6813 (USD)\footnotemark[\numexpr\value{fnstart}+11\relax] \\
+    & 72 & 6813 (USD)\tablefootnote{\url{https://www.thermalvideo.com/46640001x.htm}} \\
     \hline
 
-    \multirow{2}{*}{\textbf{DJI Zenmuse XT\footnotemark[\numexpr\value{fnstart}+12\relax]}} 
+    \multirow{2}{*}{\textbf{DJI Zenmuse XT\tablefootnote{\url{https://www.dji.com/uk/zenmuse-xt/specs}}}} 
     & 640 × 512 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 68° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 270 & 9900 (USD)\footnotemark[\numexpr\value{fnstart}+13\relax] \\
+    & 270 & 9900 (USD)\tablefootnote{\url{https://www.thedroneproshop.com/blogs/product-info/dji-zenmuse-xt-specifications}} \\
     \cline{2-6}
     & 336 × 256 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}6.8 mm: 49.1° × 37.4° \\ 9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
-    & 270 & 7999 (USD)\footnotemark[\numexpr\value{fnstart}+14\relax] \\
+    & 270 & 7999 (USD)\tablefootnote{\url{https://www.bhphotovideo.com/c/product/1318086-REG/dji_cp_zm_000337_zenmuse_xt_336x256_6_8mm.html}} \\
     \hline
 
     \end{tabular}
 \end{table}
-
-\footnotetext[\numexpr\value{fnstart}+1\relax]{\url{https://flir.netx.net/file/asset/10907/original/attachment}}
-\footnotetext[\numexpr\value{fnstart}+2\relax]{\url{https://groupgets.com/products/flir-vue-pro}}
-\footnotetext[\numexpr\value{fnstart}+3\relax]{\url{https://flir.netx.net/file/asset/8136/original/attachment}}
-\footnotetext[\numexpr\value{fnstart}+4\relax]{\url{https://www.tequipment.net/FLIR/DUO-PRO-R-640-19mm-9Hz/UAVs-and-Drones/}}
-\footnotetext[\numexpr\value{fnstart}+5\relax]{\url{https://dronedoctorusa.com/products/flir-duo-pro-r-336-30hz-19mm-open-box}}
-\footnotetext[\numexpr\value{fnstart}+6\relax]{\url{https://flir.netx.net/file/asset/14770/original/attachment}}
-\footnotetext[\numexpr\value{fnstart}+7\relax]{\url{https://www.flir.co.uk/products/flir-one-pro/?model=435-0006-03&vertical=condition+monitoring&segment=solutions}}
-\footnotetext[\numexpr\value{fnstart}+8\relax]{\url{https://flir.netx.net/file/asset/5631/original/attachment}}
-\footnotetext[\numexpr\value{fnstart}+9\relax]{\url{https://www.flir.co.uk/products/flir-one-edge-pro/}}
-\footnotetext[\numexpr\value{fnstart}+10\relax]{\url{https://www.unmannedsystemstechnology.com/wp-content/uploads/2012/04/FLIR-Tau2-Brochure.pdf}}
-\footnotetext[\numexpr\value{fnstart}+11\relax]{\url{https://www.thermalvideo.com/46640001x.htm}}
-\footnotetext[\numexpr\value{fnstart}+12\relax]{\url{https://www.dji.com/uk/zenmuse-xt/specs}}
-\footnotetext[\numexpr\value{fnstart}+13\relax]{\url{https://www.thedroneproshop.com/blogs/product-info/dji-zenmuse-xt-specifications}}
-\footnotetext[\numexpr\value{fnstart}+14\relax]{\url{https://www.bhphotovideo.com/c/product/1318086-REG/dji_cp_zm_000337_zenmuse_xt_336x256_6_8mm.html}}
-
-\addtocounter{footnote}{14}
- 
-
-Among them, the FLIR Tau 2 provides the highest sensitivity (<30~mK) and is also the lightest (72~g), followed by the FLIR Vue Pro (92–113.4~g), DJI Zenmuse XT (270~g), and FLIR Duo Pro R (325–375~g). In terms of cost, the FLIR Vue Pro is the most affordable (3895~USD), while the DJI Zenmuse XT is the most expensive (9900~USD).
-
-Although the DJI Zenmuse XT offers good performance, it is designed specifically for DJI drones and requires proprietary mounts, power connectors, and software protocols. Integration it with a custom UAV would require hardware adaptation or even reverse engineering, which is not feasible within the time constraints of this project.
-
-This leaves three practical options: FLIR Vue Pro, FLIR Duo Pro R, and FLIR Tau 2. All support standard PWM or serial interfaces and allow real-time video output via USB or analog ports. FLIR Duo Pro R is heavier and more costly than the Vue Pro, with no major performance advantage. FLIR Tau 2 offers slightly better sensitivity and weight, but is nearly twice as expensive.
-
-Considering all these trade-offs, we select the \textbf{FLIR Vue Pro} as the thermal imaging solution for our system.
 
 
 
@@ -232,43 +215,38 @@ Considering all these trade-offs, we select the \textbf{FLIR Vue Pro} as the the
 
 With the FLIR Vue Pro camera selected, the next step is to determine appropriate flight parameters, including the operating altitude and FOV (decided by lens focal length). It supports multiple focal lengths (9~mm, 13~mm, and 19~mm), each producing a different FOV. Shorter focal lengths yield wider FOVs, allowing larger ground coverage per image but at the expense of lower spatial resolution. In contrast, longer focal lengths provide narrower FOVs, increasing resolution but reducing coverage area.
 
-As established earlier, the target GSD is approximately 1.4~cm/pixel. Given the fixed pixel resolution of 640×~512, and varying FOVs across different lenses, we use geometric relationships to calculate the corresponding flight altitude and ground coverage for each lens option.
+As established earlier, the target GSD is approximately 1.4~cm/pixel. Given the fixed pixel resolution of 640×~512, and varying FOVs across different lenses, we use geometric relationships to calculate the corresponding flight altitude for each lens option with the same coverage area.
 
-The GSD is related to flight altitude and camera geometry via the following expression:
-
-\begin{equation}
-GSD = \frac{2 \cdot (height \cdot \tan(\frac{FOV}{2}))}{\text{pixel resolution}}
-\end{equation}
-
-Rearranging, the required flight altitude to achieve a target GSD is:
+Referring to Figure~\ref{fig:fov_ifov}, the GSD \( \delta A \) is related to flight altitude \( S \) and camera resolution \( N \) via the following expression derived from~\ref{eq:fov}:
 
 \begin{equation}
-height = \frac{GSD \cdot \text{pixel resolution}}{2 \cdot \tan(\frac{FOV}{2})}
+\delta A = \frac{2 \cdot (S \cdot \tan(\frac{FOV}{2}))}{N}
 \end{equation}
 
-Once altitude is known, the physical ground coverage can be estimated as:
+Rearranging, the required flight altitude to achieve a target \( \delta A \)  is:
 
 \begin{equation}
-\text{Ground Dimension} = 2 \cdot height \cdot \tan\left(\frac{FOV_{h,v}}{2}\right)
+S = \frac{\delta A \cdot N}{2 \cdot \tan(\frac{FOV}{2})}
 \end{equation}
 
-Using these equations, we evaluate each focal length option while holding the GSD constant at 1.4cm/pixel. The resulting flight altitudes and ground coverage areas are summarized in Table\ref{tab:fov_results}.
+Using these equations, we evaluate each focal length option while holding \( \delta A \)  constant at 1.4cm/pixel. The resulting \( S \) are summarized in Table~\ref{tab:fov_results}.
 
 \begin{table}[H]
+\small
 \centering
-\caption{Estimated flight height and coverage area for different Focal Lengths (at GSD = 1.4~cm/pixel)}
+\caption{Estimated flight height for different Focal Lengths (at GSD = 1.4~cm/pixel)}
 \label{tab:fov_results}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-\textbf{Focal Length (mm)} & \textbf{FOV (H × V)} & \textbf{Height (m)} & \textbf{Coverage Area (m\textsuperscript{2})} \\
+\textbf{Focal Length (mm)} & \textbf{FOV (H × V)} & \textbf{Height (m)} \\
 \hline
-9  & 69° × 56° & 6.52   & 62.09  \\
+9  & 69° × 56° & 6.52   \\
 \hline
-13 & 45° × 37° & 10.82  & 64.84  \\
+13 & 45° × 37° & 10.82  \\
 \hline
-19 & 32° × 26° & 15.62  & 64.63  \\
+19 & 32° × 26° & 15.62  \\
 \hline
 \end{tabular}
 \end{table}
 
-Interestingly, the total imaged area remains relatively consistent across lenses (62–65~m\textsuperscript{2}), but the required flight height increases substantially with focal length (from 6.52~m at 9~mm to 15.62~m at 19~mm). Since thermal radiation intensity diminishes with distance due to geometric spreading and atmospheric attenuation, flying at lower altitudes maximizes signal strength and image contrast. Therefore, the \textbf{9~mm} lens with flight altitude around \textbf{6~m} is selected as the optimal configuration.
+From Table~\ref{tab:fov_results}, the required flight height increases substantially with focal length (from 6.52~m at 9~mm to 15.62~m at 19~mm). Since thermal radiation intensity diminishes with distance due to geometric spreading and atmospheric attenuation, flying at lower altitudes maximizes signal strength and image contrast. Therefore, the \textbf{9~mm} lens with flight altitude around \textbf{6~m} is selected as the optimal configuration.
