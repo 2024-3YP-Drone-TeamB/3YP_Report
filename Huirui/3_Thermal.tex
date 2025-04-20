@@ -1,6 +1,6 @@
-\subsection{Thermal Camera System}
+\subsection{Thermal Camera System}\label{thermal_system}
 
-\subsubsection{Fundamentals of Thermal Imaging}
+\subsubsection{Fundamentals of Thermal Imaging}\label{thermal_fundamental}
 
 Thermal imaging is a passive, non-contact sensing technique that captures the infrared (IR) radiation naturally emitted by objects with temperatures above absolute zero\footnote{\label{thermography}\url{https://en.wikipedia.org/wiki/Thermography}}. Unlike visible-light cameras that rely on reflected light, thermal cameras measure emitted radiation and generate spatial maps of surface temperature.
 
@@ -10,7 +10,7 @@ In landmine detection, buried mines disrupt the natural thermal behavior of the 
 
 
 
-\subsubsection{Thermal Camera Performance Parameters}
+\subsubsection{Thermal Camera Performance Parameters}\label{thermal_parameter}
 
 The performance of a thermal imaging system depends not only on the physics of infrared radiation but also on the specific characteristics of the camera itself. Key parameters include the spectral band, thermal sensitivity, pixel resolution, field of view (FOV), instantaneous field of view (IFOV), and ground sample distance (GSD). These factors collectively determine the system’s ability to detect small temperature differences, resolve fine spatial features from altitude, and identify landmines from the surrounding terrain.
 
@@ -134,7 +134,7 @@ Ground Sample Distance (GSD) is the physical ground distance between each pixel 
 Since APLs typically have diameters ranging from 6 to 15~cm, as shown in Landmine section before, and we aim to achieve a resolution where at least 5–6 pixels span the width of a landmine, this leads to a target GSD of approximately \textbf{1.4~cm/pixel}. This requirement directly informs our selection of flight altitude and FOV, which will be discussed in the flight configuration section later.
 
 
-\subsubsection{Thermal Camera Selection}
+\subsubsection{Thermal Camera Selection}\label{thermal_selection}
 
 Based on the theoretical principles and performance criteria established in the previous sections, the thermal camera used in our drone system must satisfy several key constraints. First, it must operate in the LWIR spectral range to align with peak thermal emissions from terrestrial objects at ambient temperature. Then, it should achieve a NETD of no more than 500~mK to reliably detect subtle contrasts between landmines and surrounding soil. Moreover, a pixel resolution of at least 640×480 is required to capture sufficient spatial detail during high-altitude scanning. Additionally, the lens focal length and field of view must enable a GSD of approximately 1.4~cm/pixel at flight altitudes between 5–10 meters. Finally, the camera’s weight and cost must be as low as possible.
 
@@ -211,7 +211,7 @@ Considering all these trade-offs, we select the \textbf{FLIR Vue Pro} as the the
 
 
 
-\subsubsection{Flight Configuration}
+\subsubsection{Thermal System Flight Configuration}\label{thermal_flight}
 
 With the FLIR Vue Pro camera selected, the next step is to determine appropriate flight parameters, including the operating altitude and FOV (decided by lens focal length). It supports multiple focal lengths (9~mm, 13~mm, and 19~mm), each producing a different FOV. Shorter focal lengths yield wider FOVs, allowing larger ground coverage per image but at the expense of lower spatial resolution. In contrast, longer focal lengths provide narrower FOVs, increasing resolution but reducing coverage area.
 

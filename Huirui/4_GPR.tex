@@ -1,6 +1,6 @@
-\subsection{Ground Penetrating Radar}
+\subsection{Ground Penetrating Radar}\label{GPR_system}
 
-\subsubsection{Fundamentals of GPR}
+\subsubsection{Fundamentals of GPR}\label{GPR_fundamental}
 
 Ground Penetrating Radar (GPR) is a non-invasive subsurface sensing technique that detects buried objects by emitting electromagnetic (EM) waves and analyzing their reflections. A typical GPR system is consisted of a wideband antenna and an active sensor. The antenna emits EM waves into the ground, and reflections are captured where there is a contrast in dielectric properties, like between soil and a buried landmine~\cite{paik2002image}.
 
@@ -33,7 +33,7 @@ Since our project focuses on localizing and estimating the depth of landmines ra
 
 
 
-\subsubsection{GPR Performance Factors}
+\subsubsection{GPR Performance Factors}\label{GPR_Factors}
 
 The performance of a GPR system for UAV-based landmine detection depends on a variety of factors that influence its resolution, penetration depth, and system complexity. These include waveform generation methods, operating frequency and bandwidth, spatial resolution metrics, antenna design, signal processing techniques such as Synthetic Aperture Radar (SAR), and orientation of the radar with respect to the ground surface. This section outlines the main design parameters and discusses their implications for airborne GPR deployment.
 
@@ -134,7 +134,7 @@ This relationship introduces a trade-off between penetration depth and physical 
 
 
 
-\subsubsection{GPR System Design}
+\subsubsection{GPR System Design}\label{GPR_design}
 
 While numerous GPR architectures have been explored in previous research, most high-performance UAV-based landmine detection systems rely on custom radar platforms. These typically incorporate Software-Defined Radio (SDR), customized waveform generators, and advanced antenna arrays to maximize their environmental adaptability, resolution, and penetration~\cite{cerquera2017uav}.
 
@@ -151,7 +151,7 @@ This system architecture based on a down-looking COTS impulse radar at low-frequ
 
 
 
-\subsubsection{Flight Configuration}
+\subsubsection{GPR System Flight Configuration}\label{GPR_flight}
 
 In our system, the GPR drone is designed to fly at an altitude of approximately 2 meters. This low flight height ensures a balance between maximizing power coupling into the ground and maintaining safe clearance for autonomous operations. The selected altitude is consistent with previous DLGPR studies on UAV landmine detection ~\cite{schartel2018uav,alqudsi2021review}.
 
