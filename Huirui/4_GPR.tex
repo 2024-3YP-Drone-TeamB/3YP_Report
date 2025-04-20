@@ -66,17 +66,17 @@ Cross-range or lateral resolution $\Delta l$ defines the radar’s ability to di
     \begin{subfigure}[t]{0.48\linewidth}
         \centering
         \includegraphics[height=4.2cm]{figs/Huirui/freq_tradeoff.png}
-        \caption{Frequency–resolution vs. penetration depth trade-off\protect\footnotemark.}
+        \caption{Frequency, resolution, penetration depth trade-off\protect\footnotemark.}
         \label{fig:freq_tradeoff}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\linewidth}
         \centering
         \includegraphics[height=4.2cm]{figs/Huirui/bp_geometry.png}
-        \caption{Illustration of BP imaging geometry~\cite{lei2014multi}.}
+        \caption{Illustration of BP SAR imaging geometry~\cite{lei2014multi}.}
         \label{fig:bp_geometry}
     \end{subfigure}
-    \caption{Trade-offs and imaging geometry in UAV-based GPR.}
+    \caption{Trade-offs and SAR imaging geometry in UAV-based GPR.}
 \end{figure}
 
 \footnotetext{\url{www.radartutorial.eu}}
@@ -88,12 +88,12 @@ Traditional GPR systems have limited cross-range resolution due to the small siz
 
 Among SAR algorithms, \textbf{Back-Projection (BP)} is particularly suited for UAV applications due to its robustness to irregular trajectories and non-uniform sampling. BP operates by summing radar echoes along computed time-delay curves for each focal point. As shown in Figure~\ref{fig:bp_geometry}, radar signals $e_1(x_p, t)$ are collected at multiple UAV positions $x_p$. The round-trip travel time $\tau_{m,n,p}$ from the transmitter to a target point $(x_n, z_m)$ and back is used to time-shift and coherently sum these signals by \(e_2(x_n, z_m) = \sum_{p=1}^{P} e_1(x_p, \tau_{m,n,p})\) and \(\tau_{m,n,p} = \frac{2R_a}{c} + \frac{2R_b}{v}\) where $R_a$ and $R_b$ are distances through air and soil respectively, $c$ is the speed of light, and $v$ is the wave velocity in soil. This delay-and-sum approach transforms hyperbolic reflections in conventional B-scans (like Figure~\ref{fig:gpr_bscan}) into focused point targets, improving subsurface interpretability. However, the method is computationally intensive and not ideal for real-time onboard processing~\cite{lei2014multi}.
 
-SAR can operate in different beam-steering modes depending on coverage and resolution needs (Figure~\ref{fig:sar_modes}):
+SAR can operate in different beam-steering modes depending on coverage and resolution needs~\cite{moreira2013tutorial}:
 
 \begin{itemize}
-    \item \textbf{Stripmap SAR} maintains a fixed beam relative to the UAV, illuminating a continuous swath as the platform moves forward, which offers a balance between area coverage and resolution~\cite{moreira2013tutorial}.
-    \item \textbf{ScanSAR} periodically steers the beam to cover multiple adjacent swaths, increasing area coverage at the cost of reduced resolution~\cite{moreira2013tutorial}.
-    \item \textbf{Spotlight SAR} keeps the beam focused on a single target area, maximizing resolution but limiting area coverage~\cite{moreira2013tutorial}.
+    \item \textbf{Stripmap SAR} maintains a fixed beam relative to the UAV, illuminating a continuous swath as the platform moves forward, which offers a balance between area coverage and resolution (Figure~\ref{fig:sar_modes} (a)).
+    \item \textbf{ScanSAR} periodically steers the beam to cover multiple adjacent swaths, increasing area coverage at the cost of reduced resolution (Figure~\ref{fig:sar_modes} (b)).
+    \item \textbf{Spotlight SAR} keeps the beam focused on a single target area, maximizing resolution but limiting area coverage (Figure~\ref{fig:sar_modes} (c)).
 \end{itemize}
 
 \begin{figure}[h!]
