@@ -142,6 +142,8 @@
 \newacronym{mcc}{MCC}{Matthews correlation coefficient}
 %%%
 
+
+
 % ADD ADDITIONAL PACKAGES HERE
 \usepackage{algpseudocode}
 \usepackage{algorithm}
@@ -282,3 +284,5 @@
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{url}
+\newcommand{\glsused}[1]{\glslink{#1}{\mbox{}}\glsadd{#1}\glsunset{#1}}
+
