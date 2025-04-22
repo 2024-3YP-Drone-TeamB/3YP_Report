@@ -35,13 +35,13 @@ This section will explain the theoretical basis of how the mission planning algo
 
 \subsubsection{Algorithm Outline}
 
-As mentioned in sections~X~and~X, we utilise thermal and \gls{gpr} sensors to detect the landmines. Table~\ref{tab:thermal_vs_gpr} illustrates the trade-off between thermal and \gls{gpr} sensors: a thermal sensor is able to scan at a higher altitude and fast speed which results in a shorter time to survey the given \gls{roi}, but a \gls{gpr} sensor results in a higher confidence in the mine location. 
+As mentioned in sections~X~and~X, we utilise thermal and \gls{GPR} sensors to detect the landmines. Table~\ref{tab:thermal_vs_gpr} illustrates the trade-off between thermal and \gls{GPR} sensors: a thermal sensor is able to scan at a higher altitude and fast speed which results in a shorter time to survey the given \gls{roi}, but a \gls{GPR} sensor results in a higher confidence in the mine location. 
 
 \begin{table}[h!]
     \centering
     \begin{tabular}{| c || c | c |}
         \hline
-        Sensor & Thermal & \gls{gpr} \\
+        Sensor & Thermal & \gls{GPR} \\
         \hline\hline
         Altitude & \textbf{High} & Low \\
         \hline
@@ -51,7 +51,7 @@ As mentioned in sections~X~and~X, we utilise thermal and \gls{gpr} sensors to de
         \hline
     \end{tabular}
     \caption[Comparison of Thermal and GPR Sensors]
-    {Comparison of thermal and \gls{gpr} sensors. Bold entries indicate a comparative advantage.}
+    {Comparison of thermal and \gls{GPR} sensors. Bold entries indicate a comparative advantage.}
     \label{tab:thermal_vs_gpr}
 \end{table}
 
@@ -61,8 +61,8 @@ The layered approach aims to optimise between this trade-off by structuring the 
     \item \textbf{Define}: The \gls{roi} and its obstacles are defined using a \gls{gis} software by the system operator. (Section~\ref{sec:msp_define})
     \item \textbf{Cover}: The \gls{roi} is fully covered by the thermal sensor in a Boustrophedon (back-and-forth) path through a \gls{cpp} algorithm. (Section~\ref{sec:msp_cpp})
     \item \textbf{Analyse}: The resulting thermal sensor readings are analysed by a machine learning algorithm to return a list of suspected landmine points. (Section~X) 
-    \item \textbf{Target}: The suspected landmine points are targeted and rescanned by the \gls{gpr} sensor in a minimum traversal path through a \gls{tspo} algorithm. (Section~\ref{sec:msp_tspo}) 
-    \item \textbf{Confirm}: The resulting \gls{gpr} readings are analysed by a machine learning algorithm to return the final result on the locations of the landmines. (Section~X)
+    \item \textbf{Target}: The suspected landmine points are targeted and rescanned by the \gls{GPR} sensor in a minimum traversal path through a \gls{tspo} algorithm. (Section~\ref{sec:msp_tspo}) 
+    \item \textbf{Confirm}: The resulting \gls{GPR} readings are analysed by a machine learning algorithm to return the final result on the locations of the landmines. (Section~X)
     \item \textbf{Demine}: The \gls{roi} is demined based on the generated landmine location map. The demining operation itself is outside the scope of this project, and it will be the responsibility of the demining organisations to safely deactivate and remove the mines.
 \end{enumerate}
 
@@ -194,11 +194,11 @@ The \gls{tsp} is an optimisation problem in which the minimum traversal path to 
     \label{tab:msp_tspcomparison}
 \end{table}
 
-For the purpose of our layered approach, the number of suspected points will get large due to the size of the \gls{roi} and leniency towards high recall for the thermal sensor analysis algorithm (Section~X). It is also acceptable to sacrifice the optimality of the solution as it is not critical for surveying the \gls{roi} with the \gls{gpr} sensor. Hence, we choose the heuristic Lin-Kernighan algorithm for our problem. 
+For the purpose of our layered approach, the number of suspected points will get large due to the size of the \gls{roi} and leniency towards high recall for the thermal sensor analysis algorithm (Section~X). It is also acceptable to sacrifice the optimality of the solution as it is not critical for surveying the \gls{roi} with the \gls{GPR} sensor. Hence, we choose the heuristic Lin-Kernighan algorithm for our problem. 
 
 % more detailed explanation of the lk algorithm. 
 
-The \gls{tsp} can be extended to more specific cases depending on the application, one of which is the \gls{tspo}. It introduces obstacles which the traversal path must avoid; this is exactly the problem that must be solved for the Target step of the layered approach, as the drone with a \gls{gpr} sensor must visit all suspected landmine points in the obstacle-filled \gls{roi}. The method for solving \gls{tspo} is explained in the next section. 
+The \gls{tsp} can be extended to more specific cases depending on the application, one of which is the \gls{tspo}. It introduces obstacles which the traversal path must avoid; this is exactly the problem that must be solved for the Target step of the layered approach, as the drone with a \gls{GPR} sensor must visit all suspected landmine points in the obstacle-filled \gls{roi}. The method for solving \gls{tspo} is explained in the next section. 
 
 \subsubsection{Solving TSP-O using Visibility Graph}
 
@@ -275,13 +275,13 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
 \subsection{Real Location Example}
 \label{sec:msp_example}
 
-To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{roi} at Kyiv, Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}a. The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{qgis}. 
+To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{roi} at Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}a. The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{qgis}. 
 
 \paragraph{Define} Figure~\ref{fig:msp_example}b shows the \gls{roi} defined using \gls{qgis}. The \gls{roi} is about the size of a 400m by 400m field with 3 obstacles which have been manually identified.  
 
 \paragraph{Cover} Figure~\ref{fig:msp_example}c shows the \gls{cpp} solution found using the implementation by \cite{bahnemann2021cpp}. The coverage width has been specified as approximately 9m, and the start/end points have been arbitrarily decided to be at the top-right region outside the \gls{roi}. A thermal sensor drone will follow the generated path plan to collect the thermal readings. The total length of the path is calculated to be 15526m.
 
-\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{tspo} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{roi} have been randomly generated using rejection sampling. In a real mission, these points would be found during the Analyse step based on the thermal readings. A \gls{gpr} sensor drone will follow the generated path plan to collect the \gls{gpr} readings. The total length of the path is calculated to be 1777m.
+\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{tspo} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{roi} have been randomly generated using rejection sampling. In a real mission, these points would be found during the Analyse step based on the thermal readings. A \gls{GPR} sensor drone will follow the generated path plan to collect the \gls{GPR} readings. The total length of the path is calculated to be 1777m.
 
 For Cover and Target, if the total length of the path is too large to be covered by a single drone the operator may choose to deploy multiple drones to cover the \gls{roi}. This is further explained in Section~\ref{sec:msp_multi_drone}. 
 
@@ -296,7 +296,7 @@ For Cover and Target, if the total length of the path is too large to be covered
         (c) & (d)
     \end{tabular}
     \caption[Real Location Example for Mission Planning]
-    {Real location example for generating a mission plan of a \gls{roi}. (a) The satellite view of a field in Kyiv, Ukraine. (b) The outer polygon (black dotted region) and holes (red regions) are drawn on \gls{qgis} to define the \gls{roi}. (c) The \gls{cpp} algorithm is executed to generate the thermal sensor drone path plan. (d) The \gls{tspo} algorithm is executed with 20 suspected landmine points to generate the \gls{gpr} sensor drone path plan. 
+    {Real location example for generating a mission plan of a \gls{roi}. (a) The satellite view of a field in Ukraine. (b) The outer polygon (black dotted region) and holes (red regions) are drawn on \gls{qgis} to define the \gls{roi}. (c) The \gls{cpp} algorithm is executed to generate the thermal sensor drone path plan. (d) The \gls{tspo} algorithm is executed with 20 suspected landmine points to generate the \gls{GPR} sensor drone path plan. 
     }
     \label{fig:msp_example}
 \end{figure}
@@ -375,7 +375,7 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
     \hline
         $v_{\mathrm{sensor}}$ & Maximum flight speed of the drone attached with the given sensor. & $\mathrm{m} \, \mathrm{s}^{-1}$ \\
     \hline
-        $T_{\mathrm{GPR}}$ & Length of the target path generated using \gls{tspo} algorithm that should be surveyed using the \gls{gpr} sensor. & $\mathrm{m}$ \\
+        $T_{\mathrm{GPR}}$ & Length of the target path generated using \gls{tspo} algorithm that should be surveyed using the \gls{GPR} sensor. & $\mathrm{m}$ \\
     \hline
         $t_{\mathrm{manual}}$ & Time taken for the \gls{roi} to be fully covered using manual detection methods. & $\mathrm{s}$ \\
     \hline
@@ -402,7 +402,7 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
 \varepsilon_{\mathrm{manual}} = \frac{t_{\mathrm{manual}}}{A_{\mathrm{ROI}}}
 \end{equation}
 
-$C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the sensors as well as the geometry of the \gls{roi}. The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1 m for a landmine detection drone using a magnetic sensor compared to 9 m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). Most of the parameters could not be found in related works on thermal, \gls{gpr} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125 square metres per deminer per day in terms of efficiency. The value includes both detection and removal. 
+$C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the sensors as well as the geometry of the \gls{roi}. The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1 m for a landmine detection drone using a magnetic sensor compared to 9 m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125 square metres per deminer per day in terms of efficiency. The value includes both detection and removal. 
 
 \subsubsection{Expandability}
 
