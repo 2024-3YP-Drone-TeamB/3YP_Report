@@ -20,22 +20,15 @@ The telemetry recordings of the flight controller are vital for crash analysis. 
 t = \frac{C \cdot (V_0 - V_{\text{cutoff}})}{I}
 \label{eq:discharge_time}
 \end{equation}
-
 \begin{equation}
 t_{\text{worst-case}} = \frac{0.47 \cdot (3.3 - 2.8)}{1} = 0.235\ \text{seconds}
 \label{eq:worst_case_time}
 \end{equation}
-
 \begin{equation}
-\tau = R \cdot C
+\tau = R \cdot C = 20 \cdot 0.47 = 9.4\ \text{seconds}
 \label{eq:charging_time_constant}
 \end{equation}
-
-\begin{equation}
-\tau = 20 \cdot 0.47 = 9.4\ \text{seconds}
-\label{eq:charging_tau_result}
-\end{equation}
-The time before dropout, with the worst case conditions is over 0.2 seconds \ref{eq:worst_case_time}, this will provide sufficient time to record any last messages. Furthermore, the time constant is 9.4s \ref{eq:charging_tau_result} meaning that there are current spikes when turning the device on but it is still charged over 3V within 30 seconds \ref{fig:charging_curve}.
+The time before dropout, with the worst case conditions is over 0.2 seconds \ref{eq:worst_case_time}, this will provide sufficient time to record any last messages. Furthermore, the time constant is 9.4s \ref{eq:charging_time_constant} meaning that there are current spikes when turning the device on but it is still charged over 3V within 30 seconds \ref{fig:charging_curve}.
 
 \subsubsection{Comparison to Commercial Options}\label{sub_sub_section:tgt_commercial_options}
 \input{Thomas/Custom_Hardware/BOMs}

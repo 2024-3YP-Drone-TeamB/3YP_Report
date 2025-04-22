@@ -3,12 +3,12 @@
 \section{Return to Safety} \label{Return to Safety}
 
 \subsection{Introduction and Philosophy}\label{sub_section:tgt_RTS_intro}
-Traditionally, \gls{RTH} is executed in commercial drone products in case of detected faults however, this specific use case provides cause to expand this functionality. In cases of partial thrust failure the device will have to use less aggressive control in order to cause no further degeneration and compensate for lower actuator saturation levels. Therefore, the device is less robust to disturbances and introducing a significant probability of crashing. Similarly, in adverse weather conditions, the device can no longer be assumed to be robust to the environmental disturbances and has a significant probability of crashing. Given the difficulty of retrieval, this means that traditional \gls{RTH} is not the optimal strategy in these specific cases and instead a \gls{RTS} strategy is more appropriate.
-\paragraph{When to use \gls{RTH}}
-\gls{RTH} is preferable to to \gls{RTS} as by tracing back the original path returns the device to the base on an obstacle free path. Therefore, \gls{RTH} should be used when the device is robust to the environmental conditions, and  has accurate location sensing. This means in cases of redundant sensor or communication faults, state of charge being outside the expected range, non safety critical sensor faults, or if commanded by the base station \gls{RTH} should be executed.
-\paragraph{Objectives}
-The objective of the \gls{RTS} system is to provide a robust path planning route to safe landing zones when \gls{RTH} is not possible. It should also be easy to setup and operate by untrained ground operators.
+We are saying: RTH is ideal, Cannot emergency land, therefore RTS
+\gls{RTH} should always be used when possible as returning to the base is easiest and safest for ground operators. When the device experiences a significant probability of failure traditionally it carries out an emergency landing. However, in this specific operating environment emergency landing leaves the device stranded in a minefield where it cannot be retrieved. Therefore, a \gls{RTS} system is developed where it attempts to go to the nearest safe landing zone for retrieval minimising the probability of crashing in a dangerous environment and avoiding obstacles. This system should be practical, easy to use and supportive of those with disabilities.
 
 \input{Thomas/Return_To_Safety/1_Cost_Maps}
 \input{Thomas/Return_To_Safety/2_Fault_Detection_And_Control}
 \input{Thomas/Return_To_Safety/3_Path_Planning}
+
+\subsection{Conclusion}
+The \gls{GUI} is easy and quick to use for untrained ground operators and supports the colour-blind. The path planning algorithm supports pre-computation that enables the device to operate \gls{RTS} with $O(1)$ memory and time complexity supporting real-time deployment. Finally, the system is built to be flexible with improvements in mind by setting up the data collection architecture to enable to the system to improve with use. 
