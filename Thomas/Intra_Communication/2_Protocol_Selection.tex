@@ -1,18 +1,21 @@
 \subsection{Protocol Selection}\label{sub_section:tgt_protocol_selection}
 
-\subsubsection{Requirements and Options}\label{sub_sub_section:tgt_requirements}
+\subsubsection{Busses}\label{sub_sub_section:tgt_requirements}
 \paragraph{Message Requirements}
 Table \ref{tab:messages} shows the required messages for flight and imaging. From this it is clear that imaging requires a far higher data transfer speeds. This means a network of low speed modules could be used with a separate imaging network.
-\input{Thomas/Intra_Communication/communication_options}
-\input{Thomas/Intra_Communication/messages}
 
-\subsubsection{Communication between Modules}\label{sub_sub_section:tgt_comms_modules}
-\paragraph{Architecture}
-Centralised architectures consist of a central node directly connected to all the relevant devices, creating a single point of failure. while this is a simple and cost effective method it leaves the device to single points of failure. In order to build robustness, the custom \gls{GNSS} module is capable of independently executing landing and \gls{RTS}.  
-\paragraph{Bus Selection}
-FlexRay has some clear advantages including built in redundancy and higher data transfer speeds as shown in Table \ref{tab:communication_options}. However, due to its added complexity, cost and the fact it is compatible with far fewer components, a \gls{CAN} bus is the better option. This may change if the data transfer rates needed to increase or if the technology behind FlexRay becomes cheaper and more widespread. Further, there are two key options for \gls{CAN}, time triggered or flexible data. Time triggered is an attractive as it supports higher data transfer rates however, flexible data is more widely supported and is sufficient for the application.\cite{CANFlexRay}
+
+
  
 \subsubsection{Communication with sensors}\label{sub_sub_section:tgt_comms_sensors}
+
+
+
+
+\begin{comment}
+\paragraph{Bus Selection}
+FlexRay has some clear advantages including built in redundancy and higher data transfer speeds as shown in Table \ref{tab:communication_options}. However, due to its added complexity, cost and the fact it is compatible with far fewer components, a \gls{CAN} bus is the better option. This may change if the data transfer rates needed to increase or if the technology behind FlexRay becomes cheaper and more widespread. Further, there are two key options for \gls{CAN}, time triggered or flexible data. Time triggered is attractive as it supports higher data transfer rates however, flexible data is more widely supported and is sufficient for the application \cite{CANFlexRay}.
+
 \paragraph{High Speed Sensors}
 The simple but high speed \gls{SPI} protocol should be used whenever possible. This is because it is widely supporting by commercially available sensors and \gls{MCU}s. Uniformly using similar sensor sets also has the benefit of simplicity of implementation.
 \paragraph{Low Speed Sensors}
@@ -20,8 +23,9 @@ Both \gls{UART} and \gls{I$^2$C} are widely supported, both are simple and effec
 \paragraph{Memory Devices}
 MicroSD and SD cards can communicate with \gls{SPI} or \gls{SDIO}. \gls{SPI} uses 1 bit writing and \gls{SDIO} uses 4 bit communication making \gls{SDIO} faster but harder to design traces with\footnote{\url{https://fmuser.org/news/IPTV-encoder/Introduction-to-SPI-I2C-UART-I2S-GPIO-SDIO-CAN/}}. Therefore, for the flight controller \gls{SPI} was used as the data transfer rates are low. However, while recording imaging data on the main computers SD card, \gls{SDIO} should be used in order to support the high writing speeds required. 
 \paragraph{Imaging Sensors}
-The imaging sensors require very high data transfer rates of over 34 mbps and are not safety critical. They are therefore not included on the \gls{CAN} bus but instead directly connect to the onboard computer using Ethernet as it can handle the higher speeds required.
+The imaging sensors require very high data transfer rates of over 34 Mbps and are not safety critical. They are therefore not included on the \gls{CAN} bus but instead directly connect to the onboard computer using Ethernet as it can handle the higher speeds required.
 \paragraph{Debugger}
 Debugging is possible using the \gls{CAN} bus at a system level but for in depth on board debugging that might be required for failure analysis or uploading code to boards should also be available.\gls{UART} can be used as a live signal monitor similar to CAN however, for full access debugging a \gls{SWD} interface is used\footnote{\url{https://runtimerec.com/using-debugging-interfaces-uart-jtag-and-swd-demystified}}. Therefore, for system wide debugging the \gls{CAN} bus will be used, and for onboard debugging a \gls{SWD} will be used.
-\paragraph{High Level Protocol}
-A single high level protocol being used across all components makes the \gls{UAV} more adaptable and makes hiring developers easier. This is because a single skill-set can interact with the entire system. Therefore, Cyphal will be used as it can operate over \gls{CAN} and Ethernet \footnote{\url{https://opencyphal.org/}} which are the key communication systems. 
+\input{Thomas/Intra_Communication/communication_options}
+\input{Thomas/Intra_Communication/messages}
+\end{comment}

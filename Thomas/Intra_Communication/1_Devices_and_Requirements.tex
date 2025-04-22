@@ -10,16 +10,22 @@ Defined interfaces, protocols and pin allow for different devices to communicate
 \paragraph{Battery Telemetry}
 The two key failure modes for the battery are state of charge and thermal runaway. Both can cause complete failure and therefore both should be monitored during flight. This allows for \gls{RTH} to be triggered in case of a state of charge or emergency landing in the case of thermal runaway.
 \paragraph{\gls{ESC} Telemetry}
-\gls{IMU} data can be used in conjunction with command signals to approximate actuator faults, however, due to noise and outside disturbances it is limited in accuracy. Providing \gls{ESC} telemetry for voltage, current and \gls{RPM} is important information when classifying motor and propeller faults accurately which is needed to support the adaptive control strategy in \ref{para:control_strategy}.   
+\gls{IMU} data can be used in conjunction with command signals to approximate actuator faults, however, due to noise and outside disturbances it is limited in accuracy. Providing \gls{ESC} telemetry for voltage, current and \gls{RPM} is important information when classifying motor and propeller faults accurately which is needed to support the adaptive control strategy in Section \ref{para:control_strategy}.   
 
-\subsubsection{Redundancy and Safety Critical Devices}\label{sub_sub_section:tgt_redundancy}
-\paragraph{Relevance}
-Safety critical devices ensure that the drone does not sustain damage or isolate itself. This includes components necessary for flight and the sensors required for \gls{RTS}. To ensure that failures are minimised, safety critical devices should be redundant. If a safety critical device does not have a redundant version it should be able to communicate on at least two different lines preventing a single module failure causing device failure.
+\subsubsection{Communication Bus}
+\paragraph{\gls{CAN} bus}
+In order to support the \gls{ESC} telemetry required Cyphal should be used as it is widely supported by \gls{COTS} hardware and can run over \gls{CAN} bus. CAN Flexible Data (FD) is widely used and supported and can process data transfer speeds up to 5 Mbps whilst also supporting modularity. In order to guarantee redundancy a dual \gls{CAN} bus is selected.
+\paragraph{Imaging Separation}
+The images used in GPR and Thermal require significantly more data then both telemetry and command signals and are therefore separately connected to the on-board computer using Fiber Optic Ethernet. As Ethernet can support speeds up to 1 Gbps it could support 217 640x512 resolution 14 bit TIFF images per second. This makes the system capable of increasing resolution, frame rate and bits-per-pixel giving flexibility to the drone.
 \paragraph{Node Distribution}
-Distributing the devices on different communication lines reduces the risk of failure as it reduces the risk of common mode failure. For example, if a \gls{GNSS} module were to have an improper fixture and move in a way that it severs all connections; if both communication lines are in it, both are severed. However, if it is on only one communication line then the other communication line is undamaged. This layout is shown in Figure \ref{fig:CAN_bus}. 
+Safety critical devices ensure that the drone does not sustain damage or isolate itself. This includes components necessary for flight and the sensors required for \gls{RTS}. To ensure that failures are minimised, safety critical devices should be redundant. If a safety critical device does not have a redundant version it should be able to communicate on at least two different lines preventing a single module failure causing device failure. Distributing the devices on different communication lines reduces the risk of failure as it reduces the risk of common mode failure. For example, if a \gls{GNSS} module were to have an improper fixture and move in a way that it severs all connections; if both communication lines are in it, both are severed. However, if it is on only one communication line then the other communication line is undamaged. This layout is shown in Figure \ref{fig:CAN_bus}. 
  \begin{figure}[h!]
  \centering
   \includegraphics[width=1\textwidth]{figs/Thomas/Intra Communication/CAN bus.png}
  \caption{Bus layout}
  \label{fig:CAN_bus}
  \end{figure}
+\paragraph{Communication Architecture}
+Centralised architectures consist of a central node directly connected to all the relevant devices. while this is a simple and cost effective method it leaves the device to single points of failure. In order to build robustness, the custom \gls{GNSS} module is capable of independently executing landing and \gls{RTS} as it is equipped with an independent \gls{IMU} that is control capable.  
+\paragraph{High Level Protocol}
+A single high level protocol being used across all components makes the \gls{UAV} more adaptable and makes hiring developers easier. This is because a single skill-set can interact with the entire system. Therefore, Cyphal will be used as it can operate over \gls{CAN} and Ethernet \footnote{\url{https://opencyphal.org/}} which are the key communication systems. 
