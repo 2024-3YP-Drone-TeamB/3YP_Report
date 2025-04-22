@@ -59,7 +59,7 @@
     \subsubsection{Fuzzy Rule Selection} \label{fuzzy_rules}
     
 
-        ANFIS can be configured to include every possible fuzzy IF-AND-THEN using a dense antecedent layer. However, this is computationally expensive, as the number of rules required scales as \((\textit{\#. fuzzy sets})^\text{(\textit{\#. inputs})}\), making this approach intractable when there is lots of domain knowledge (an example of this method is included in \cite{jang1993anfis}). Instead, it is more efficient to explicitly encode only the fuzzy rules that are expected to have the most significant impact. The following rules are proposed for the full ANFIS implementation, which are manually derived from the simulations in Sections \ref{compvis_thermalsims} and \ref{compvis_radarsims}, from first-principles physics, or general domain knowledge:
+        ANFIS can be configured to include every possible fuzzy IF-AND-THEN using a dense antecedent layer. However, this is computationally expensive, as the number of rules required scales as \newline \((\textit{\#. fuzzy sets})^\text{(\textit{\#. inputs})}\), making this approach intractable when there is lots of domain knowledge (an example of this method is included in \cite{jang1993anfis}). Instead, it is more efficient to explicitly encode only the fuzzy rules that are expected to have the most significant impact. The following rules are proposed for the full ANFIS implementation, which are manually derived from the simulations in Sections \ref{compvis_thermalsims} and \ref{compvis_radarsims}, from first-principles physics, or general domain knowledge:
         
         \begin{enumerate}
 

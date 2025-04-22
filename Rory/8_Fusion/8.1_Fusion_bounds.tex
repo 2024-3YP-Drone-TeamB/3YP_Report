@@ -27,7 +27,7 @@
         \paragraph{Recall} The Naive Bayes system recall can similarly be found by considering the intrinsic recalls of each sensor, and is a lower bound on the true system recall. Because the radar sensor only scans regions flagged by the thermal sensor, the NB system recall is the product of the individual recalls \(R_\text{sys} = R_\text{T} R_\text{R}\), 
         which  cannot exceed $R_\text{T}$. This gives the \textbf{bounds on the fused system's recall as} $R_\text{T}R_\text{R}\leq R_\text{sys}< R_\text{T}$.
     
-    \subsubsection{Naive Bayes Fusion: Quantifying Bounds}
+    \subsubsection{Naive Bayes Fusion: Quantifying Bounds} \label{Rory_quantifying_bounds}
     
         Using the YOLO model performance metrics in Table \ref{tab:sensor_comparison}, and a prior landmine density of 2\% ($\rho_0 = 0.02$), the following values are obtained: $R_T = 0.919,~ F_T = 0.15,~ R_R = 0.833,~ F_R = 0.085.$ These values are used to calculate the posterior density after thermal screening and subsequent radar scanning, using Equation \ref{eq:rho_2}:
         \[
@@ -44,7 +44,7 @@
             
             When the radar sensor is included as part of the layered architecture, the system precision is increased approximately 5 times, with only a marginal 15.3\% drop in recall. This trade-off is justified, as a modest reduction in recall has negligible operational impact (discussed in Section \ref{fusion_overview}), whilst the boost in precision dramatically reduces operational costs, which is mentioned in Section \ref{financing}. Therefore it is crucial to have the radar sensor.
                 
-        \paragraph{Benefit of the Layered Approach}
+        \paragraph{Benefit of the Layered Approach} \label{Benefit of the Layered Approach}
         
             The layered approach, where the radar sensor only probes the points flagged by the thermal sensor, enables the radar sensor to operate over a much smaller region, covering only $\rho_1 \approx 11.2\%$ of the total land area. In contrast, if both sensors were applied in parallel, with the radar sensor scanning the entire area, detection time, and hence cost would increase by $\approx$ \textbf{XX.XX}$\times$ (Section \ref{sec:msp_comparison_manual_demining}), for only a slight improvement in recall and a negligible gain in precision. Therefore, the layered approach is a very efficient way of incorporating the radar sensor. 
 
