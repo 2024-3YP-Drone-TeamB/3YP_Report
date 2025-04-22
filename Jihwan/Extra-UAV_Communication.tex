@@ -2,7 +2,7 @@
 \fancyhead[C]{Jihwan Shin}
 \section{Extra-UAV Communication Architecture} \label{sec:euc}
 
-Most of the procedures required in our system are processed offline either within the drone's internal hardware (e.g. control system, emergency protocol, data collection) or the base station computer (e.g. data processing, mission planning). However, it is necessary to enable an online communication system that can be used to send/receive necessary information between the drones and the base station during flight time. In this section, we outline the requirements of the extra-UAV communication system and explore the use of \gls{lora} communication as the solution. A ns-3 simulation for \gls{lora} communication is also considered for integration with the mission planning framework. 
+Most of the procedures required in our system are processed offline either within the drone's internal hardware (e.g. control system, emergency protocol, data collection) or the base station computer (e.g. data processing, mission planning). However, it is necessary to enable an online communication system that can be used to send/receive necessary information between the drones and the base station during flight time. In this section, we outline the requirements of the extra-\gls{UAV} communication system and explore the use of \gls{lora} communication as the solution. A ns-3 simulation for \gls{lora} communication is also considered for integration with the mission planning framework. 
 
 %%%%%%%%%%
 \subsection{System Requirements}
@@ -14,11 +14,11 @@ The base station is the central node where the drones are deployed to the \gls{r
 
 \begin{itemize}
     \item \textbf{Before mission}: The main computer processes the mission planning framework to generate the path plan for each drone. The path is uploaded to the drones for them to follow offline during the mission. Drones are charged at the charging station to achieve the maximum travel distance possible. 
-    \item \textbf{During mission}: The drones are in flight, following the offline path plan to collect the data with their thermal or \gls{gpr} sensors. The main computer receives the \gls{gnss} data from all drones to keep track of their locations, and transmits emergency flags in case an extreme event forces the mission to be paused (e.g. rainfall, strong wind forecasts). This is where the extra-UAV communication becomes necessary. 
+    \item \textbf{During mission}: The drones are in flight, following the offline path plan to collect the data with their thermal or \gls{GPR} sensors. The main computer receives the \gls{GNSS} data from all drones to keep track of their locations, and transmits emergency flags in case an extreme event forces the mission to be paused (e.g. rainfall, strong wind forecasts). This is where the extra-\gls{UAV} communication becomes necessary. 
     \item \textbf{After mission}: The drones have returned to the base station and they are charged at the charging station. The data collected from the mission is uploaded to the main computer for processing to predict the location of the landmines. 
 \end{itemize}
 
-The purpose of the extra-UAV communication framework is to facilitate the base station's role during mission (when drones are in flight). 
+The purpose of the extra-\gls{UAV} communication framework is to facilitate the base station's role during mission (when drones are in flight). 
 
 \subsubsection{Extra-UAV Communication Content}
 
@@ -34,9 +34,9 @@ Table~\ref{tab:euc_messages} lists all messages that should be communicated betw
         \hline
         Drone ID & Distinct ID given to each drone to distinguish at the base station. Unsigned integer (0-255) data type is used. & $\leftrightarrow$ & 8 \\
         \hline
-        \gls{gnss} Location & The x, y, z location coordinates of the drone based on \gls{gnss}. Each dimension takes up 16-bits. *Clarification needed with Thomas on source and bits/bytes & $\rightarrow$ & 48 \\
+        \gls{GNSS} Location & The x, y, z location coordinates of the drone based on \gls{GNSS}. Each dimension takes up 16-bits. & $\rightarrow$ & 48 \\
         \hline
-        \gls{gnss} Correction & Correction data required to ensure the validity of the \gls{gnss} data. *Clarification needed with Thomas on the source and reasoning & $\rightarrow$ & 500 \\
+        \gls{GNSS} Correction & Correction data required to ensure the validity of the \gls{GNSS} data. & $\rightarrow$ & 500 \\
         \hline
         Return to Safety Flag & Flag triggered when Return to Safety is required. Boolean (0-1) data type is used. & $\leftarrow$ & 1 \\
         \hline
@@ -47,21 +47,21 @@ Table~\ref{tab:euc_messages} lists all messages that should be communicated betw
         \multicolumn{2}{|c|}{\textbf{Total Base-to-Drone Packet Size (bits)}} & $\leftarrow$ & 74 \\
         \hline
     \end{tabularx}
-    \caption[Messages for Extra-UAV Communication]{Messages required for extra-UAV communications with details on content, direction and size.}
+    \caption[Messages for Extra-UAV Communication]{Messages required for extra-\gls{UAV} communications with details on content, direction and size.}
     \label{tab:euc_messages}
 \end{table}
 
 \subsubsection{Technical Requirements}
 
-The technical requirements can be considered with respect to distance, bit rate and geographical factors. The following paragraphs outline the approximate ranges or specifications which are required by the extra-UAV communication system to serve as a baseline for deciding the suitable communication protocol.
+The technical requirements can be considered with respect to distance, bit rate and geographical factors. The following paragraphs outline the approximate ranges or specifications which are required by the extra-\gls{UAV} communication system to serve as a baseline for deciding the suitable communication protocol.
 
 \paragraph{Distance} The base station will be set up outside the \gls{roi} and it will need to communicate with the drones regardless of where they are. The communication distance therefore acts as the limiting factor on the maximum size of the \gls{roi}; if the communication distance is too small, the efficiency and expandability of the system will decrease drastically. For the purpose of our system, we set the desired communication distance to be in the range of kilometres. 
 
-\paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$ Hz, the drone-to-base and base-to-drone bit rates are $620 \times f=1240$ bps and $74 \times f=148$ bps respectively. The extra-UAV communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
+\paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$ Hz, the drone-to-base and base-to-drone bit rates are $620 \times f=1240$ bps and $74 \times f=148$ bps respectively. The extra-\gls{UAV} communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
 
 \paragraph{Geographical Factors} Demining operations may take place in regions where cell communications are unavailable (due to post-war recovery or remoteness of the location), so the communication protocol should not depend on any external cell communications. Different countries also have restrictions on the bandwidth available for specific use-cases, which should be met by the chosen communication protocol. 
 
-We choose the \gls{lora} communication technology with \gls{lorawan} protocol for the purpose of the extra-UAV communication. Its theory, advantages and disadvantages are explained in greater detail in the next section. 
+We choose the \gls{lora} communication technology with \gls{lorawan} protocol for the purpose of the extra-\gls{UAV} communication. Its theory, advantages and disadvantages are explained in greater detail in the next section. 
 
 \subsection{LoRa Communication}
 \label{sec:euc_lora}
@@ -116,11 +116,11 @@ We choose the \gls{lora} communication technology with \gls{lorawan} protocol fo
 
 \subsubsection{Advantages}
 
-\paragraph{Power Consumption} The coverage area of the landmine detection drones is directly dependent on the battery capacity. To maximise the coverage area to increase the efficiency of the system, the power consumption of the extra-UAV communication method should be minimised. \gls{lorawan} protocol is able to achieve low power consumption levels by its efficient modulation technology and idling periods of the end devices, showing up to 10 times the duration of cellular machine-to-machine communication in general applications \cite{semtech2024lora}. 
+\paragraph{Power Consumption} The coverage area of the landmine detection drones is directly dependent on the battery capacity. To maximise the coverage area to increase the efficiency of the system, the power consumption of the extra-\gls{UAV} communication method should be minimised. \gls{lorawan} protocol is able to achieve low power consumption levels by its efficient modulation technology and idling periods of the end devices, showing up to 10 times the duration of cellular machine-to-machine communication in general applications \cite{semtech2024lora}. 
 
-\paragraph{Distance} The \gls{css} modulation technology of \gls{lora} allows long distance coverage (in the kilometre-range) as outlined in \ref{tab:euc_lorasf} which is suitable for our application of deploying drones into remote \gls{roi}s. By adopting spreading factors of 7 or 8, the base station can communicate with drones from 2-4km away. This enables the operator to define larger \gls{roi}s, increasing the efficiency of the system. 
+\paragraph{Distance} The \gls{css} modulation technology of \gls{lora} allows long distance coverage (in the kilometre-range) as outlined in Table~\ref{tab:euc_lorasf} which is suitable for our application of deploying drones into remote \gls{roi}s. By adopting spreading factors of 7 or 8, the base station can communicate with drones from 2-4km away. This enables the operator to define larger \gls{roi}s, increasing the efficiency of the system. 
 
-\paragraph{Costs} The cost benefit analysis of \gls{lpwan} technologies performed by \cite{hossain2021lpwancosts} demonstrates that \gls{lorawan} is the most cost-effective solution for deployment in rural and urban areas where device density and activity rates are low (which align with the problem specifications of our project). \cite{stokking2021lorawan} states that \gls{lorawan} modules cost less than 20€ per node in capital expenditure and almost no operational expenditure, meaning that the extra-UAV communication system can be established at very low costs.
+\paragraph{Costs} The cost benefit analysis of \gls{lpwan} technologies performed by \cite{hossain2021lpwancosts} demonstrates that \gls{lorawan} is the most cost-effective solution for deployment in rural and urban areas where device density and activity rates are low (which align with the problem specifications of our project). \cite{stokking2021lorawan} states that \gls{lorawan} modules cost less than 20€ per node in capital expenditure and almost no operational expenditure, meaning that the extra-\gls{UAV} communication system can be established at very low costs.
  
 \subsubsection{Disadvantages}
 
@@ -139,11 +139,11 @@ The base station and the drones of a \gls{roi} will represent the gateway and en
     \centering
     \includegraphics[width=0.7\linewidth]{figs/Jihwan/Network Diagram of LoRa.eps}
     \caption[LoRaWAN Network Diagram for Extra-UAV Communication]
-    {\gls{lorawan} network diagram for extra-UAV communication. More base stations, \gls{roi}s and drones can be connected to the network server as necessary.}
+    {\gls{lorawan} network diagram for extra-\gls{UAV} communication. More base stations, \gls{roi}s and drones can be connected to the network server as necessary.}
     \label{fig:euc_network_diagram}
 \end{figure}
 
-When generating the path plan of the drones in the mission planning framework (Section~\ref{sec:msp}), a network simulation will be conducted to ensure signal stability throughout the entire duration of the mission. If the drone paths travel too far from the base station for a stable extra-UAV communication to be maintained, the operator will be warned and advised to install another base station at a suitable location. 
+When generating the path plan of the drones in the mission planning framework (Section~\ref{sec:msp}), a network simulation will be conducted to ensure signal stability throughout the entire duration of the mission. If the drone paths travel too far from the base station for a stable extra-\gls{UAV} communication to be maintained, the operator will be warned and advised to install another base station at a suitable location. 
  
 \subsubsection{Simulation using ns-3}
 
