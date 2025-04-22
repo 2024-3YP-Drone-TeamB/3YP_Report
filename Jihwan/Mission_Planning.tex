@@ -184,9 +184,9 @@ The \gls{tsp} is an optimisation problem in which the minimum traversal path to 
         \textbf{Method} & \centering{\textbf{Explanation}} & \textbf{Complexity} \\
         \hline \hline
         Brute-Force Algorithm & Naïve method where all possible permutations are calculated to find the optimal solution. & $O(n!)$ \\ \hline
-        Held-Karp Algorithm \cite{held1962hktsp} & Dynamic Programming method where subsets of nodes are explored to find the optimal solution. It improves on the brute-force method in terms of complexity while maintaining the optimal solution, but comes at the cost of large memory requirements. & $O(n^2*2^n)$ \\ \hline
-        Genetic Algorithm \cite{potvin1996gentsp} & Searches for the heuristic solution by combining the best features of good solutions over multiple generations. & $O(n^2*g)$ \\ \hline
-        Ant Colony Optimisation \cite{dorigo1997anttsp} & Mimics the behaviour of ants leaving pheromone trail (on edges of the graph) to successively shorten the path for a heuristic solution. & $O(n^2*m)$ \\ \hline
+        Held-Karp Algorithm \cite{held1962hktsp} & Dynamic Programming method where subsets of nodes are explored to find the optimal solution. It improves on the brute-force method in terms of complexity while maintaining the optimal solution, but comes at the cost of large memory requirements. & $O(n^2 2^n)$ \\ \hline
+        Genetic Algorithm \cite{potvin1996gentsp} & Searches for the heuristic solution by combining the best features of good solutions over multiple generations. & $O(n^2 g)$ \\ \hline
+        Ant Colony Optimisation \cite{dorigo1997anttsp} & Mimics the behaviour of ants leaving pheromone trail (on edges of the graph) to successively shorten the path for a heuristic solution. & $O(n^2 m)$ \\ \hline
         Lin-Kernighan Algorithm \cite{lin1973lktsp} & Iteratively swap edges for local optimisation to find the heuristic solution. It is a popularly used method due to its performance and efficiency. & $O(n^2\log{n})$ \\ \hline
     \end{tabular}
     \caption[Comparison of TSP Solution Methods]
@@ -240,11 +240,11 @@ The algorithm for converting a \gls{tspo} into a visibility graph given the Poly
 
 \subsubsection{Time Complexity}
 
-The time complexity of algorithm~\ref{alg:msp_tspo2visgraph} can be calculated to estimate the computing requirements for solving the \gls{tspo}. Note that the visibility condition is checked through the IsVisible($u$,$v$) function which is inside two nested for-loops iterating through all nodes in the visibility graph. Let $n$ be the number of nodes, which is equal to the sum of $p$ (the number of vertices in $P$) and $q$ (the number of points in $T$). In addition, let $h$ be the number of holes + 1. According to \cite{cgal2024visibility}, the time complexity for \gls{cgal}'s implementation of the visibility check (triangular expansion algorithm) is $O(n*h)$. The nested for-loops will multiply $O(n)$ to the time complexity twice. Hence, the worst-case time complexity of Algorithm~\ref{alg:msp_tspo2visgraph} can be expressed as $O(n^3*h)$. 
+The time complexity of algorithm~\ref{alg:msp_tspo2visgraph} can be calculated to estimate the computing requirements for solving the \gls{tspo}. Note that the visibility condition is checked through the IsVisible($u$,$v$) function which is inside two nested for-loops iterating through all nodes in the visibility graph. Let $n$ be the number of nodes, which is equal to the sum of $p$ (the number of vertices in $P$) and $q$ (the number of points in $T$). In addition, let $h$ be the number of holes + 1. According to \cite{cgal2024visibility}, the time complexity for \gls{cgal}'s implementation of the visibility check (triangular expansion algorithm) is $O(n h)$. The nested for-loops will multiply $O(n)$ to the time complexity twice. Hence, the worst-case time complexity of Algorithm~\ref{alg:msp_tspo2visgraph} can be expressed as $O(n^3 h)$. 
 
-The resulting visibility graph is then solved as an ordinary \gls{tsp} through the use of Lin-Kernighan algorithm explained above, which has the time complexity $O(n^2\log{n})$. Algorithm~\ref{alg:msp_tspo2visgraph} and the Lin-Kernighan algorithm are applied successively, meaning that their time complexities will be added to give $O(n^3*h + n^2\log{n})$. 
+The resulting visibility graph is then solved as an ordinary \gls{tsp} through the use of Lin-Kernighan algorithm explained above, which has the time complexity $O(n^2\log{n})$. Algorithm~\ref{alg:msp_tspo2visgraph} and the Lin-Kernighan algorithm are applied successively, meaning that their time complexities will be added to give $O(n^3 h + n^2\log{n})$. 
 
-As $n$ increases to a large value, $O(n^2\log{n})$ becomes negligible compared to $O(n^3*h)$ in terms of its magnitude. The final time complexity of finding the solution to \gls{tspo} can therefore be expressed as $O(n^3*h)$. This is a reasonable value for computation given that the number of suspected landmine points does not come out to be too high for the \gls{roi}. 
+As $n$ increases to a large value, $O(n^2\log{n})$ becomes negligible compared to $O(n^3 h)$ in terms of its magnitude. The final time complexity of finding the solution to \gls{tspo} can therefore be expressed as $O(n^3 h)$. This is a reasonable value for computation given that the number of suspected landmine points does not come out to be too high for the \gls{roi}. 
 % it will get too high, so we divide and cluster. 
 
 \subsubsection{Implementation}
@@ -443,4 +443,4 @@ The \gls{cpp} and \gls{tspo} algorithms are not directly connected to the \gls{q
 
 In this report, the mission planning framework was only tested for a real location example in Figure~\ref{fig:msp_example}. It is not sufficient to validate a successful mission using a real multi-aerial drone system or the Divide and Cluster method. 
 
-Real world testing will need to be conducted for a variety of different \gls{roi} locations, evaluating the efficiency of the proposed mission planning framework. This will help to create a robust system that can easily be applied across different regions and scenarios. 
+Real world testing will need to be conducted for a variety of different \gls{roi} locations (with varying terrains, soil composition, weather conditions, etc.), evaluating the efficiency of the proposed mission planning framework. This will help to create a robust system that can easily be applied across different regions and scenarios. 

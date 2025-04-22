@@ -34,52 +34,6 @@
 \usepackage{glossaries}
 \makeglossaries
 
-\newcommand{\subtitle}[1]{\def\@subtitle{#1}}%
-
-\renewcommand{\maketitle}{
-\begin{titlepage}
-
-    \centering
-    
-    \vspace*{1cm}
-
-    \includegraphics[width=0.4\textwidth]{figs/OxEng Logo.pdf}
-
-    \vspace*{1cm}
-
-    \Huge
-    \textbf{\@title}
-
-    \vspace{0.5cm}
-    \LARGE
-    \@subtitle
-
-    \vfill
-
-    \vspace{1.5cm}
-
-    \textbf{\@author}
-
-    \Large
-    \@date
-
-    \thispagestyle{empty} % Suppress page number on the title page
-\end{titlepage}
-}
-
-\usepackage{setspace}
-\usepackage{multicol}
-
-\newcommand{\printbibliography}[2]{
-\begingroup\onehalfspacing
-{\small
-\begin{multicols}{2}
-\bibliographystyle{plain}
-\bibliography{#1}
-\end{multicols}}
-\endgroup
-}
-
 % ADD ACRONYMS HERE
 \newacronym{3yp}{3YP}{Third-Year Project}
 \newacronym{cpp}{CPP}{Coverage Path Planning}
@@ -143,6 +97,51 @@
 %%%
 
 
+\newcommand{\subtitle}[1]{\def\@subtitle{#1}}%
+
+\renewcommand{\maketitle}{
+\begin{titlepage}
+
+    \centering
+    
+    \vspace*{1cm}
+
+    \includegraphics[width=0.4\textwidth]{figs/OxEng Logo.pdf}
+
+    \vspace*{1cm}
+
+    \Huge
+    \textbf{\@title}
+
+    \vspace{0.5cm}
+    \LARGE
+    \@subtitle
+
+    \vfill
+
+    \vspace{1.5cm}
+
+    \textbf{\@author}
+
+    \Large
+    \@date
+
+    \thispagestyle{empty} % Suppress page number on the title page
+\end{titlepage}
+}
+
+\usepackage{setspace}
+\usepackage{multicol}
+
+\newcommand{\printbibliography}[2]{
+\begingroup\onehalfspacing
+{\small
+\begin{multicols}{2}
+\bibliographystyle{plain}
+\bibliography{#1}
+\end{multicols}}
+\endgroup
+}
 
 % ADD ADDITIONAL PACKAGES HERE
 \usepackage{algpseudocode}
