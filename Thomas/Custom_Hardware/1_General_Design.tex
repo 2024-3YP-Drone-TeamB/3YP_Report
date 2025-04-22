@@ -36,7 +36,7 @@ The simplest and most cost effective option in \gls{PCB} design is two copper la
 \paragraph{Four or More Layers}
 When circuits become more complex, a purpose ground and power plane in between the top and bottom plane can allow for greater packing density of components. They also make the planes more stable as all the path impedances are very low. This means that for complex designs with many sensors, like the flight controller module, four layer \gls{PCB}s are the best option. Furthermore, if the complexity of the design is greater you can add further ground and power planes for analogue signals, high frequency signals or for regular signals to support greater component density.
 
-\subsection{Debugging}\label{sub_sub_section:debugging}
+\subsection{Debugging and Interfaces}\label{sub_sub_section:debugging}
 \paragraph{Technical Debugging}
 There easy to use male pin headers in both designs shown in \ref{fig:custom_hardware_overview} so that a \gls{SWD} debugger can be connected, furthermore, for signalling debugging the detachable ports for the \gls{CAN} bus mean a debugging computer can simply connect. This is so technically skilled operators can inspect system level signals and specific board operations.
 \paragraph{Field Debugging}
@@ -44,3 +44,5 @@ The use of technical debugging experts should always be avoided if possible to r
 \input{Thomas/Custom_Hardware/error_codes}
 \paragraph{Post Failure Analysis}
 If there is a crash that causes significant damage, and due to the volatile nature of \gls{RAM} memory, some failures cannot be detected directly with the device. Therefore, the flight controller has a removable microSD card to record flight data. In addition, the backup power supply, as seen in \ref{fig:custom_hardware_overview}, provides enough power that even in complete failure it can write the final few error messages. Therefore, this can be retrieved, downloaded and sent for analysis quickly to find the source of failure.
+\paragraph{Interfaces}
+It is incredibly important that all interfaces between modules are easy to access, protected and consistent. For both designs screw-in connectors are used for the battery supply to ensure a strong power connection whilst also being removable. For all communication signals a 3 pin JST connector with locking ensuring any disconnections due to vibrations are minimised. For the \gls{CAN} signals the third pin is used as a shared ground so the signals do not drift between boards and all have a shared ground level. Lastly, for the debugging interface male Dupont header is used so that the user can attach wires easily. All interfaces are protected with \gls{TVS} diodes to ensure no accidental \gls{ESD} events when connecting or disconnecting. 

@@ -9,7 +9,7 @@
       \State \(d(u)\gets \Call{Search}{u,\,p,\,1,\,0,\,D,\,\mathit{minCost}}\)
     \EndFor
 
-    \Function{Search}{$(u,p,p_{\mathit{alive}},\mathit{cost},\mathit{depth},\mathbf{ref},\mathit{minCost})$}
+    \Function{Search}{$(u,p,p_{\mathit{alive}},\mathit{cost}, depth,\mathbf{ref},\mathit{minCost})$}
       \State \(\mathit{currCost}\gets \mathit{cost} + p_{\mathit{alive}}\;\cdot\; l(u)\)
       \If{\(\mathit{currCost}<\mathit{minCost}\)}
         \State \(\mathit{minCost}\gets \mathit{currCost}\)
