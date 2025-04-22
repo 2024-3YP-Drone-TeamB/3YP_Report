@@ -55,7 +55,7 @@ The waveform type determines how \gls{GPR} transmits and receives \gls{EM} signa
 
 The center frequency and bandwidth of a radar signal are key parameters about the \gls{GPR} system’s resolution and penetration depth. 
 
-In general, lower frequencies (e.g., < 1 GHz) enhance penetration depth but limit resolution. Higher frequencies (e.g., > 2--3 GHz) improve resolution but attenuate quickly, especially in moist or conductive soils. For example, a \gls{GPR} operating at 3~GHz may penetrate up to 0.5 m in dry soil, but only a few centimeters in wet environments~\cite{alqudsi2021review}. This trade-off is illustrated in Figure~\ref{fig:freq_tradeoff}, where increasing frequency improves resolution (represented as gray circles becoming smaller) at the cost of reduced sensing depth.
+In general, lower frequencies (e.g., < 1 GHz) enhance penetration depth but limit resolution. Higher frequencies (e.g., > 2--3 GHz) improve resolution but attenuate quickly, especially in moist or conductive soils. For example, a \gls{GPR} operating at 3~GHz may penetrate up to 0.5 m in dry soil, but only a few centimeters in wet environments~\cite{9758040}. This trade-off is illustrated in Figure~\ref{fig:freq_tradeoff}, where increasing frequency improves resolution (represented as gray circles becoming smaller) at the cost of reduced sensing depth.
 
 \begin{figure}[H]
     \centering
@@ -66,16 +66,22 @@ In general, lower frequencies (e.g., < 1 GHz) enhance penetration depth but limi
 \footnotetext{\url{www.radartutorial.eu}}
 
 
+The radar’s bandwidth, defined as the difference between the maximum and minimum frequencies $B = f_{\text{max}} - f_{\text{min}}$, determines the system’s range (or depth) resolution $\Delta r$, which is the ability to distinguish between objects at different depths along the same vertical axis. In free-space conditions where the wave velocity $v_p = c$ (the speed of light), the range resolution $\Delta r$ is approximated by: \(\Delta r = \frac{c}{2B}~\cite{9758040}\)
 
-The radar’s bandwidth, defined as the difference between the maximum and minimum frequencies $B = f_{\text{max}} - f_{\text{min}}$, determines the system’s range (or depth) resolution $\Delta r$, which is the ability to distinguish between objects at different depths along the same vertical axis. In free-space conditions where the wave velocity $v_p = c$ (the speed of light), the range resolution $\Delta r$ is approximated by: \(\Delta r = \frac{c}{2B}~\cite{alqudsi2021review}\)
+Cross-range or lateral resolution $\Delta l$ defines the radar’s ability to distinguish adjacent objects at the same depth. It depends on the central wavelength $\lambda_c$, aperture size $L_{\text{ap}}$, and antenna-to-target distance $R$, and is approximated as: \(\Delta l = \frac{R \cdot \lambda_c}{L_{\text{ap}}}~\cite{9758040}\)
 
-Cross-range or lateral resolution $\Delta l$ defines the radar’s ability to distinguish adjacent objects at the same depth. It depends on the central wavelength $\lambda_c$, aperture size $L_{\text{ap}}$, and antenna-to-target distance $R$, and is approximated as: \(\Delta l = \frac{R \cdot \lambda_c}{L_{\text{ap}}}~\cite{alqudsi2021review}\)
 
+
+\paragraph{Antenna Size}
+
+The physical size of a \gls{GPR} antenna is closely linked to the operating frequency, with lower frequencies requiring larger antennas. A rough estimate of the minimum antenna length is given by: \(L_{\text{antenna}} \approx \frac{\lambda_{\text{min}}}{2}\), where $\lambda_{\text{min}}$ is the wavelength of the minimum \gls{GPR} frequency~\cite{burr2018design}.
+
+This relationship introduces a trade-off between penetration depth and physical size: lower frequencies penetrate deeper but require larger antennas, which may exceed the payload and form-factor limits of \gls{UAV} platforms.
 
 
 \paragraph{\gls{SAR} Processing}
 
-Traditional \gls{GPR} systems have limited cross-range resolution due to the small sizes of antennas. \gls{SAR} addresses this limitation by coherently integrating radar echoes collected along the \gls{UAV}’s flight path, synthesizing a larger aperture, and significantly improving lateral resolution. This is especially beneficial for \gls{UAV}-based \gls{GPR} where antenna size and weight are constrained~\cite{alqudsi2021review}.
+Traditional \gls{GPR} systems have limited cross-range resolution due to the small sizes of antennas. \gls{SAR} addresses this limitation by coherently integrating radar echoes collected along the \gls{UAV}’s flight path, synthesizing a larger aperture, and significantly improving lateral resolution. This is especially beneficial for \gls{UAV}-based \gls{GPR} where antenna size and weight are constrained~\cite{9758040}.
 
 Among \gls{SAR} algorithms, \textbf{Back-Projection (\gls{BP})} is particularly suited for \gls{UAV} applications due to its robustness to irregular trajectories and non-uniform sampling. \gls{BP} operates by summing radar echoes along computed time-delay curves for each focal point. As shown in Figure~\ref{fig:bp_geometry}, radar signals $e_1(x_p, t)$ are collected at multiple \gls{UAV} positions $x_p$. The round-trip travel time $\tau_{m,n,p}$ from the transmitter to a target point $(x_n, z_m)$ and back is used to time-shift and coherently sum these signals by \(e_2(x_n, z_m) = \sum_{p=1}^{P} e_1(x_p, \tau_{m,n,p})\) and \(\tau_{m,n,p} = \frac{2R_a}{c} + \frac{2R_b}{v}\) where $R_a$ and $R_b$ are distances through air and soil respectively, $c$ is the speed of light, and $v$ is the wave velocity in soil. This delay-and-sum approach transforms hyperbolic reflections in conventional B-scans (like Figure~\ref{fig:gpr_bscan}) into focused point targets, improving subsurface interpretability. However, the method is computationally intensive and not ideal for real-time onboard processing~\cite{lei2014multi}.
 
@@ -122,14 +128,6 @@ The orientation of the \gls{GPR} antenna on a \gls{UAV} plays a critical role in
 
 
 
-\paragraph{Antenna Size}
-
-The physical size of a \gls{GPR} antenna is closely linked to the operating frequency, with lower frequencies requiring larger antennas. A rough estimate of the minimum antenna length is given by: \(L_{\text{antenna}} \approx \frac{\lambda_{\text{min}}}{2}\), where $\lambda_{\text{min}}$ is the wavelength of the minimum \gls{GPR} frequency~\cite{burr2018design}.
-
-This relationship introduces a trade-off between penetration depth and physical size: lower frequencies penetrate deeper but require larger antennas, which may exceed the payload and form-factor limits of \gls{UAV} platforms~\cite{alqudsi2021review}.
-
-
-
 \subsubsection{\gls{GPR} System Design}\label{GPR_design}
 
 While numerous \gls{GPR} architectures have been explored in previous research, most high-performance \gls{UAV}-based landmine detection systems rely on custom radar platforms. These typically incorporate \gls{SDR}, customized waveform generators, and advanced antenna arrays to maximize their environmental adaptability, resolution, and penetration~\cite{cerquera2017uav}.
@@ -138,7 +136,7 @@ In contrast, the focus of our project is to demonstrate the feasibility of integ
 
 We select the \textbf{SPH Engineering Zond Aero 1000 MHz \gls{GPR}} (~1.8~kg\footnote{\label{Zond}\url{https://cdn.shopify.com/s/files/1/0596/9451/4353/files/RadSys_Zond_Aero_1000_NG_datasheet.pdf?v=1732295405}}). It operates in the 600–1300~MHz band with a center frequency of 1~GHz\textsuperscript{\ref{Zond}}, offering reasonable balance between resolution and penetration. Unlike high-frequency systems that offer fine detail at shallow depths, this system prioritizes deeper penetration—essential for detecting mines in compact or moist soils. Although its vertical resolution (around 10--15~cm) may not allow precise depth estimation, this is acceptable for our use case, where the primary goal is to confirm the existence rather than reconstruct detailed object geometry of the buried landmines.
 
-The system uses a \textbf{\gls{DLGPR}} configuration, maximizing reflected signal power from targets and simplifies hardware integration. While \gls{DLGPR} does introduce surface clutter due to strong air–ground reflections, it can be mitigated through signal processing techniques such as Singular Value Decomposition (SVD) and migration algorithms ~\cite{garcia2024comparison}. Furthermore, \gls{DLGPR} is the most widely adopted orientation in past \gls{UAV}-\gls{GPR} applications, supporting its practical reliability ~\cite{alqudsi2021review}.
+The system uses a \textbf{\gls{DLGPR}} configuration, maximizing reflected signal power from targets and simplifies hardware integration. While \gls{DLGPR} does introduce surface clutter due to strong air–ground reflections, it can be mitigated through signal processing techniques such as Singular Value Decomposition (SVD) and migration algorithms ~\cite{garcia2024comparison}. Furthermore, \gls{DLGPR} is the most widely adopted orientation in past \gls{UAV}-\gls{GPR} applications, supporting its practical reliability ~\cite{9758040}.
 
 To improve lateral resolution and compensate for the limited range resolution of our low-frequency radar, we apply \gls{SAR} processing in \textbf{Stripmap} mode using a \textbf{\gls{BP}} algorithm. This enables continuous scanning without beam steering, reducing \gls{UAV} control complexity. Since coherent SAR imaging requires centimeter-level positioning accuracy to align radar returns across the UAV trajectory~\cite{fernandez2018synthetic}, we ensure this through the integration of a high-precision GNSS and IMU system, as described in section~\ref{sub_sub_section:tgt_component_selection}. Real-time processing is avoided due to the computational cost of \gls{BP}; instead, raw B-scans are geo-referenced and processed offline after each flight.
 
@@ -148,7 +146,7 @@ This system architecture based on a down-looking \gls{COTS} impulse radar at low
 
 \subsubsection{\gls{GPR} System Flight Configuration}\label{GPR_flight}
 
-In our system, the \gls{GPR} drone is designed to fly at an altitude of approximately \textbf{2~m}. This low flight height ensures a balance between maximizing power coupling into the ground and maintaining safe clearance for autonomous operations. The selected altitude is consistent with previous \gls{DLGPR} studies on \gls{UAV} landmine detection ~\cite{schartel2018uav,alqudsi2021review}.
+In our system, the \gls{GPR} drone is designed to fly at an altitude around \textbf{2~m}. This low flight height ensures a balance between maximizing power coupling into the ground and maintaining safe clearance for autonomous operations, consistent with previous \gls{DLGPR} studies on \gls{UAV} landmine detection ~\cite{schartel2018uav,9758040}.
 
 As illustrated in Figure~\ref{fig:swath_geometry}, for our \gls{DLGPR} system ($\alpha = 90^\circ$), assuming a beamwidth (the angle between near range and far range) of $\theta = 45^\circ$, the effective swath width $W$ can be derived geometrically as \(W = 2H \cdot \tan\left(\frac{\theta}{2}\right)\). For $H = 2$~m,  $W = 1.65$~m. This value defines the effective width of ground coverage per flight strip.
 
