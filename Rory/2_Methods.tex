@@ -4,7 +4,7 @@
     
         \begin{enumerate}
         
-            \item \textbf{Mission Planning} The operator will select a region that they wish to map, by selecting the perimeter of the region of interest (Section \ref{sec:missionplanning}). The base-station computer will then decide on the optimal path a drone should take to get there, and cover the region of interest with the thermal sensor. A human operator then manually loads these flight instructions from the computer onto the thermal drone, after some pre-flight checks.
+            \item \textbf{Mission Planning} The operator will select a region that they wish to map, by selecting the perimeter of the region of interest (Section \ref{sec:msp}). The base-station computer will then decide on the optimal path a drone should take to get there, and cover the region of interest with the thermal sensor. A human operator then manually loads these flight instructions from the computer onto the thermal drone, after some pre-flight checks.
             
             \item \textbf{Thermal Data Acquisition} The thermal drone autonomously captures images along the planned trajectory. Post-mission, images are transferred to the base station and processed by a YOLOv11 computer vision model, described in Section \ref{compvis_implementation}. This generates a thermal probability map \newline \(\mathcal{P}_{\text{thermal}}(x,y)\), where each coordinate \((x,y)\) is assigned a confidence score (between 0 and 1) for landmine presence. Probability map assembly described in Section \ref{fusion_overview} uses position and pose metadata to \textbf{project just the detections} onto a geographic grid, avoiding computationally intensive image mosaicking.
             
