@@ -7,6 +7,19 @@ Cell ageing and actuator ageing can cause inaccurate state of charge predictions
 \gls{LiON} batteries can have a thermal runaway. This is seen with a massive spike in temperature from the \gls{BMS} telemetry data and should lead to immediate landing and battery shutdown as it is a chain reaction effect that can cause excessive thermal damage\cite{LiONRunaway}.
 
 \subsubsection{Actuator Fault}\label{sub_sub_section:tgt_actuator_fault}
+\paragraph{Detection}
+Leveraging the \gls{ESC} telemetry values of Voltage (V), Current (I) and Rotational Speed (RPM) in addition to the the \gls{IMU} data a Thrust/Power model of each motor is built.
+For each control signal the predicted thrust values are used in combination to the inertial properties of the device to create an acceleration prediction vector $\mathbf{a}_{prediction}$. The actual acceleration,  $\mathbf{a}_{actual}$, is recorded using the \gls{IMU}.
+\begin{equation}\label{eq:residual}
+    \mathbf{r}(t) = \mathbf{a}_{prediction}(t) - \mathbf{a}_{actual}(t)
+\end{equation}
+The residual $\mathbf{r}(t)$ is shown in Equation \ref{eq:residual} and if the autocorrelation of $\mathbf{r}(t)$ over a sustained period it shows that there is a rotor fault or a change in the dynamics of the device. 
+\paragraph{Quantification}
+To quantify the loss of effectiveness an \gls{EKF} is used for each motor. A \gls{KF} cannot be used as the efficiency of a rotor is not constant over the operational range of RPM by a drone and therefore needs to be accounted for by the \gls{EKF}.
+
+To account for gusts and external disturbances a 3 stage \gls{KF} can be used as shown in \cite{3KF} however, this is left as an area for future research as having suitable detection periods should be sufficient for this application.
+\paragraph{Generation}
+
 \paragraph{Causes}
 A loss of actuator effectiveness can be either from motor damage or propeller damage. The possible causes of motor damage specific to the operating environments include: wire damage, cooling blockages and dust or sand getting into the components. For propeller damage this could be from impacts, thermal effects or fatigue cracks.
 \paragraph{Fault Detection and Estimation}
