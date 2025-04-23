@@ -7,7 +7,38 @@ Cell ageing and actuator ageing can cause inaccurate state of charge predictions
 \gls{LiON} batteries can have a thermal runaway. This is seen with a massive spike in temperature from the \gls{BMS} telemetry data and should lead to immediate landing and battery shutdown as it is a chain reaction effect that can cause excessive thermal damage\cite{LiONRunaway}.
 
 \subsubsection{Actuator Fault}\label{sub_sub_section:tgt_actuator_fault}
+\paragraph{Causes}
+A loss of actuator effectiveness can be either from motor damage or propeller damage. The possible causes of motor damage specific to the operating environments include: wire damage, cooling blockages and dust or sand getting into the components. For propeller damage this could be from impacts, thermal effects or fatigue cracks.
 \paragraph{Detection}
+Consider motor effectiveness factors $\eta_i \in [0,1]$ as random walks. Using the \gls{RPM} telemetry, predicted thrust for each motor $T_{\text{pred},i} = \eta_i k_T \omega_i^2$ can be generated. This is used predict the acceleration of the device and then compare with IMU-measured acceleration using an \gls{EKF} update. If $\eta_i$ falls below $\eta_{thresh}$ failure is detected. The \gls{EKF} worse non-linear performance when compared to an \gls{UKF} \cite{WAN2000}. However, given that the control strategy for \gls{RTS} is for gradual degradation and smooth flight paths this is sufficient. The random walk also will cause slower detection times in case of sudden fault, however, in these cases \gls{RTS} is not feasible and it will instead emergency land.
+\begin{equation}
+    \mathbf{x}(k) = \begin{bmatrix}
+        \text{Physical states} \\
+        \eta_1(k) \\
+        \vdots \\
+        \eta_4(k)
+    \end{bmatrix}, \quad
+    \eta_i(k+1) = \eta_i(k) + w_i(k), \quad w_i \sim \mathcal{N}(0,Q_i)
+\end{equation}
+\paragraph{Isolation}
+Assign \gls{EKF} observer per rotor, each assuming single motor fault. The faulty rotor is isolated by calculating the maximum normalised residual as shown in Equation \ref{eq:rotor_failure}.
+\begin{equation}\label{eq:rotor_failure}
+    i^* = \arg\max_i R_i(k), \quad R_i(k) = \mathbf{r}_i(k)^\top \mathbf{S}_i(k)^{-1} \mathbf{r}_i(k)
+\end{equation}
+This means that the system is vulnerable to multiple actuator faults as all others are assumed healthy. There are methods that can address this at the cost of extra complexity \cite{ZHANG2008}. Given that the probability of simultaneous partial faults is low these are not necessary.
+\paragraph{Reconfiguration}
+To account for fault, control allocation matrix $\mathbf{B}_\eta = \mathbf{B} \cdot \text{diag}(\eta)$ and compute commands via:
+\begin{equation}
+    \mathbf{T} = \mathbf{B}_\eta^\dagger \mathbf{u}_{\text{des}}, \quad \mathbf{B}_\eta^\dagger = (\mathbf{B}_\eta^\top \mathbf{B}_\eta)^{-1} \mathbf{B}_\eta^\top
+\end{equation}
+This maintains the original control characteristics at the cost of putting the device at risk of saturation. To account for saturation constrained quadratic programming can be used \cite{JOHANSEN2013}. Instead a simple gain scheduling approach is used, deploying a less aggressive controller with known characteristics for varying $\eta$ thresholds. These are pre-computed and loaded into the device to support real-time deployment without any added onboard complexity. Using less aggressive controls also mitigates the risk of further degradation due to increased mechanical loads at higher \gls{RPM}s.
+
+\begin{comment}
+Furthermore, using static thresholds can lead to false positives when performing aggressive manoeuvres or in gusty conditions. This can be mitigated using statistical methods as explored in \cite{REF} but given that the device follows smooth paths and does not fly in extreme weather this mitigation is unnecessary.
+\paragraph{Control Strategy}
+The simplest solution is to tune the output signals from the controller until the thrust of the actuator matches the expected value. This allows the control loop to be unchanged, abstracting from the physical effects. However, the actuator will saturate at a lower thrust value meaning the control loop will not perform as expected and can lead to failure in typically non-failure states. By increasing the output on the actuator it will likely cause the current defect to degenerate as the loads increase on the damaged actuator. Therefore, a gain scheduling approach is used with a selection of less aggressive controller gains to match different tuning magnitudes. As tuning magnitude increases, the controller should be less aggressive so that the thrust demands reduce. However, this means that the controller cannot tolerate disturbances of the same magnitude. 
+
+    \paragraph{Detection}
 Leveraging the \gls{ESC} telemetry values of Voltage (V), Current (I) and Rotational Speed (RPM) in addition to the the \gls{IMU} data a Thrust/Power model of each motor is built.
 For each control signal the predicted thrust values are used in combination to the inertial properties of the device to create an acceleration prediction vector $\mathbf{a}_{prediction}$. The actual acceleration,  $\mathbf{a}_{actual}$, is recorded using the \gls{IMU}.
 \begin{equation}\label{eq:residual}
@@ -15,13 +46,4 @@ For each control signal the predicted thrust values are used in combination to t
 \end{equation}
 The residual $\mathbf{r}(t)$ is shown in Equation \ref{eq:residual} and if the autocorrelation of $\mathbf{r}(t)$ over a sustained period it shows that there is a rotor fault or a change in the dynamics of the device. 
 \paragraph{Quantification}
-To quantify the loss of effectiveness an \gls{EKF} is used for each motor. A \gls{KF} cannot be used as the efficiency of a rotor is not constant over the operational range of RPM by a drone and therefore needs to be accounted for by the \gls{EKF}.
-
-To account for gusts and external disturbances a 3 stage \gls{KF} can be used as shown in \cite{3KF} however, this is left as an area for future research as having suitable detection periods should be sufficient for this application.
-\paragraph{Generation}
-
-\paragraph{Causes}
-A loss of actuator effectiveness can be either from motor damage or propeller damage. The possible causes of motor damage specific to the operating environments include: wire damage, cooling blockages and dust or sand getting into the components. For propeller damage this could be from impacts, thermal effects or fatigue cracks.
-\paragraph{Fault Detection and Estimation}
-\paragraph{Control Strategy}
-The simplest solution is to tune the output signals from the controller until the thrust of the actuator matches the expected value. This allows the control loop to be unchanged, abstracting from the physical effects. However, the actuator will saturate at a lower thrust value meaning the control loop will not perform as expected and can lead to failure in typically non-failure states. By increasing the output on the actuator it will likely cause the current defect to degenerate as the loads increase on the damaged actuator. Therefore, a gain scheduling approach is used with a selection of less aggressive controller gains to match different tuning magnitudes. As tuning magnitude increases, the controller should be less aggressive so that the thrust demands reduce. However, this means that the controller cannot tolerate disturbances of the same magnitude. 
+\end{comment}

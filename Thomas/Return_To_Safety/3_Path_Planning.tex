@@ -25,9 +25,29 @@ The key objective is to reduce the downtime and cost of operation of the drone. 
 \paragraph{Cause}
 When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault due to the less aggressive control strategies deployed meaning that the maximum rejected gust becomes lower in magnitude and therefore more likely to occur. 
 \paragraph{Gust Modelling}
-Using forecasts and modelling as discussed in Section \ref{gust} we can model the probability that a gust exceeds the known maximum rejection gust speed for the current control gains per second, $\lambda$. From this we can calculate $p$ using Equation \ref{eq:p_calc}. The exact methods used to find $\lambda$ are an area of future work.
+To calculate the probability that a gust exceeds the maximum gust rejection value per second, $\lambda$, we model gusts with the Gumbel distribution \cite{Gumbel1958}. Working from the Meteomatics \gls{API} as discussed in Section \ref{gust} we can get gusts at intervals of 1 hour\footnote{\url{https://www.meteomatics.com/en/api/available-parameters/weather-parameter/standard-weather-parameters-wind/}}. Let $G_{hour}$ represent the maximum gust within an hour, the \gls{CDF} of \( G_{\text{hour}} \) is given in Equation \ref{eq:gumbel_cdf}.
+\begin{equation}\label{eq:gumbel_cdf}
+    F_G(v) = \exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+\end{equation}
+Therefore the probability that the hourly maximum gust \( G_{\text{hour}} \) exceeds a threshold \( v \) is:
+\begin{equation}
+    P(G_{\text{hour}} > v) = 1 - F_G(v) = 1 - \exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+\end{equation}
+Assuming wind gusts in different seconds are independent events to simplify the problem. Let \( \lambda \) be the probability of a gust exceeding \( v \) in any given second. Over \( N = 3600 \) seconds (1 hour), the probability that \( v \) is not exceeded in all seconds is given in Equation \ref{eq:p_v}. Equation \ref{eq:solve_p} is then solved to get $\lambda$.
+\begin{equation}\label{eq:p_v}
+    (1 - \lambda)^{N} = P(G_{\text{hour}} \leq v) = \exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+\end{equation}
+\begin{align}\label{eq:solve_p}
+    1 - \lambda &= \left[\exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right)\right]^{1/N}, \\
+    \lambda &= 1 - \exp\left(-\frac{1}{N} \exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+\end{align}
+ From this we can calculate $p$ using Equation \ref{eq:p_calc}. The exact methods used to find $\lambda$ are an area of future work.
 \begin{equation}\label{eq:p_calc}
     p = (1-\lambda)^{\frac{distance}{speed}}
+\end{equation}
+The model $\mu, \sigma$ parameters are estimated using historical API data. They can be approximated by taking the Maximum Likelihood Estimation of the Gumbel Likelihood given in Equation \ref{eq:Gumbel_L}\cite{Gumbel1958}.To gather the data, data from periods most similar to the forecast should be used. The exact process for sample selection is an area for future work.
+\begin{equation}\label{eq:Gumbel_L}
+    \mathcal{L}(\mu, \sigma) = \prod_{i=1}^n f_G(g_i; \mu, \sigma).
 \end{equation}
 
 \subsubsection{Search Algorithms}\label{sub_sub_section:tgt_search}
