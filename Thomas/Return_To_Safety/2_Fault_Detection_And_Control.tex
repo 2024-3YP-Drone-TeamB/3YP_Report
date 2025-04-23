@@ -10,7 +10,7 @@ Cell ageing and actuator ageing can cause inaccurate state of charge predictions
 \paragraph{Causes}
 A loss of actuator effectiveness can be either from motor damage or propeller damage. The possible causes of motor damage specific to the operating environments include: wire damage, cooling blockages and dust or sand getting into the components. For propeller damage this could be from impacts, thermal effects or fatigue cracks.
 \paragraph{Detection}
-Consider motor effectiveness factors $\eta_i \in [0,1]$ as random walks. Using the \gls{RPM} telemetry, predicted thrust for each motor $T_{\text{pred},i} = \eta_i k_T \omega_i^2$ can be generated. This is used predict the acceleration of the device and then compare with IMU-measured acceleration using an \gls{EKF} update. If $\eta_i$ falls below $\eta_{thresh}$ failure is detected. The \gls{EKF} worse non-linear performance when compared to an \gls{UKF} \cite{WAN2000}. However, given that the control strategy for \gls{RTS} is for gradual degradation and smooth flight paths this is sufficient. The random walk also will cause slower detection times in case of sudden fault, however, in these cases \gls{RTS} is not feasible and it will instead emergency land.
+Consider motor effectiveness factors $\eta_i \in [0,1]$ as random walks. Using the \gls{RPM} telemetry, predicted thrust for each motor $T_{\text{pred},i} = \eta_i k_T \omega_i^2$ can be generated. This is used predict the acceleration of the device and then compare with IMU-measured acceleration using an \gls{EKF} update. If $\eta_i$ falls below $\eta_{thresh}$ failure is detected. The \gls{EKF} worse non-linear performance when compared to an \gls{UKF} \cite{WAN2000}. However, given that the control strategy for \gls{RTS} is for gradual degradation and smooth flight paths this is sufficient. The random walk also will cause slower detection times in case of sudden fault.
 \begin{equation}
     \mathbf{x}(k) = \begin{bmatrix}
         \text{Physical states} \\
@@ -25,13 +25,13 @@ Assign \gls{EKF} observer per rotor, each assuming single motor fault. The fault
 \begin{equation}\label{eq:rotor_failure}
     i^* = \arg\max_i R_i(k), \quad R_i(k) = \mathbf{r}_i(k)^\top \mathbf{S}_i(k)^{-1} \mathbf{r}_i(k)
 \end{equation}
-This means that the system is vulnerable to multiple actuator faults as all others are assumed healthy. There are methods that can address this at the cost of extra complexity \cite{ZHANG2008}. Given that the probability of simultaneous partial faults is low these are not necessary.
+This means that the system is vulnerable to multiple actuator faults as all others are assumed healthy. There are methods that can address this at the cost of extra complexity \cite{ZHANG2008}. Given that the probability of simultaneous partial faults is low these are not necessary for this application, however, common mode failures could be possible for example if in sand storm you would expect multiple faults.
 \paragraph{Reconfiguration}
-To account for fault, control allocation matrix $\mathbf{B}_\eta = \mathbf{B} \cdot \text{diag}(\eta)$ and compute commands via:
-\begin{equation}
+To account for fault, control allocation matrix $\mathbf{B}_\eta = \mathbf{B} \cdot \text{diag}(\eta)$ and compute commands using Equation \ref{eq:adj_thrust}.
+\begin{equation}\label{eq:adj_thrust}
     \mathbf{T} = \mathbf{B}_\eta^\dagger \mathbf{u}_{\text{des}}, \quad \mathbf{B}_\eta^\dagger = (\mathbf{B}_\eta^\top \mathbf{B}_\eta)^{-1} \mathbf{B}_\eta^\top
 \end{equation}
-This maintains the original control characteristics at the cost of putting the device at risk of saturation. To account for saturation constrained quadratic programming can be used \cite{JOHANSEN2013}. Instead a simple gain scheduling approach is used, deploying a less aggressive controller with known characteristics for varying $\eta$ thresholds. These are pre-computed and loaded into the device to support real-time deployment without any added onboard complexity. Using less aggressive controls also mitigates the risk of further degradation due to increased mechanical loads at higher \gls{RPM}s.
+This maintains the original control characteristics at the cost of putting the device at risk of saturation. To account for saturation constrained quadratic programming can be used \cite{JOHANSEN2013}. Instead a simple gain scheduling approach is used, deploying a less aggressive controller with known characteristics for varying $\eta$ thresholds. These are pre-computed using simulation and validated with hardware-in-the-loop error injection testing. They are checked for transient shifting behaviour and loaded into the device to support real-time deployment without any added onboard complexity. Using less aggressive controls also mitigates the risk of further degradation due to increased mechanical loads at higher \gls{RPM}s.
 
 \begin{comment}
 Furthermore, using static thresholds can lead to false positives when performing aggressive manoeuvres or in gusty conditions. This can be mitigated using statistical methods as explored in \cite{REF} but given that the device follows smooth paths and does not fly in extreme weather this mitigation is unnecessary.
