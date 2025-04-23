@@ -45,7 +45,7 @@ Assuming wind gusts in different seconds are independent events to simplify the 
 \begin{equation}\label{eq:p_calc}
     p = (1-\lambda)^{\frac{distance}{speed}}
 \end{equation}
-The model $\mu, \sigma$ parameters are estimated using historical API data. They can be approximated by taking the Maximum Likelihood Estimation of the Gumbel Likelihood given in Equation \ref{eq:Gumbel_L}\cite{Gumbel1958}.To gather the data, data from periods most similar to the forecast should be used. The exact process for sample selection is an area for future work.
+The model $\mu, \sigma$ parameters are estimated using historical \gls{API} data. They can be approximated by taking the Maximum Likelihood Estimation of the Gumbel Likelihood given in Equation \ref{eq:Gumbel_L}\cite{Gumbel1958}.To gather the data, data from periods most similar to the forecast should be used. The exact process for sample selection is an area for future work.
 \begin{equation}\label{eq:Gumbel_L}
     \mathcal{L}(\mu, \sigma) = \prod_{i=1}^n f_G(g_i; \mu, \sigma).
 \end{equation}
