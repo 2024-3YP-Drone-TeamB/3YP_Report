@@ -1,42 +1,35 @@
 \fancyhead[C]{Jihwan Shin}
 \section{Introduction} \label{introduction}
 
-\subsection{Motivation}
+The use of \gls{APL} remains a persistent threat to welfare worldwide. According to \cite{icbl2024landmine}, at least 5,757 casualties of landmines and explosive remnants of war were recorded for 2023. Civilians made up 84\,\% of the recorded casualties, out of which 37\,\% were children. 
 
-- 110mil mines buried world wide
-- 6000 casualties per year
-- 84percent civilians, over a third are children
+Since Russia's invasion of Ukraine in February 2022, Ukraine has become the most mined country in the world \cite{globsec2024ukraine}. 30\,\% of Ukraine's territory needs to be inspected for mines (over 174,000\,km$^2$), and it is expected to take up to 757 years to demine the potentially contaminated territory with the available resources (given that they are actually contaminated) as of 2023. The average market rate of mine clearance is about 4,000,000\,USD/km$^2$ \cite{globsec2023ukraine}, indicating a challenge in both time and cost to combat the landmine crisis. 
 
-- current demining techniques are mostly manual: metal detectors and other handheld devices
-- 5mn usd to clear 1km2
-- ukraine needs over 750 years to remove the mines planted in the last 3 years using such manual techniques
+The mission of this \gls{3yp} is to expedite the detection and mapping of \gls{APL} through an autonomous multi-aerial drone system, improving safety, efficiency and accessibility in demining operations worldwide. We present the key findings for the areas of focus outlined in Table~\ref{tab:intro_focus}. Some of our designs are then tested in the context of Ukraine through simulations to further validate its applicability in current situations.  
 
-- automated systems are still being developed using UAV (give few example links)
-- we want to establish a multiaerial drone system for landmine detection to accelerate this process
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|p{0.6\linewidth}|c|}
+    \hline
+        \textbf{Area of Focus} & \textbf{Sections} \\
+    \hline\hline
+        Research and selection of components for a multi-modal (thermal and \gls{GPR}) sensor system to collect the field data. & \ref{sensor_hardware_data_acquisition} \\
+    \hline
+        Design of a mission planning framework to efficiently deploy the multi-aerial drone system. & \ref{sec:msp} \\
+    \hline
+        Implementation of computer vision and sensor fusion software utilising machine learning methods to detect the landmines. & \ref{computervision}, \ref{fusion} \\
+    \hline
+        Design and selection of communication, battery management and custom hardware systems to construct the drones. & \ref{Intra Communication}, \ref{sec:euc}, \ref{section:Custom Hardware}, \ref{sec:bms} \\
+    \hline
+        Design and simulation of the control system to ensure its robustness in various weather conditions. & \ref{sec:simcontrol} \\
+    \hline
+        Design of the emergency protocol to safely retrieve the drones in case of hardware failure. & \ref{Return to Safety} \\
+    \hline
+        Analysis of non-technical details of the project in the scope of Engineering in Society. & \ref{Safety and Risk}, \ref{financing}, \ref{sec:techstrat}, \ref{sustainability_ethics} \\
+    \hline
+    \end{tabular}
+    \caption{Areas of Focus}
+    \label{tab:intro_focus}
+\end{table}
 
-\cite{icbl2024landmine}
-\cite{globsec2024ukraine}
-
-\subsection{Mission}
-
-- mission: expedite the detection and mapping of AP landmines through an autonomous drone system, improving safety, efficiency, and accessibility in demining operations worldwide
-
-% key objectives
-- Design and develop a coordinated fleet of autonomous drones capable of covering large terrains effectively.
-- Create software that integrates multimodal sensor data and terrain analysis to predict landmine locations with high accuracy.
-- Optimize the system to balance cost, operational autonomy, and detection precision, ensuring feasibility for deployment in diverse environments.
-
-% key deliverables
-- Key hardware component selections for sensor, communication, battery management, etc. (reference section-huirui, thomas, sam, jihwan)
-- Computer vision proof of concept (section-rory)
-- Mission planning and strategy proof of concept (section-jihwan)
-- Optimal control simulation (section-sam)
-- Failure consideration and mitigation (section-thomas)
-
-... will be explored while applying these design philosophy
-- Modular
-- Cost-Efficient
-- Easy-to-Use
-- Robust
-- Repairable
-- Sustainable
+Throughout the report, we aim to follow a consistent design philosophy to achieve a high standard. Our designs are made to be \textbf{modular}, \textbf{cost-efficient}, \textbf{easy-to-use}, \textbf{robust}, \textbf{repairable} and \textbf{sustainable}.
