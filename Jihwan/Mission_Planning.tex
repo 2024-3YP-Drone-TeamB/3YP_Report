@@ -74,7 +74,7 @@ The layered approach aims to optimise between this trade-off by structuring the 
 
 \subsubsection{Geometric Representation}
 
-The \gls{roi} is an abstract representation of the minefield we wish to survey using our multi-aerial drone system. To apply geometric operations as required by the mission planning algorithm, we represent the \gls{roi} as a Polygon with Holes class (\texttt{Polygon\_with\_holes\_2}) from the \gls{cgal}\footnote{\url{https://www.cgal.org/}} which defines the outer boundary and its holes (obstacles) as a set of vertex coordinates \cite{cgal2024pwh}. \gls{cgal} provides various algorithms that can be directly applied to a Polygon with Holes object -- some of them will be explored and applied in later sections to construct the mission planning algorithm. Throughout the report (Figures~\ref{fig:msp_straight_skeleton},~\ref{fig:msp_bahnemann},~\ref{fig:msp_tspo_20_100},~\ref{fig:msp_tspo_plot}~and~\ref{fig:msp_cdt}), an example Polygon with Holes object extracted from \cite{bahnemann2021cpp} based on a dataset by \cite{sun2014dataset} will be used to represent a simple \gls{roi} with a square outer boundary of width 100m. 
+The \gls{roi} is an abstract representation of the minefield we wish to survey using our multi-aerial drone system. To apply geometric operations as required by the mission planning algorithm, we represent the \gls{roi} as a Polygon with Holes class (\texttt{Polygon\_with\_holes\_2}) from the \gls{cgal}\footnote{\url{https://www.cgal.org/}} which defines the outer boundary and its holes (obstacles) as a set of vertex coordinates \cite{cgal2024pwh}. \gls{cgal} provides various algorithms that can be directly applied to a Polygon with Holes object -- some of them will be explored and applied in later sections to construct the mission planning algorithm. Throughout the report (Figures~\ref{fig:msp_straight_skeleton},~\ref{fig:msp_bahnemann},~\ref{fig:msp_tspo_20_100},~\ref{fig:msp_tspo_plot}~and~\ref{fig:msp_cdt}), an example Polygon with Holes object extracted from \cite{bahnemann2021cpp} based on a dataset by \cite{sun2014dataset} will be used to represent a simple \gls{roi} with a square outer boundary of width 100\,m. 
 
 \subsubsection{Geographic Information System}
 
@@ -109,7 +109,7 @@ Figure~\ref{fig:msp_straight_skeleton} shows the result of applying \gls{cgal}'s
     \centering
     \includegraphics[width=0.6\linewidth]{figs/Jihwan/Polygon Offset with Straight Skeleton.pdf}
     \caption[Offset of ROI using Straight Skeleton]
-    {A 2m offset of a Polygon with Holes has been generated using \gls{cgal}'s straight skeleton method.}
+    {A 2\,m offset of a Polygon with Holes has been generated using \gls{cgal}'s straight skeleton method.}
     \label{fig:msp_straight_skeleton}
 \end{figure}
 
@@ -140,7 +140,7 @@ For the purpose of a landmine detection system, it is important to use the exact
     \label{fig:msp_choset}
 \end{figure}
 
-In each cell, boustrophedon (back-and-forth) paths are generated for the drone to cover the region with its sensor. Based on the thermal sensor decided in Section~X, the coverage width of the drone travelling in a straight line is approximately 9 metres. A set of parallel lines are drawn within the boundary of the cell with spacings equal to the coverage width. The end of these parallel lines are then connected appropriately to generate the continuous path the drone must take to fully cover the cell with its sensor's FOV. Based on the angle at which the parallel lines are drawn, the coverage path can be optimised with respect to two different loss functions: the total distance travelled or the number of turns taken (as turning is a costly manoeuvrer compared to a straight path, so it should be minimised). The method for finding the optimal angle for convex and non-convex polygons is discussed in \cite{torres2016cpp} which in brief involves finding the maximum width of the cell's convex hull. 
+In each cell, boustrophedon (back-and-forth) paths are generated for the drone to cover the region with its sensor. Based on the thermal sensor decided in Section~X, the coverage width of the drone travelling in a straight line is approximately 9\,m. A set of parallel lines are drawn within the boundary of the cell with spacings equal to the coverage width. The end of these parallel lines are then connected appropriately to generate the continuous path the drone must take to fully cover the cell with its sensor's \gls{FOV}. Based on the angle at which the parallel lines are drawn, the coverage path can be optimised with respect to two different loss functions: the total distance travelled or the number of turns taken (as turning is a costly manoeuvrer compared to a straight path, so it should be minimised). The method for finding the optimal angle for convex and non-convex polygons is discussed in \cite{torres2016cpp} which in brief involves finding the maximum width of the cell's convex hull. 
 
 The boustrophedon paths of each cell should now be connected to form a continuous path across all cells in the decomposition. This can be done by the use of an adjacency graph \cite{choset1998bcd}. An undirected graph is initialised where each cell of the decomposition corresponds to a node. Edges are created between cells which are adjacent to one another (two cells share one or more edges) where the weight is the distance between the end of one cell's coverage path to the start of the other cell's coverage path. The \gls{cpp} problem is now simplified into one in which the agent (drone) must visit all cells in the adjacency graph at least once, covering each cell with their individual boustrophedon paths. This is equivalent to a \gls{tsp}, for which the solutions will be explored in more detail in Section~\ref{sec:msp_tspo}. 
 
@@ -163,7 +163,7 @@ For use, the software must be compiled from its ROS Noetic\footnote{\url{https:/
     \centering
     \includegraphics[width=\linewidth]{figs/Jihwan/CPP_diff_widths.pdf}
     \caption[CPP Solution Examples]
-    {\gls{cpp} solutions have been found for sensor coverage widths of 2m (left) and 5m (right). The colour of the background indicates segmentations resulting from the \gls{bcd}.}
+    {\gls{cpp} solutions have been found for sensor coverage widths of 2\,m (left) and 5\,m (right). The colour of the background indicates segmentations resulting from the \gls{bcd}.}
     \label{fig:msp_bahnemann}
 \end{figure}
 
@@ -267,7 +267,7 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
     \centering
     \includegraphics[width=\linewidth]{figs/Jihwan/target_points_vs.pdf}
     \caption[Effect of Number of Target Points on Computing Time and Total Distance of TSP-O Solution]
-    {Plots showing the effect of the number of target points on the computing time (left) and total distance (right) in \gls{tspo}. Number of Target Points have been changed from 10 to 150 at increments of 10, taking the mean of 3 trials each where the target points are randomly generated through rejection sampling. The total distance is based on the scale where the width of the outer boundary is 100m.}
+    {Plots showing the effect of the number of target points on the computing time (left) and total distance (right) in \gls{tspo}. Number of Target Points have been changed from 10 to 150 at increments of 10, taking the mean of 3 trials each where the target points are randomly generated through rejection sampling. The total distance is based on the scale where the width of the outer boundary is 100\,m.}
     \label{fig:msp_tspo_plot}
 \end{figure}
 
@@ -277,11 +277,11 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
 
 To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{roi} at Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}a. The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{qgis}. 
 
-\paragraph{Define} Figure~\ref{fig:msp_example}b shows the \gls{roi} defined using \gls{qgis}. The \gls{roi} is about the size of a 400m by 400m field with 3 obstacles which have been manually identified.  
+\paragraph{Define} Figure~\ref{fig:msp_example}b shows the \gls{roi} defined using \gls{qgis}. The \gls{roi} is about the size of a 400\,m by 400\,m field with 3 obstacles which have been manually identified.  
 
-\paragraph{Cover} Figure~\ref{fig:msp_example}c shows the \gls{cpp} solution found using the implementation by \cite{bahnemann2021cpp}. The coverage width has been specified as approximately 9m, and the start/end points have been arbitrarily decided to be at the top-right region outside the \gls{roi}. A thermal sensor drone will follow the generated path plan to collect the thermal readings. The total length of the path is calculated to be 15526m.
+\paragraph{Cover} Figure~\ref{fig:msp_example}c shows the \gls{cpp} solution found using the implementation by \cite{bahnemann2021cpp}. The coverage width has been specified as approximately 9\,m, and the start/end points have been arbitrarily decided to be at the top-right region outside the \gls{roi}. A thermal sensor drone will follow the generated path plan to collect the thermal readings. The total length of the path is calculated to be 15526\,m.
 
-\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{tspo} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{roi} have been randomly generated using rejection sampling. In a real mission, these points would be found during the Analyse step based on the thermal readings. A \gls{GPR} sensor drone will follow the generated path plan to collect the \gls{GPR} readings. The total length of the path is calculated to be 1777m.
+\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{tspo} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{roi} have been randomly generated using rejection sampling. In a real mission, these points would be found during the Analyse step based on the thermal readings. A \gls{GPR} sensor drone will follow the generated path plan to collect the \gls{GPR} readings. The total length of the path is calculated to be 1777\,m.
 
 For Cover and Target, if the total length of the path is too large to be covered by a single drone the operator may choose to deploy multiple drones to cover the \gls{roi}. This is further explained in Section~\ref{sec:msp_multi_drone}. 
 
@@ -361,7 +361,19 @@ The Divide and Cluster method is visualised by Figure~\ref{fig:msp_divide_cluste
 
 \subsubsection{Efficiency}
 
-To evaluate the efficiency of the landmine detection system, we can compare the coverage time per unit area ($\varepsilon$). The expressions for the layered, magnetic-sensor (a commonly used option for aerial landmine detection systems) and manual approaches are shown in Equations~\ref{eq:msp_layeredefficiency},~\ref{eq:msp_magneticefficiency}~and~\ref{eq:msp_manualefficiency} respectively using symbols explained in Table~\ref{tab:msp_efficiencyvariables}. 
+To evaluate the efficiency of the landmine detection system, we can compare the coverage time per unit area ($\varepsilon$). The expressions for the layered, magnetic-sensor (a commonly used option for aerial landmine detection systems) and manual approaches are shown in Equations~\ref{eq:msp_layeredefficiency},~\ref{eq:msp_magneticefficiency}~and~\ref{eq:msp_manualefficiency} respectively using symbols explained in Table~\ref{tab:msp_efficiencyvariables}.
+\begin{equation}
+\label{eq:msp_layeredefficiency}
+\varepsilon_{\mathrm{layered}} = \frac{\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}}+\frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}}{A_{\mathrm{ROI}}}
+\end{equation}
+\begin{equation}
+\label{eq:msp_magneticefficiency}
+\varepsilon_{\mathrm{magnetic}} = \frac{\frac{C_{\mathrm{magnetic}}}{v_{\mathrm{magnetic}}}}{A_{\mathrm{ROI}}}
+\end{equation}
+\begin{equation}
+\label{eq:msp_manualefficiency}
+\varepsilon_{\mathrm{manual}} = \frac{t_{\mathrm{manual}}}{A_{\mathrm{ROI}}}
+\end{equation}
 
 \begin{table}[h!]
     \centering
@@ -387,22 +399,7 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
     \label{tab:msp_efficiencyvariables}
 \end{table}
 
-\begin{equation}
-\label{eq:msp_layeredefficiency}
-\varepsilon_{\mathrm{layered}} = \frac{\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}}+\frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}}{A_{\mathrm{ROI}}}
-\end{equation}
-
-\begin{equation}
-\label{eq:msp_magneticefficiency}
-\varepsilon_{\mathrm{magnetic}} = \frac{\frac{C_{\mathrm{magnetic}}}{v_{\mathrm{magnetic}}}}{A_{\mathrm{ROI}}}
-\end{equation}
-
-\begin{equation}
-\label{eq:msp_manualefficiency}
-\varepsilon_{\mathrm{manual}} = \frac{t_{\mathrm{manual}}}{A_{\mathrm{ROI}}}
-\end{equation}
-
-$C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the sensors as well as the geometry of the \gls{roi}. The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1 m for a landmine detection drone using a magnetic sensor compared to 9 m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125 square metres per deminer per day in terms of efficiency. The value includes both detection and removal. 
+$C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the sensors as well as the geometry of the \gls{roi}. The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1\,m for a landmine detection drone using a magnetic sensor compared to 9\,m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125\,m$^2$ per deminer per day in terms of efficiency. The value includes both detection and removal. 
 
 \subsubsection{Expandability}
 
