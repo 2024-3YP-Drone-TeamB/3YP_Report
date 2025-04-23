@@ -3,9 +3,9 @@
 \section{Intra-UAV Communication Architecture} \label{Intra Communication}
 
 \subsection{Introduction}\label{sub_section:tgt_intra_com_intro}
-The communication and networking of devices on our device is a key consideration for design. All interfaces and software should be as uniform as possible to reduce the training required for operation and to reduce the difficulty of creating new components for specific environments, applications and regulations.
+The communication and networking of devices on our device is a key consideration for design. All interfaces and software should be as uniform as possible as they reduce integration complexity of creating new components for specific environments, applications, regulations and general upgrades.
 
 \input{Thomas/Intra_Communication/1_Devices_and_Requirements}
 
 \subsection{Conclusion}
-All major communication interfaces are considered and allocated suitable protocols. The dual \gls{CAN} design supports modularity and redundancy, the Ethernet connection between imaging sensors and the onboard computer supports the high data transfer rates required and all the sensors are assigned suitable protocols. Lastly, by using Cyphal as a common high level application protocol the system is easier to learn and use.
+All major communication interfaces are considered and allocated suitable protocols. The dual \gls{CAN} design supports modularity and redundancy, the Ethernet connection between imaging sensors and the onboard computer supports the high data transfer rates required and future upgrades. Lastly, by using Cyphal as a common high level application protocol the system is easier to learn and use whilst also being supported widely by \gls{COTS} hardware.

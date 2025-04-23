@@ -23,32 +23,32 @@ The key objective is to reduce the downtime and cost of operation of the drone. 
 
 \subsubsection{Weather induced failure}\label{sub_sub_section:tgt_weather_failure}
 \paragraph{Cause}
-When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault due to the less aggressive control strategies deployed meaning that the maximum rejected gust becomes lower in magnitude and therefore more likely to occur. 
+When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault as the maximum rejected gust becomes lower in magnitude and therefore more likely to occur.
 \paragraph{Gust Modelling}
-To calculate the probability that a gust exceeds the maximum gust rejection value per second, $\lambda$, we model gusts with the Gumbel distribution \cite{Gumbel1958}. Working from the Meteomatics \gls{API} as discussed in Section \ref{gust} we can get gusts at intervals of 1 hour\footnote{\url{https://www.meteomatics.com/en/api/available-parameters/weather-parameter/standard-weather-parameters-wind/}}. Let $G_{hour}$ represent the maximum gust within an hour, the \gls{CDF} of \( G_{\text{hour}} \) is given in Equation \ref{eq:gumbel_cdf}.
-\begin{equation}\label{eq:gumbel_cdf}
-    F_G(v) = \exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+To model the wind in the operational environment a wind speed monitor is deployed at base stations. Wind gusts are measured at 1 Hz in m/s and recorded as $\mathbf{x} =  \{x_1, x_2, \dots, x_N\}$. The wind speed is modelled using the Weibull distribution \cite{weibull1951} with PDF given by Equation \ref{eq:weibull_pdf}.
+\begin{equation}\label{eq:weibull_pdf}
+    f_X(x; k, \lambda) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} \exp\left(-\left(\frac{x}{\lambda}\right)^k\right),
 \end{equation}
-Therefore the probability that the hourly maximum gust \( G_{\text{hour}} \) exceeds a threshold \( v \) is:
-\begin{equation}
-    P(G_{\text{hour}} > v) = 1 - F_G(v) = 1 - \exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+where:
+\begin{itemize}
+    \item \( k > 0 \): Shape parameter (controls skewness),
+    \item \( \lambda > 0 \): Scale parameter (characteristic wind speed).
+\end{itemize}
+The probability that a gust exceeds \( v \) in any given second is derived from the Weibull survival function shown in Equation \ref{eq:weibull_survive}.
+\begin{equation}\label{eq:weibull_survive}
+    P(X > v) = 1 - F_X(v) = \exp\left(-\left(\frac{v}{\lambda}\right)^k\right).
 \end{equation}
-Assuming wind gusts in different seconds are independent events to simplify the problem. Let \( \lambda \) be the probability of a gust exceeding \( v \) in any given second. Over \( N = 3600 \) seconds (1 hour), the probability that \( v \) is not exceeded in all seconds is given in Equation \ref{eq:p_v}. Equation \ref{eq:solve_p} is then solved to get $\lambda$.
-\begin{equation}\label{eq:p_v}
-    (1 - \lambda)^{N} = P(G_{\text{hour}} \leq v) = \exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right).
+\begin{equation}\label{eq:weibull_likilihood}
+     \mathcal{L}(k, \lambda) = \prod_{i=1}^N f_X(x_i; k, \lambda)
 \end{equation}
-\begin{align}\label{eq:solve_p}
-    1 - \lambda &= \left[\exp\left(-\exp\left(-\frac{v - \mu}{\sigma}\right)\right)\right]^{1/N}, \\
-    \lambda &= 1 - \exp\left(-\frac{1}{N} \exp\left(-\frac{v - \mu}{\sigma}\right)\right).
-\end{align}
- From this we can calculate $p$ using Equation \ref{eq:p_calc}. The exact methods used to find $\lambda$ are an area of future work.
+The model $k, \lambda$ parameters are estimated by calculating the Maximum Likelihood Estimation of \ref{eq:weibull_likilihood} using numerical methods such as Newton-Raphson \cite{rinne2008} on the base station and sent live over LoRa as discussed in Section \ref{sec:euc_lora}. This allows the device to operate on live information.
+
+\paragraph{Calculating $p$}
+The maximum gust rejection, $v$, is a known parameter for all deployed controllers discussed in Section \ref{sub_sub_section:tgt_actuator_fault}. From this we can calculate $p$ as discussed above using Equation \ref{eq:p_calc} where $d$ is the nodal distance and $s$ is the speed of travel.
 \begin{equation}\label{eq:p_calc}
-    p = (1-\lambda)^{\frac{distance}{speed}}
+    p = (1-P(X>v))^{\frac{d}{s}}
 \end{equation}
-The model $\mu, \sigma$ parameters are estimated using historical \gls{API} data. They can be approximated by taking the Maximum Likelihood Estimation of the Gumbel Likelihood given in Equation \ref{eq:Gumbel_L}\cite{Gumbel1958}.To gather the data, data from periods most similar to the forecast should be used. The exact process for sample selection is an area for future work.
-\begin{equation}\label{eq:Gumbel_L}
-    \mathcal{L}(\mu, \sigma) = \prod_{i=1}^n f_G(g_i; \mu, \sigma).
-\end{equation}
+This has the implicit assumption of independence of gusts that is flawed and is an area that would benefit from future work with auto-regressive models.
 
 \subsubsection{Search Algorithms}\label{sub_sub_section:tgt_search}
 \input{Thomas/Return_To_Safety/search_algo}
@@ -87,7 +87,7 @@ For a deployed algorithm consistent timings and a minimal memory footprint are e
   \end{algorithmic}
 \end{algorithm}
 \paragraph{Memory Management}
-The memory on the \gls{MCU}s consists of Flash and \gls{SRAM}. Flash is static memory that has to be pre-loaded onto the board before each run whereas \gls{SRAM} is volatile but has faster access times. Therefore, waypoints, maps and gains are loaded into \gls{RAM} from the preset values in Flash before a flight. In addition, the flight controller's \gls{MCU} has \gls{ITCM} configured \gls{RAM} and \gls{DTCM} configured \gls{RAM}. \gls{DTCM} and \gls{ITCM} allow for precise timings when accessing data and instructions respectively and should therefore be used for looped processes including control loops and heading calculations. Whereas, for less timing critical actions or varying time operations such as actuator tests the regular \gls{SRAM} can be used. For the \gls{GNSS} module \gls{MCU} there is just Flash and \gls{SRAM} however, as it is a less complex operational loop this is sufficient. 
+The memory on the \gls{MCU}s consists of Flash and \gls{SRAM}. Flash is static memory that has to be pre-loaded onto the board before each run whereas \gls{SRAM} is volatile but has faster access times. Therefore, waypoints, maps and gains are loaded into \gls{RAM} from the preset values in Flash before a flight. In addition, the flight controller's \gls{MCU} has \gls{ITCM} configured \gls{RAM} and \gls{DTCM} configured \gls{RAM}. \gls{DTCM} and \gls{ITCM} allow for precise timings when accessing data and instructions respectively\footnote{\url{https://developer.arm.com/documentation/107565/0101/Memory-system/Tightly-Coupled-Memory--TCM-}} and should therefore be used for looped processes including control loops and heading calculations. Whereas, for less timing critical actions or varying time operations such as actuator tests the regular \gls{SRAM} can be used. For the \gls{GNSS} module \gls{MCU} there is just Flash and \gls{SRAM} however, as it is a less complex operational loop this is sufficient. 
 \input{Thomas/Return_To_Safety/memory}
 \paragraph{Memory Reduced Nodes}
 Using a C implementation as shown in Listing \ref{lst:node} it requires 56 bytes per node, therefore, for a 256 node map it requires 14.336 kilobytes of \gls{RAM}. This puts significant resolution limitations on the map. Therefore, the map should be stored in custom data structures that contain only as many bits as required. By using an indexed node array instead of pointers, 12 bit indexes can be used supporting 4096 nodes and 8 bits for probability values is sufficient. Lastly, the index of the node can be used to derive its location removing the relative values. This structure is shown in Listing \ref{lst:reducednode} and with the above values and using guaranteed optimal number of thresholds and actions of 6 results in 16.5 bytes per node. However, the major drawback is that when moving away from from standard C data types bespoke bit operations are required increasing the development difficulty. 
@@ -109,5 +109,5 @@ struct Node {
 \end{lstlisting}
 
 \paragraph{Testing}
-Using 10 random satellite images from the Kharkiv region, 256 node cost maps were generated including visible obstacles and assumed regions of interest. Each trail consisted of starting at each node in the region of interest and finding the actual cost, using the values given in Table \ref{tab:cost_values}, experienced following maps generated by each nodal structure for a specified value of $p$. 20 trials were run between $p$ values 0.01 and 0.99 with intervals of 0.01 and the aggregate average performances between Stop-Go, Reduced and Implemented nodes were all within 0.01\% showing equivalent performance of each nodal structure over the dataset. However, the Stop-Go method can no longer guarantee optimal results leaving them vulnerable to unforeseen situations and varying cost functions. Therefore, the reduced node given in Listing \ref{lst:reducednode} should be implemented unless there are significant memory requirements.
+Using 10 random satellite images from the Kharkiv region, 256 node cost maps were generated including visible obstacles and assumed regions of interest. Each trail consisted of starting at each node in the region of interest and finding the actual cost, using the values given in Table \ref{tab:cost_values}, experienced following maps generated by each nodal structure for a specified value of $p$. 20 trials were run between $p$ values 0.01 and 0.99 with intervals of 0.01 and the aggregate average performances between Stop-Go, Reduced and Implemented nodes were all within 0.01\% showing equivalent performance of each nodal structure over the dataset. However, the Stop-Go method can no longer guarantee optimal results leaving them vulnerable to unforeseen situations and varying cost functions. Therefore, the reduced node given in Listing \ref{lst:reducednode} should be implemented unless there are significant memory requirements. Further field validation is required as the dataset used may be different to real-world application.
 
