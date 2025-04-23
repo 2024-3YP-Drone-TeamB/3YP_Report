@@ -57,7 +57,7 @@ The technical requirements can be considered with respect to distance, bit rate 
 
 \paragraph{Distance} The base station will be set up outside the \gls{roi} and it will need to communicate with the drones regardless of where they are. The communication distance therefore acts as the limiting factor on the maximum size of the \gls{roi}; if the communication distance is too small, the efficiency and expandability of the system will decrease drastically. For the purpose of our system, we set the desired communication distance to be in the range of kilometres. 
 
-\paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$ Hz, the drone-to-base and base-to-drone bit rates are $620 \times f=1240$ bps and $74 \times f=148$ bps respectively. The extra-\gls{UAV} communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
+\paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$\,Hz, the drone-to-base and base-to-drone bit rates are $620 \times f=1240$\,bps and $74 \times f=148$\,bps respectively. The extra-\gls{UAV} communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
 
 \paragraph{Geographical Factors} Demining operations may take place in regions where cell communications are unavailable (due to post-war recovery or remoteness of the location), so the communication protocol should not depend on any external cell communications. Different countries also have restrictions on the bandwidth available for specific use-cases, which should be met by the chosen communication protocol. 
 
@@ -68,8 +68,7 @@ We choose the \gls{lora} communication technology with \gls{lorawan} protocol fo
 
 \subsubsection{LoRa and LoRaWAN Theory}
 
-\paragraph{LoRa} \gls{lora} is a communication technology developed by Semtech\footnote{\url{https://www.semtech.com/lora}} for \gls{lpwan}. It is a \gls{phy} layer implementation derived from the \gls{css} modulation technique \cite{semtech2024lora}. In \gls{css}, the data is modulated by a chirp signal (a spectrum whose frequency decreases overtime), effectively spreading the bandwidth beyond the original data signal to achieve reduced noise and interference levels \cite{devalal2018lora}. The bit rate ($\mathrm{R_b}$) is expressed by the bandwidth ($\mathrm{BW}$) and spreading factor ($\mathrm{SF}$) using Equation~\ref{eq:euc_lorabit}. Table~\ref{tab:euc_lorasf} shows the bit rates and ranges at different values of the spreading factor for an uplink transmission at 125 kHz. 
-
+\paragraph{LoRa} \gls{lora} is a communication technology developed by Semtech\footnote{\url{https://www.semtech.com/lora}} for \gls{lpwan}. It is a \gls{phy} layer implementation derived from the \gls{css} modulation technique \cite{semtech2024lora}. In \gls{css}, the data is modulated by a chirp signal (a spectrum whose frequency decreases overtime), effectively spreading the bandwidth beyond the original data signal to achieve reduced noise and interference levels \cite{devalal2018lora}. The bit rate ($\mathrm{R_b}$) is expressed by the bandwidth ($\mathrm{BW}$) and spreading factor ($\mathrm{SF}$) using Equation~\ref{eq:euc_lorabit}. Table~\ref{tab:euc_lorasf} shows the bit rates and ranges at different values of the spreading factor for an uplink transmission at 125\,kHz. 
 \begin{equation} 
 \label{eq:euc_lorabit}
 \mathrm{R_b} = \mathrm{BW} \times \frac{\mathrm{SF}}{2^{\mathrm{SF}}} \; \mathrm{bps}
@@ -81,16 +80,16 @@ We choose the \gls{lora} communication technology with \gls{lorawan} protocol fo
     \hline
         \textbf{Spreading Factor} (For UL at 125 kHz) & \textbf{Bit Rate} & \textbf{Range} (Depends on Terrain) \\
     \hline\hline
-        SF10 & 980 bps & 8 km \\
+        SF10 & 980\,bps & 8\,km \\
     \hline
-        SF9 & 1760 bps & 6 km \\
+        SF9 & 1760\,bps & 6\,km \\
     \hline
-        SF8 & 3125 bps & 4 km \\
+        SF8 & 3125\,bps & 4\,km \\
     \hline
-        SF7 & 5470 bps & 2 km \\
+        SF7 & 5470\,bps & 2\,km \\
     \hline
     \end{tabular}
-    \caption[LoRa Spreading Factors' Effect on Bit Rate and Range]{The effect of changing the spreading factor on the bit rate and range for a \gls{lora} modulated signal (uplink at 125 kHz). The bit rates given exclude the protocol overhead required in real-world applications. Data extracted from \cite{semtech2024lora}.}
+    \caption[LoRa Spreading Factors' Effect on Bit Rate and Range]{The effect of changing the spreading factor on the bit rate and range for a \gls{lora} modulated signal (uplink at 125\,kHz). The bit rates given exclude the protocol overhead required in real-world applications. Data extracted from \cite{semtech2024lora}.}
     \label{tab:euc_lorasf}
 \end{table}
 
@@ -118,15 +117,15 @@ We choose the \gls{lora} communication technology with \gls{lorawan} protocol fo
 
 \paragraph{Power Consumption} The coverage area of the landmine detection drones is directly dependent on the battery capacity. To maximise the coverage area to increase the efficiency of the system, the power consumption of the extra-\gls{UAV} communication method should be minimised. \gls{lorawan} protocol is able to achieve low power consumption levels by its efficient modulation technology and idling periods of the end devices, showing up to 10 times the duration of cellular machine-to-machine communication in general applications \cite{semtech2024lora}. 
 
-\paragraph{Distance} The \gls{css} modulation technology of \gls{lora} allows long distance coverage (in the kilometre-range) as outlined in Table~\ref{tab:euc_lorasf} which is suitable for our application of deploying drones into remote \gls{roi}s. By adopting spreading factors of 7 or 8, the base station can communicate with drones from 2-4km away. This enables the operator to define larger \gls{roi}s, increasing the efficiency of the system. 
+\paragraph{Distance} The \gls{css} modulation technology of \gls{lora} allows long distance coverage (in the kilometre-range) as outlined in Table~\ref{tab:euc_lorasf} which is suitable for our application of deploying drones into remote \gls{roi}s. By adopting spreading factors of 7 or 8, the base station can communicate with drones from 2-4\,km away. This enables the operator to define larger \gls{roi}s, increasing the efficiency of the system. 
 
-\paragraph{Costs} The cost benefit analysis of \gls{lpwan} technologies performed by \cite{hossain2021lpwancosts} demonstrates that \gls{lorawan} is the most cost-effective solution for deployment in rural and urban areas where device density and activity rates are low (which align with the problem specifications of our project). \cite{stokking2021lorawan} states that \gls{lorawan} modules cost less than 20€ per node in capital expenditure and almost no operational expenditure, meaning that the extra-\gls{UAV} communication system can be established at very low costs.
+\paragraph{Costs} The cost benefit analysis of \gls{lpwan} technologies performed by \cite{hossain2021lpwancosts} demonstrates that \gls{lorawan} is the most cost-effective solution for deployment in rural and urban areas where device density and activity rates are low (which align with the problem specifications of our project). \cite{stokking2021lorawan} states that \gls{lorawan} modules cost less than 20\,€ per node in capital expenditure and almost no operational expenditure, meaning that the extra-\gls{UAV} communication system can be established at very low costs.
  
 \subsubsection{Disadvantages}
 
-\paragraph{Bit Rate} \gls{lora} is limited by the low bit rates as outlined in Table~\ref{tab:euc_lorasf} but is sufficient for the bit rate requirements of the system. Spreading factors of 7-8 is able to maintain a sufficient bit rate at approximately 5 Hz frequency for ranges of 2-4 km. In events where longer ranges are required, the frequency may need to be reduced (1-2 Hz at spreading factors of 9-10) but the system would still be able to function while offering lower accuracy in location and delayed emergency flags. 
+\paragraph{Bit Rate} \gls{lora} is limited by the low bit rates as outlined in Table~\ref{tab:euc_lorasf} but is sufficient for the bit rate requirements of the system. Spreading factors of 7-8 is able to maintain a sufficient bit rate at approximately 5\,Hz frequency for ranges of 2-4\,km. In events where longer ranges are required, the frequency may need to be reduced (1-2\,Hz at spreading factors of 9-10) but the system would still be able to function while offering lower accuracy in location and delayed emergency flags. 
 
-\paragraph{Bandwidth} Sub-gigahertz \gls{ism} bands are available for unlicensed uses with \gls{lorawan} \cite{stokking2021lorawan}. They can operate out of limited bandwidths available (125, 250, 500 kHz) depending on the region, where Europe only allows 125 kHz to be used. This may result in interferences from other devices in the band (especially in rural areas) as well as low bit rates from the small bandwidth options. The effects may be minimal in demining regions due to the lack of population, but solutions to reduce interference may need to be investigated. 
+\paragraph{Bandwidth} Sub-gigahertz \gls{ism} bands are available for unlicensed uses with \gls{lorawan} \cite{stokking2021lorawan}. They can operate out of limited bandwidths available (125, 250, 500\,kHz) depending on the region, where Europe only allows 125\,kHz to be used. This may result in interferences from other devices in the band (especially in rural areas) as well as low bit rates from the small bandwidth options. The effects may be minimal in demining regions due to the lack of population, but solutions to reduce interference may need to be investigated. 
 
 \subsection{Application Details}
 \label{sec:euc_application}
@@ -149,6 +148,6 @@ When generating the path plan of the drones in the mission planning framework (S
 
 To simulate the stability of \gls{lorawan} during a mission, ns-3\footnote{\url{https://www.nsnam.org/}} discrete-event network simulator will be used. ns-3 is a free and open-source software (GNU GPLv2 license) which allows the developer to incorporate custom models to construct the simulation scenario. 
 
-\paragraph{LoRaWAN Model} The model was created by \cite{magrin2017lora} to create \gls{lorawan} simulations by establishing connections between custom end devices, gateways and network servers. Currently, the model only supports class A end devices at 868 MHz (\gls{ism} band for EU) so additional components will need to be developed for implementation. 
+\paragraph{LoRaWAN Model} The model was created by \cite{magrin2017lora} to create \gls{lorawan} simulations by establishing connections between custom end devices, gateways and network servers. Currently, the model only supports class A end devices at 868\,MHz (\gls{ism} band for EU) so additional components will need to be developed for implementation. 
 
 \paragraph{Mobility Model} The model enables nodes to have defined position and velocities on a Cartesian plane. The generated path plans of the drones can be input to accurately simulate the network performance at any part of the \gls{roi} during the mission. 
