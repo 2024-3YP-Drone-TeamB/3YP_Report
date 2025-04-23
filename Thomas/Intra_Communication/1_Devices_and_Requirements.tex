@@ -4,13 +4,13 @@
 \paragraph{Relevance}
 Mechanical modularity is the most obvious path as the components need to physically connect easily. However, the communication architecture also needs to support this so that devices can easily communicate even if they are changed completely.
 \paragraph{Modular Communication Protocols}
-Defined interfaces, protocols and pin allow for different devices to communicate without specific dependencies on each other with protocols such as those in Table \ref{tab:communication_options}. Therefore, integrating new sensors or modules does not require a new communication system. Another key property of modular networks is physical, some networks lend themselves better to modular design, for example for a \gls{CAN} Bus you only need to add a stub.
+Defined interfaces, protocols and pin allow for different devices to communicate without specific dependencies on each other with protocols. Therefore, integrating new sensors or modules does not require a new communication system. Another key property of modular networks is physical, some networks lend themselves better to modular design, for example for a \gls{CAN} Bus you only need to add a stub.
 
 \subsubsection{Telemetry}\label{sub_sub_section:tgt_telemetry}
 \paragraph{Battery Telemetry}
 The two key failure modes for the battery are state of charge and thermal runaway. Both can cause complete failure and therefore both should be monitored during flight. This allows for \gls{RTH} to be triggered in case of a state of charge or emergency landing in the case of thermal runaway.
 \paragraph{\gls{ESC} Telemetry}
-\gls{IMU} data can be used in conjunction with command signals to approximate actuator faults, however, due to noise and outside disturbances it is limited in accuracy. Providing \gls{ESC} telemetry for voltage, current and \gls{RPM} is important information when classifying motor and propeller faults accurately which is needed to support the adaptive control strategy in Section \ref{para:control_strategy}.   
+Providing \gls{ESC} telemetry for voltage, current and \gls{RPM} is important information when classifying motor and propeller faults accurately which is needed to support the adaptive control strategy in Section \ref{sub_sub_section:tgt_actuator_fault}.   
 
 \subsubsection{Communication Bus}
 \paragraph{\gls{CAN} bus}
