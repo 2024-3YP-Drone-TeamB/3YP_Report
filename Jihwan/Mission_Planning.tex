@@ -35,7 +35,7 @@ This section will explain the theoretical basis of how the mission planning algo
 
 \subsubsection{Algorithm Outline}
 
-As mentioned in sections~X~and~X, we utilise thermal and \gls{GPR} sensors to detect the landmines. Table~\ref{tab:thermal_vs_gpr} illustrates the trade-off between thermal and \gls{GPR} sensors: a thermal sensor is able to scan at a higher altitude and fast speed which results in a shorter time to survey the given \gls{roi}, but a \gls{GPR} sensor results in a higher confidence in the mine location. 
+As mentioned in Section~\ref{sensor_hardware_data_acquisition}, we utilise thermal and \gls{GPR} sensors to detect the landmines. Table~\ref{tab:thermal_vs_gpr} illustrates the trade-off between thermal and \gls{GPR} sensors: a thermal sensor is able to scan at a higher altitude and fast speed which results in a shorter time to survey the given \gls{roi}, but a \gls{GPR} sensor results in a higher confidence in the mine location. 
 
 \begin{table}[h!]
     \centering
@@ -60,13 +60,13 @@ The layered approach aims to optimise between this trade-off by structuring the 
 \begin{enumerate}
     \item \textbf{Define}: The \gls{roi} and its obstacles are defined using a \gls{gis} software by the system operator. (Section~\ref{sec:msp_define})
     \item \textbf{Cover}: The \gls{roi} is fully covered by the thermal sensor in a Boustrophedon (back-and-forth) path through a \gls{cpp} algorithm. (Section~\ref{sec:msp_cpp})
-    \item \textbf{Analyse}: The resulting thermal sensor readings are analysed by a machine learning algorithm to return a list of suspected landmine points. (Section~X) 
+    \item \textbf{Analyse}: The resulting thermal sensor readings are analysed by a machine learning algorithm to return a list of suspected landmine points. (Section~\ref{computervision}) 
     \item \textbf{Target}: The suspected landmine points are targeted and rescanned by the \gls{GPR} sensor in a minimum traversal path through a \gls{tspo} algorithm. (Section~\ref{sec:msp_tspo}) 
-    \item \textbf{Confirm}: The resulting \gls{GPR} readings are analysed by a machine learning algorithm to return the final result on the locations of the landmines. (Section~X)
+    \item \textbf{Confirm}: The resulting \gls{GPR} readings are analysed by a machine learning algorithm to return the final result on the locations of the landmines. (Section~\ref{computervision})
     \item \textbf{Demine}: The \gls{roi} is demined based on the generated landmine location map. The demining operation itself is outside the scope of this project, and it will be the responsibility of the demining organisations to safely deactivate and remove the mines.
 \end{enumerate}
 
-% add a diagram for summarising the layered approach. 
+% add a diagram for summarising the layered approach?
 
 %%%%%%%%%%
 \subsection{Defining the Region of Interest}
@@ -74,13 +74,13 @@ The layered approach aims to optimise between this trade-off by structuring the 
 
 \subsubsection{Geometric Representation}
 
-The \gls{roi} is an abstract representation of the minefield we wish to survey using our multi-aerial drone system. To apply geometric operations as required by the mission planning algorithm, we represent the \gls{roi} as a Polygon with Holes class (\texttt{Polygon\_with\_holes\_2}) from the \gls{cgal}\footnote{\url{https://www.cgal.org/}} which defines the outer boundary and its holes (obstacles) as a set of vertex coordinates \cite{cgal2024pwh}. \gls{cgal} provides various algorithms that can be directly applied to a Polygon with Holes object -- some of them will be explored and applied in later sections to construct the mission planning algorithm. Throughout the report (Figures~\ref{fig:msp_straight_skeleton},~\ref{fig:msp_bahnemann},~\ref{fig:msp_tspo_20_100},~\ref{fig:msp_tspo_plot}~and~\ref{fig:msp_cdt}), an example Polygon with Holes object extracted from \cite{bahnemann2021cpp} based on a dataset by \cite{sun2014dataset} will be used to represent a simple \gls{roi} with a square outer boundary of width 100\,m. 
+The \gls{roi} is an abstract representation of the minefield we wish to survey using our multi-aerial drone system. To apply geometric operations as required by the mission planning algorithm, we represent the \gls{roi} as a Polygon with Holes class (\texttt{Polygon\_with\_holes\_2}) from the \gls{cgal}\footnote{\url{https://www.cgal.org/}} which defines the outer boundary and its holes (obstacles) as a set of vertex coordinates \cite{cgal2024pwh}. \gls{cgal} provides various algorithms that can be directly applied to a Polygon with Holes object -- some of them will be explored and applied in later sections to construct the mission planning algorithm. Throughout the report (Figures \ref{fig:msp_straight_skeleton}, \ref{fig:msp_bahnemann}, \ref{fig:msp_tspo_20_100}, \ref{fig:msp_tspo_plot} and \ref{fig:msp_cdt}), an example Polygon with Holes object extracted from \cite{bahnemann2021cpp} based on a dataset by \cite{sun2014dataset} will be used to represent a simple \gls{roi} with a square outer boundary of width 100\,m. 
 
 \subsubsection{Geographic Information System}
 
 \gls{gis} software connects the geometric representation of the \gls{roi} to a geographic map in an accessible user-interface. This project uses a free and open-source \gls{gis} software called \gls{qgis}\footnote{\url{https://qgis.org/}} from which the demining operator can define the \gls{roi}. The process of defining the \gls{roi} on \gls{qgis} is shown in Figure~\ref{fig:msp_qgis}. Once all the outer polygon and its holes have been created to define the full \gls{roi}, the operator can export the coordinates in a GeoJSON\footnote{\url{https://geojson.org/}} format which gets converted into a Polygon with Holes object.
 
-% add notes on satellite source and mapping drone 
+% add notes on satellite source and mapping drone?
 
 \begin{figure}[h!]
     \centering
@@ -140,7 +140,7 @@ For the purpose of a landmine detection system, it is important to use the exact
     \label{fig:msp_choset}
 \end{figure}
 
-In each cell, boustrophedon (back-and-forth) paths are generated for the drone to cover the region with its sensor. Based on the thermal sensor decided in Section~X, the coverage width of the drone travelling in a straight line is approximately 9\,m. A set of parallel lines are drawn within the boundary of the cell with spacings equal to the coverage width. The end of these parallel lines are then connected appropriately to generate the continuous path the drone must take to fully cover the cell with its sensor's \gls{FOV}. Based on the angle at which the parallel lines are drawn, the coverage path can be optimised with respect to two different loss functions: the total distance travelled or the number of turns taken (as turning is a costly manoeuvrer compared to a straight path, so it should be minimised). The method for finding the optimal angle for convex and non-convex polygons is discussed in \cite{torres2016cpp} which in brief involves finding the maximum width of the cell's convex hull. 
+In each cell, boustrophedon (back-and-forth) paths are generated for the drone to cover the region with its sensor. Based on the thermal sensor decided in Section~\ref{thermal_system}, the coverage width of the drone travelling in a straight line is approximately 9\,m. A set of parallel lines are drawn within the boundary of the cell with spacings equal to the coverage width. The end of these parallel lines are then connected appropriately to generate the continuous path the drone must take to fully cover the cell with its sensor's \gls{FOV}. Based on the angle at which the parallel lines are drawn, the coverage path can be optimised with respect to two different loss functions: the total distance travelled or the number of turns taken (as turning is a costly manoeuvrer compared to a straight path, so it should be minimised). The method for finding the optimal angle for convex and non-convex polygons is discussed in \cite{torres2016cpp} which in brief involves finding the maximum width of the cell's convex hull. 
 
 The boustrophedon paths of each cell should now be connected to form a continuous path across all cells in the decomposition. This can be done by the use of an adjacency graph \cite{choset1998bcd}. An undirected graph is initialised where each cell of the decomposition corresponds to a node. Edges are created between cells which are adjacent to one another (two cells share one or more edges) where the weight is the distance between the end of one cell's coverage path to the start of the other cell's coverage path. The \gls{cpp} problem is now simplified into one in which the agent (drone) must visit all cells in the adjacency graph at least once, covering each cell with their individual boustrophedon paths. This is equivalent to a \gls{tsp}, for which the solutions will be explored in more detail in Section~\ref{sec:msp_tspo}. 
 
@@ -194,9 +194,9 @@ The \gls{tsp} is an optimisation problem in which the minimum traversal path to 
     \label{tab:msp_tspcomparison}
 \end{table}
 
-For the purpose of our layered approach, the number of suspected points will get large due to the size of the \gls{roi} and leniency towards high recall for the thermal sensor analysis algorithm (Section~X). It is also acceptable to sacrifice the optimality of the solution as it is not critical for surveying the \gls{roi} with the \gls{GPR} sensor. Hence, we choose the heuristic Lin-Kernighan algorithm for our problem. 
+For the purpose of our layered approach, the number of suspected points will get large due to the size of the \gls{roi} and leniency towards high recall for the thermal sensor analysis algorithm (Section~\ref{compvis_intro}). It is also acceptable to sacrifice the optimality of the solution as it is not critical for surveying the \gls{roi} with the \gls{GPR} sensor. Hence, we choose the heuristic Lin-Kernighan algorithm for our problem. 
 
-% more detailed explanation of the lk algorithm. 
+% more detailed explanation of the lk algorithm? 
 
 The \gls{tsp} can be extended to more specific cases depending on the application, one of which is the \gls{tspo}. It introduces obstacles which the traversal path must avoid; this is exactly the problem that must be solved for the Target step of the layered approach, as the drone with a \gls{GPR} sensor must visit all suspected landmine points in the obstacle-filled \gls{roi}. The method for solving \gls{tspo} is explained in the next section. 
 
@@ -245,6 +245,7 @@ The time complexity of algorithm~\ref{alg:msp_tspo2visgraph} can be calculated t
 The resulting visibility graph is then solved as an ordinary \gls{tsp} through the use of Lin-Kernighan algorithm explained above, which has the time complexity $O(n^2\log{n})$. Algorithm~\ref{alg:msp_tspo2visgraph} and the Lin-Kernighan algorithm are applied successively, meaning that their time complexities will be added to give $O(n^3 h + n^2\log{n})$. 
 
 As $n$ increases to a large value, $O(n^2\log{n})$ becomes negligible compared to $O(n^3 h)$ in terms of its magnitude. The final time complexity of finding the solution to \gls{tspo} can therefore be expressed as $O(n^3 h)$. This is a reasonable value for computation given that the number of suspected landmine points does not come out to be too high for the \gls{roi}. 
+
 % it will get too high, so we divide and cluster. 
 
 \subsubsection{Implementation}
@@ -281,7 +282,7 @@ To test the validity of the layered approach, a real location example has been c
 
 \paragraph{Cover} Figure~\ref{fig:msp_example}c shows the \gls{cpp} solution found using the implementation by \cite{bahnemann2021cpp}. The coverage width has been specified as approximately 9\,m, and the start/end points have been arbitrarily decided to be at the top-right region outside the \gls{roi}. A thermal sensor drone will follow the generated path plan to collect the thermal readings. The total length of the path is calculated to be 15526\,m.
 
-\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{tspo} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{roi} have been randomly generated using rejection sampling. In a real mission, these points would be found during the Analyse step based on the thermal readings. A \gls{GPR} sensor drone will follow the generated path plan to collect the \gls{GPR} readings. The total length of the path is calculated to be 1777\,m.
+\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{tspo} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{roi} have been randomly generated using rejection sampling. The total length of the path is calculated to be 1777\,m. In a real mission, the suspected landmine points would be found during the Analyse step based on the thermal readings. At each point, the \gls{GPR} sensor drone will perform the scanning procedure described in Section~\ref{GPR_flight} before continuing onto the next point. 
 
 For Cover and Target, if the total length of the path is too large to be covered by a single drone the operator may choose to deploy multiple drones to cover the \gls{roi}. This is further explained in Section~\ref{sec:msp_multi_drone}. 
 
@@ -361,7 +362,7 @@ The Divide and Cluster method is visualised by Figure~\ref{fig:msp_divide_cluste
 
 \subsubsection{Efficiency}
 
-To evaluate the efficiency of the landmine detection system, we can compare the coverage time per unit area ($\varepsilon$). The expressions for the layered, magnetic-sensor (a commonly used option for aerial landmine detection systems) and manual approaches are shown in Equations~\ref{eq:msp_layeredefficiency},~\ref{eq:msp_magneticefficiency}~and~\ref{eq:msp_manualefficiency} respectively using symbols explained in Table~\ref{tab:msp_efficiencyvariables}.
+To evaluate the efficiency of the landmine detection system, we can compare the coverage time per unit area ($\varepsilon$). The expressions for the layered, magnetic-sensor (a commonly used option for aerial landmine detection systems) and manual approaches are shown in Equations \ref{eq:msp_layeredefficiency}, \ref{eq:msp_magneticefficiency} and \ref{eq:msp_manualefficiency} respectively using symbols explained in Table \ref{tab:msp_efficiencyvariables}.
 \begin{equation}
 \label{eq:msp_layeredefficiency}
 \varepsilon_{\mathrm{layered}} = \frac{\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}}+\frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}}{A_{\mathrm{ROI}}}
@@ -395,7 +396,7 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
     \hline
     \end{tabular}
     \caption[Explanation of Variables for Mission Efficiency Expressions]
-    {Explanation of the variables used in Equations~\ref{eq:msp_layeredefficiency},~\ref{eq:msp_magneticefficiency}~and~\ref{eq:msp_manualefficiency} to express the mission efficiency.}
+    {Explanation of the variables used in Equations \ref{eq:msp_layeredefficiency}, \ref{eq:msp_magneticefficiency} and \ref{eq:msp_manualefficiency} to express the mission efficiency.}
     \label{tab:msp_efficiencyvariables}
 \end{table}
 

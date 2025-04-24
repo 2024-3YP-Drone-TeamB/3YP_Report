@@ -14,11 +14,9 @@ The base station is the central node where the drones are deployed to the \gls{r
 
 \begin{itemize}
     \item \textbf{Before mission}: The main computer processes the mission planning framework to generate the path plan for each drone. The path is uploaded to the drones for them to follow offline during the mission. Drones are charged at the charging station to achieve the maximum travel distance possible. 
-    \item \textbf{During mission}: The drones are in flight, following the offline path plan to collect the data with their thermal or \gls{GPR} sensors. The main computer receives the \gls{GNSS} data from all drones to keep track of their locations, and transmits emergency flags in case an extreme event forces the mission to be paused (e.g. rainfall, strong wind forecasts). This is where the extra-\gls{UAV} communication becomes necessary. 
+    \item \textbf{During mission}: The drones are in flight, following the offline path plan to collect the data with their thermal or \gls{GPR} sensors. The main computer receives the \gls{GNSS} data from all drones to keep track of their locations, and transmits emergency flags in case an extreme event forces the mission to be paused (e.g. rainfall, strong wind forecasts). They also calculate and communicate the necessary data for the \gls{RTS} algorithms explained in Section~\ref{sub_section:tgt_path_planning}. This is where the extra-\gls{UAV} communication becomes necessary. 
     \item \textbf{After mission}: The drones have returned to the base station and they are charged at the charging station. The data collected from the mission is uploaded to the main computer for processing to predict the location of the landmines. 
 \end{itemize}
-
-The purpose of the extra-\gls{UAV} communication framework is to facilitate the base station's role during mission (when drones are in flight). 
 
 \subsubsection{Extra-UAV Communication Content}
 
@@ -32,19 +30,23 @@ Table~\ref{tab:euc_messages} lists all messages that should be communicated betw
         \hline\hline
         Timestamp & Time data for confirmation of transmission period. & $\leftrightarrow$ & 64 \\
         \hline
-        Drone ID & Distinct ID given to each drone to distinguish at the base station. Unsigned integer (0-255) data type is used. & $\leftrightarrow$ & 8 \\
+        Drone ID & Distinct ID given to each drone to distinguish at the base station. Unsigned char (0-255) is used. & $\leftrightarrow$ & 8 \\
         \hline
-        \gls{GNSS} Location & The x, y, z location coordinates of the drone based on \gls{GNSS}. Each dimension takes up 16-bits. & $\rightarrow$ & 48 \\
+        \gls{GNSS} Location & The x, y, z location coordinates of the drone based on \gls{GNSS}. Each dimension is expressed as a double (64-bits). & $\rightarrow$ & 192 \\
         \hline
-        \gls{GNSS} Correction & Correction data required to ensure the validity of the \gls{GNSS} data. & $\rightarrow$ & 500 \\
+        \gls{GNSS} \gls{RTK} Correction & Correction data required to achieve \gls{RTK} explained in Section~\ref{sub_sub_section:tgt_component_selection}.  The message size is estimated based on \cite{RTK_LORA}. & $\rightarrow$ & 500 \\
         \hline
-        Return to Safety Flag & Flag triggered when Return to Safety is required. Boolean (0-1) data type is used. & $\leftarrow$ & 1 \\
+        Controller ID & Data required for the \gls{RTS} system in Section \ref{sub_section:tgt_path_planning}. Unsigned char (0-255) is used. & $\rightarrow$ & 8 \\
         \hline
-        Return to Home Flag & Flag triggered when Return to Home is required. Boolean (0-1) data type is used. & $\leftarrow$ & 1 \\
+        $\mathrm{RTS}_p$ & Data required for the \gls{RTS} system in Section \ref{sub_section:tgt_path_planning}. Unsigned integer (0-65535) is used which is scaled to a value between 0 and 1. & $\leftarrow$ & 16 \\
+        \hline
+        Return to Safety Flag & Flag triggered when Return to Safety is required. Boolean (0-1) is used. & $\leftarrow$ & 1 \\
+        \hline
+        Return to Home Flag & Flag triggered when Return to Home is required. Boolean (0-1) is used. & $\leftarrow$ & 1 \\
         \hline\hline
-        \multicolumn{2}{|c|}{\textbf{Total Drone-to-Base Packet Size (bits)}} & $\rightarrow$ & 620 \\
+        \multicolumn{2}{|c|}{\textbf{Total Drone-to-Base Packet Size (bits)}} & $\rightarrow$ & 772 \\
         \hline
-        \multicolumn{2}{|c|}{\textbf{Total Base-to-Drone Packet Size (bits)}} & $\leftarrow$ & 74 \\
+        \multicolumn{2}{|c|}{\textbf{Total Base-to-Drone Packet Size (bits)}} & $\leftarrow$ & 90 \\
         \hline
     \end{tabularx}
     \caption[Messages for Extra-UAV Communication]{Messages required for extra-\gls{UAV} communications with details on content, direction and size.}
@@ -57,7 +59,7 @@ The technical requirements can be considered with respect to distance, bit rate 
 
 \paragraph{Distance} The base station will be set up outside the \gls{roi} and it will need to communicate with the drones regardless of where they are. The communication distance therefore acts as the limiting factor on the maximum size of the \gls{roi}; if the communication distance is too small, the efficiency and expandability of the system will decrease drastically. For the purpose of our system, we set the desired communication distance to be in the range of kilometres. 
 
-\paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$\,Hz, the drone-to-base and base-to-drone bit rates are $620 \times f=1240$\,bps and $74 \times f=148$\,bps respectively. The extra-\gls{UAV} communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
+\paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$\,Hz, the drone-to-base and base-to-drone bit rates are $772 \times f=1544$\,bps and $90 \times f=180$\,bps respectively. The extra-\gls{UAV} communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
 
 \paragraph{Geographical Factors} Demining operations may take place in regions where cell communications are unavailable (due to post-war recovery or remoteness of the location), so the communication protocol should not depend on any external cell communications. Different countries also have restrictions on the bandwidth available for specific use-cases, which should be met by the chosen communication protocol. 
 
