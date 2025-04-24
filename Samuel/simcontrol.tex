@@ -449,7 +449,7 @@ A \gls{uml} class diagram summarising the implementation is shown in Figure \ref
 \subsubsection{Control Techniques}
 \label{sec:modelfree}
 
-Despite cascade \gls{pid} being simpler to implement and easier to modify than most other control strategies, the ongoing increase in microcontroller processing power will enable more sophisticated methods to be implemented onboard the drone.
+Despite cascade \gls{pid} control being simpler to implement and easier to modify than most other control strategies, the ongoing increase in microcontroller processing power will enable more sophisticated methods to be implemented onboard the drone.
 
 The first potential improvement could be made by combining the \gls{lqr} and \gls{pid} control techniques onboard the drone, so that the drone can benefit from the robustness of the \gls{pid} controller in general flight, while being able to hover more steadily using a finely tuned \gls{lqr}. Model predictive control (\acrshort{mpc}) could also be investigated to allow the drone's controller to be updated during the mission, although this method would require a significant increase in onboard processing power. 
 
