@@ -24,7 +24,7 @@ The key objective is to reduce the downtime and cost of operation of the drone. 
 \subsubsection{Weather induced failure}\label{sub_sub_section:tgt_weather_failure}
 \paragraph{Cause}
 When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault as the maximum rejected gust becomes lower in magnitude and therefore more likely to occur.
-\paragraph{Gust Modelling}
+\paragraph{Wind Speed Modelling}
 To model the wind in the operational environment a wind speed monitor is deployed at base stations. Wind speeds are measured at 1 Hz in m/s. For a given time,$\tau$ we can a gust vector $\mathbf{x_{\tau}} =  \{x_1, x_2, \dots, x_N\}$ where $x_i$ is the max wind speed in that time. The wind speed is then modelled using the Weibull distribution \cite{weibull1951} with PDF given by Equation \ref{eq:weibull_pdf}.
 \begin{equation}\label{eq:weibull_pdf}
     f_X(x; k, \lambda) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} \exp\left(-\left(\frac{x}{\lambda}\right)^k\right),
@@ -47,15 +47,15 @@ The model $k, \lambda$ parameters are estimated by calculating the Maximum Likel
 \paragraph{Calculating $p$}
 The maximum wind speed rejection, $v$, is a known parameter for all deployed controllers discussed in Section \ref{sub_sub_section:tgt_actuator_fault}. From this we can calculate $p$ as discussed in Section \ref{sub_sub_section:tgt_cost_function} in Equation \ref{eq:p_calc}, $\tau$ is set as the as the expected travel time for the characteristic distance of $p$.
 \begin{equation}\label{eq:p_calc}
-    p = (1-P(X>v))
+    p = 1-P(X>v)
 \end{equation}
-
 \paragraph{Deployment}
-For each deployed controller there is a defined maximum wind speed rejection $v$ and travel speed $s$. For a cost map the half-nodal distance for $p$, $d$, is also predefined. Therefore, we can can calculate $\tau$ on base given we know the controller deployed on the drone using Equation \ref{eq:tau_calc}. This can then be used to calculate a prior value for $p$ using data from the last $50\tau$ data points before query on the base station to give a live approximation.
+For each deployed controller there is a defined maximum wind speed rejection $v$ and travel speed $s$. For a cost map the half-nodal distance for $p$, $d$, is also predefined. Therefore, we can can calculate $\tau$ on base given we know the controller deployed on the drone using Equation \ref{eq:tau_calc}. This can then be used to calculate a $p$ using data from the last $50\tau$ data points to balance recency with noise rejection. This can be calculated continuously on the base station to give a live approximation.
 \begin{equation}\label{eq:tau_calc}
     \tau = d/s
 \end{equation}
-Using the LoRa communication system already deployed the system shown in Figure \ref{fig} is used where the device sends out the controller it is using to the base-station, $p$ is calculated on the base station and sent back to the device. 
+Using the LoRa communication system already deployed the system shown in Figure \ref{fig:wind_process} is used where the device sends out the controller it is using to the base-station, $p$ is calculated on the base station and sent back to the device. 
+\input{Thomas/Return_To_Safety/wind_process}
 
 \subsubsection{Path Planning}\label{sub_sub_section:tgt_search}
 %\input{Thomas/Return_To_Safety/search_algo}
@@ -69,6 +69,7 @@ Carrying out memory and time complex operations on real-time hardware should alw
 \paragraph{$p$ ranges}
 While the value of $p$ can take any value between 0 and 1, there can be only 7 outputs for the next best move (going to each of the 6 neighbours or landing). Therefore, instead of creating a specific map for a specific value of $p$ on the flight controller you can pre-compute all the ranges of $p$ that would cause each of these outcomes. Then the device selects the option corresponding to its current $p$ value.
 \paragraph{Map}
+% week for complexity as this is worst case and general -> specific case is psuedo square so more like V^1.5 which is very differnet
 In order to minimise on-board compute, a map is uploaded where it simply tells the device where to go next given the value of $p$ and its current position. To calculate this the optimal next-node must be calculated for $p\in[0\to1]$ with a step-size of $\beta$.  To calculate the optimal next-node for all nodes at a specified value of $p$ I developed Algorithm \ref{alg:flow}. This is based on a Bellman-Ford approach and therefore restricts the system to non-negative cycles however given that this is a damage mitigation task having non-negative costs is to be expected.  Bellman-Ford algorithms have a time complexity of $O(|E|\times |V|)$. In dense graphs this becomes  $O(|V|^3)$ however, we know $|E| \leq |V| \times 7$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual complexity is $O(|V|^2)$\cite{cormen2009}. The complexity of Dijkstra's algorithm with priority queue for similarly sparse maps is $O(|E| + |V|log|V|)$ however it is not appropriate for this application as updates to child nodes effect the cost of parent nodes so nodes cannot be closed off as required for Dijkstra.
 
 \subsubsection{Real-time application}\label{sub_sub_section:tgt_real_time}
