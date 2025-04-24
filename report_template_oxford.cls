@@ -31,7 +31,7 @@
 \fancyhead[C]{} % Center of the header (optional)
 \fancyhead[R]{} % Right side of the header (optional)
 
-\usepackage{glossaries}
+\usepackage[nonumberlist]{glossaries}
 \makeglossaries
 
 % ADD ACRONYMS HERE
