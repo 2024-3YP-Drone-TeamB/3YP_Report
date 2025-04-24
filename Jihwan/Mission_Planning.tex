@@ -365,7 +365,7 @@ The Divide and Cluster method is visualised by Figure~\ref{fig:msp_divide_cluste
 To evaluate the efficiency of the landmine detection system, we can compare the coverage time per unit area ($\varepsilon$). The expressions for the layered, magnetic-sensor (a commonly used option for aerial landmine detection systems) and manual approaches are shown in Equations \ref{eq:msp_layeredefficiency}, \ref{eq:msp_magneticefficiency} and \ref{eq:msp_manualefficiency} respectively using symbols explained in Table \ref{tab:msp_efficiencyvariables}.
 \begin{equation}
 \label{eq:msp_layeredefficiency}
-\varepsilon_{\mathrm{layered}} = \frac{\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}}+\frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}}{A_{\mathrm{ROI}}}
+\varepsilon_{\mathrm{layered}} = \frac{\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}}+\frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}+n_{\mathrm{suspected}} \times t_{\mathrm{GPR}}}{A_{\mathrm{ROI}}}
 \end{equation}
 \begin{equation}
 \label{eq:msp_magneticefficiency}
@@ -382,13 +382,17 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
     \hline
         \textbf{Symbol} & \textbf{Explanation} & \textbf{Unit} \\
     \hline\hline
-        $\varepsilon_{\mathrm{method}}$ & Coverage time per unit area of the given method. & $\mathrm{s} \, \mathrm{m}^{-2}$ \\
+        $\varepsilon_{\mathrm{method}}$ & Coverage time per unit area of the given method. & $\mathrm{m}^{-2} \cdot \mathrm{s}$ \\
     \hline
         $C_{\mathrm{sensor}}$ & Length of the coverage path generated using \gls{bcd} algorithm for the coverage width of the given sensor.  & $\mathrm{m}$ \\
     \hline
-        $v_{\mathrm{sensor}}$ & Maximum flight speed of the drone attached with the given sensor. & $\mathrm{m} \, \mathrm{s}^{-1}$ \\
+        $v_{\mathrm{sensor}}$ & Maximum flight speed of the drone attached with the given sensor. & $\mathrm{m} \cdot \mathrm{s}^{-1}$ \\
     \hline
         $T_{\mathrm{GPR}}$ & Length of the target path generated using \gls{tspo} algorithm that should be surveyed using the \gls{GPR} sensor. & $\mathrm{m}$ \\
+    \hline
+        $n_{\mathrm{suspected}}$ & Number of suspected landmine points that must be visited by the \gls{GPR} sensor. & N/A \\
+    \hline
+        $t_{\mathrm{GPR}}$ & The fixed time required to perform the scanning procedure for a point of interest using the \gls{GPR} sensor as described in Section \ref{GPR_flight} & $\mathrm{s}$ \\
     \hline
         $t_{\mathrm{manual}}$ & Time taken for the \gls{roi} to be fully covered using manual detection methods. & $\mathrm{s}$ \\
     \hline
@@ -400,22 +404,11 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
     \label{tab:msp_efficiencyvariables}
 \end{table}
 
-It is difficult to quantify an exact value for the improvement in efficiency by adopting the layered approach because the values of $C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the chosen sensors as well as the geometry of the \gls{roi}. Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- this is because they vary depending on the sensor specifications and the fine-tuning for the specific detection scenario. The value of $\varepsilon_{\mathrm{manual}}$ given by \cite{gichd2005manual} has a large range between 12.5 and 125\,m$^2$ per deminer per day, making it difficult for direct comparison. 
+It is difficult to quantify an exact value for the improvement in efficiency by adopting the layered approach because the values of $C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the chosen sensors, geometry of the \gls{roi} and the density of the suspected landmine points. 
 
-By introducing several assumptions, we can make an attempt at estimating the difference between $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$. 
+For the manual method, \cite{gichd2005manual} provides a value of 12.5 to 125\,m$^2$ per deminer per day. This is a large range which varies depending on the quality of the workers and management.
 
-\paragraph{Assumption 1} $C_{\mathrm{sensor}}$ is proportional to the coverage width of the corresponding sensor. In reality, non-linearities will be introduced during the \gls{bcd} and the connection of straight line segments. 
-
-\paragraph{Assumption 2} $\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}} \gg \frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}$. Given that the density of the suspected landmine points is not too high, the coverage wid
-
-
-
-
-
- The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1\,m for a landmine detection drone using a magnetic sensor compared to 9\,m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). 
-
-
-Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125\,m$^2$ per deminer per day in terms of efficiency. The value includes both detection and removal. 
+The coverage width of a magnetic sensor is suggested to be 1\,m according to \cite{Yoo2024UnmannedAV} compared to 9\,m of our chosen thermal sensor, which would result in a significantly longer $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). The main argument for improvement in efficiency of the layered approach comes from the decision to use a thermal sensor during the Cover step which is significantly faster than its alternatives. However, most of the remaining parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones as they vary depending on the specification and fine-tuning. For a credible comparison, real world experiments need to be conducted for various geometries of \gls{roi} and levels of landmine density.  
 
 \subsubsection{Expandability}
 
