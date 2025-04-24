@@ -25,7 +25,7 @@ Figure~\ref{fig:gpr_coords} illustrates the 3D coordinate system used in \gls{GP
         \caption{Example of a B-scan.}
         \label{fig:gpr_bscan}
     \end{subfigure}
-    \caption{Visualization of GPR data acquisition and interpretation~\cite{paik2002image}.}
+    \caption[Visualization of GPR data acquisition and interpretation]{Visualization of GPR data acquisition and interpretation~\cite{paik2002image}.}
 \end{figure}
 
 Since our project focuses on localizing and estimating the depth of landmines rather than reconstructing their full 3D geometry, we collect and process only \textbf{B-scan} data from the \gls{UAV} \gls{GPR} platform.
@@ -53,14 +53,14 @@ The waveform type determines how \gls{GPR} transmits and receives \gls{EM} signa
 
 \paragraph{Centre Frequency, Bandwidth, Resolution, and Penetration Depth}
 
-The center frequency and bandwidth of a radar signal are key parameters about the \gls{GPR} system’s resolution and penetration depth. 
+The centre frequency and bandwidth of a radar signal are key parameters about the \gls{GPR} system’s resolution and penetration depth. 
 
 In general, lower frequencies (e.g., < 1 GHz) enhance penetration depth but limit resolution. Higher frequencies (e.g., > 2--3 GHz) improve resolution but attenuate quickly, especially in moist or conductive soils. For example, a \gls{GPR} operating at 3~GHz may penetrate up to 0.5 m in dry soil, but only a few centimeters in wet environments~\cite{9758040}. This trade-off is illustrated in Figure~\ref{fig:freq_tradeoff}, where increasing frequency improves resolution (represented as gray circles becoming smaller) at the cost of reduced sensing depth.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=6cm]{figs/Huirui/freq_tradeoff.png}
-    \caption{Frequency, resolution, and penetration depth trade-off\protect\footnotemark.}
+    \includegraphics[width=7cm]{figs/Huirui/freq_tradeoff.png}
+    \caption[Frequency, resolution, and penetration depth trade-off]{Frequency, resolution, and penetration depth trade-off\protect\footnotemark.}
     \label{fig:freq_tradeoff}
 \end{figure}
 \footnotetext{\url{www.radartutorial.eu}}
@@ -87,8 +87,8 @@ Among \gls{SAR} algorithms, \textbf{Back-Projection (\gls{BP})} is particularly 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=4.5cm]{figs/Huirui/bp_geometry.png}
-    \caption{Illustration of BP SAR imaging geometry~\cite{lei2014multi}.}
+    \includegraphics[height=5cm]{figs/Huirui/bp_geometry.png}
+    \caption[BP SAR imaging geometry]{Illustration of BP SAR imaging geometry~\cite{lei2014multi}.}
     \label{fig:bp_geometry}
 \end{figure}
 
@@ -104,7 +104,7 @@ Among \gls{SAR} algorithms, \textbf{Back-Projection (\gls{BP})} is particularly 
 \begin{figure}[H]
     \centering
     \includegraphics[height=4cm]{figs/Huirui/sar_modes.png}
-    \caption{Different SAR operation modes: (a) Stripmap SAR, (b) Scan SAR, and (c) Spotlight SAR~\cite{moreira2013tutorial}.}
+    \caption[SAR operation modes]{Different SAR operation modes: (a) Stripmap SAR, (b) Scan SAR, and (c) Spotlight SAR~\cite{moreira2013tutorial}.}
     \label{fig:sar_modes}
 \end{figure}
 
@@ -122,7 +122,7 @@ The orientation of the \gls{GPR} antenna on a \gls{UAV} plays a critical role in
 \begin{figure}[H]
     \centering
     \includegraphics[height=6cm]{figs/Huirui/gpr_ori_modes.png}
-    \caption{GPR orientations: (a) DLGPR, and (b) FLGPR~\cite{vsipovs2020lightweight}.}
+    \caption[GPR orientations]{GPR orientations: (a) DLGPR, and (b) FLGPR~\cite{vsipovs2020lightweight}.}
     \label{fig:GPR_Ori_modes}
 \end{figure}
 
@@ -153,7 +153,7 @@ As illustrated in Figure~\ref{fig:swath_geometry}, for our \gls{DLGPR} system ($
 \begin{figure}[H]
     \centering
     \includegraphics[height=6cm]{figs/Huirui/gpr_swath}
-    \caption{Illustration of the stripmap SAR geometry.~\cite{schartel2018uav}.}
+    \caption[Stripmap SAR geometry]{Illustration of the stripmap SAR geometry.~\cite{schartel2018uav}.}
     \label{fig:swath_geometry}
 \end{figure}
 

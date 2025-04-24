@@ -59,7 +59,7 @@ To estimate a realistic \gls{NETD} requirement, we refer to a laboratory study i
     \footnotesize
     \renewcommand{\arraystretch}{1}
     \setlength{\tabcolsep}{6pt}
-    \caption{Maximum temperature differences measured by thermocouples and infrared imaging under different moisture levels and burial depths~\cite{lamorski2002thermal}.}
+    \caption[Maximum temperature differences across moisture levels and depths]{Maximum temperature differences measured by thermocouples and infrared imaging under different moisture levels and burial depths~\cite{lamorski2002thermal}.}
     \label{tab:netd_table}
     \begin{tabular}{llccc}
         \toprule
@@ -67,19 +67,19 @@ To estimate a realistic \gls{NETD} requirement, we refer to a laboratory study i
         \midrule
         \multirow{2}{*}{Dry sand} 
             & Thermocouple & 1.3 °C & 0.5 °C & 1.5 °C \\
-            & \gls{IR} Image     & 1.5 °C & 1.0 °C & -- \\
+            & IR Image     & 1.5 °C & 1.0 °C & -- \\
         \midrule
         \multirow{2}{*}{2.5\% water} 
             & Thermocouple & --     & 4.0 °C & 1.2 °C \\
-            & \gls{IR} Image     & 3.0 °C & 3.5 °C & 2.0 °C \\
+            & IR Image     & 3.0 °C & 3.5 °C & 2.0 °C \\
         \midrule
         \multirow{2}{*}{5\% water} 
             & Thermocouple & 2.4 °C & 1.4 °C & 2.0 °C \\
-            & \gls{IR} Image     & 3.0 °C & 3.0 °C & 3.0 °C \\
+            & IR Image     & 3.0 °C & 3.0 °C & 3.0 °C \\
         \midrule
         \multirow{2}{*}{10\% water} 
             & Thermocouple & 3.8 °C & 1.4 °C & 1.1 °C \\
-            & \gls{IR} Image     & 4.0 °C & 1.8 °C & 2.5 °C \\
+            & IR Image     & 4.0 °C & 1.8 °C & 2.5 °C \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -108,7 +108,7 @@ Figure~\ref{fig:fov_ifov} illustrates the two-dimensional geometry of \gls{FOV} 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.3\textwidth]{figs/Huirui/fov_ifov_2d_diagram.png}
-    \caption{FOV and IFOV for optical system~\cite{pencheva2006design}.}
+    \caption[Optical system FOV and IFOV]{FOV and IFOV for optical system~\cite{pencheva2006design}.}
     \label{fig:fov_ifov}
 \end{figure}
 
@@ -151,7 +151,7 @@ Four models meet the minimum resolution requirement of 640×512 pixels: FLIR Vue
 
 \begin{table}[H]
     \centering
-    \caption{Comparison of LWIR thermal camera models used in previous studies. All models operate in the \gls{LWIR} band.}
+    \caption[Comparison of LWIR thermal camera models]{Comparison of LWIR thermal camera models used in previous studies.}
     \label{tab:camera_specs}
     \scriptsize
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -162,41 +162,41 @@ Four models meet the minimum resolution requirement of 640×512 pixels: FLIR Vue
     \textbf{FLIR Vue Pro\tablefootnote{\url{https://flir.netx.net/file/asset/10907/original/attachment}}} 
     & 640 × 512 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 92–113.4 & 3895 (\gls{USD})\tablefootnote{\url{https://groupgets.com/products/flir-vue-pro}} \\
+    & 92–113.4 & 3895 (USD)\tablefootnote{\url{https://groupgets.com/products/flir-vue-pro}} \\
     \hline
 
     \multirow{2}{*}{\textbf{FLIR Duo Pro R\tablefootnote{\url{https://flir.netx.net/file/asset/8136/original/attachment}}}} 
     & 640 × 512 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}13 mm: 45° × 37° \\ 19 mm: 32° × 26° \\ 25 mm: 25° × 20° \end{tabular} 
-    & 325–375 & 6599 (\gls{USD})\tablefootnote{\url{https://www.tequipment.net/FLIR/DUO-PRO-R-640-19mm-9Hz/UAVs-and-Drones/}} \\
+    & 325–375 & 6599 (USD)\tablefootnote{\url{https://www.tequipment.net/FLIR/DUO-PRO-R-640-19mm-9Hz/UAVs-and-Drones/}} \\
     \cline{2-6}
     & 336 × 256 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
-    & 325 & 4499 (\gls{USD})\tablefootnote{\url{https://dronedoctorusa.com/products/flir-duo-pro-r-336-30hz-19mm-open-box}} \\
+    & 325 & 4499 (USD)\tablefootnote{\url{https://dronedoctorusa.com/products/flir-duo-pro-r-336-30hz-19mm-open-box}} \\
     \hline
 
     \textbf{FLIR One Pro\tablefootnote{\url{https://flir.netx.net/file/asset/14770/original/attachment}}} 
-    & 160 × 120 & 70 & 50° × 43° & 36.5 & 349 (\gls{GBP})\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-pro/?model=435-0006-03&vertical=condition+monitoring&segment=solutions}} \\
+    & 160 × 120 & 70 & 50° × 43° & 36.5 & 349 (GBP)\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-pro/?model=435-0006-03&vertical=condition+monitoring&segment=solutions}} \\
     \hline
 
     \textbf{FLIR One Edge Pro\tablefootnote{\url{https://flir.netx.net/file/asset/5631/original/attachment}}} 
-    & 160 × 120 & 70 & 54° × 42° & 153 & 435 (\gls{GBP})\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-edge-pro/}} \\
+    & 160 × 120 & 70 & 54° × 42° & 153 & 435 (GBP)\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-edge-pro/}} \\
     \hline
 
     \textbf{FLIR Tau 2\tablefootnote{\url{https://www.unmannedsystemstechnology.com/wp-content/uploads/2012/04/FLIR-Tau2-Brochure.pdf}}} 
     & 640 × 512 & < 30 & 
     \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 69° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 72 & 6813 (\gls{USD})\tablefootnote{\url{https://www.thermalvideo.com/46640001x.htm}} \\
+    & 72 & 6813 (USD)\tablefootnote{\url{https://www.thermalvideo.com/46640001x.htm}} \\
     \hline
 
     \multirow{2}{*}{\textbf{DJI Zenmuse XT\tablefootnote{\url{https://www.dji.com/uk/zenmuse-xt/specs}}}} 
     & 640 × 512 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 68° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 270 & 9900 (\gls{USD})\tablefootnote{\url{https://www.thedroneproshop.com/blogs/product-info/dji-zenmuse-xt-specifications}} \\
+    & 270 & 9900 (USD)\tablefootnote{\url{https://www.thedroneproshop.com/blogs/product-info/dji-zenmuse-xt-specifications}} \\
     \cline{2-6}
     & 336 × 256 & < 50 & 
     \begin{tabular}[c]{@{}c@{}}6.8 mm: 49.1° × 37.4° \\ 9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
-    & 270 & 7999 (\gls{USD})\tablefootnote{\url{https://www.bhphotovideo.com/c/product/1318086-REG/dji_cp_zm_000337_zenmuse_xt_336x256_6_8mm.html}} \\
+    & 270 & 7999 (USD)\tablefootnote{\url{https://www.bhphotovideo.com/c/product/1318086-REG/dji_cp_zm_000337_zenmuse_xt_336x256_6_8mm.html}} \\
     \hline
 
     \end{tabular}
@@ -219,7 +219,7 @@ With the FLIR Vue Pro camera selected, the next step is to determine appropriate
 
 As established earlier, the target \gls{GSD} is approximately 1.4~cm/pixel. Given the fixed pixel resolution of 640×~512, and varying \gls{FOV}s across different lenses, we use geometric relationships to calculate the corresponding flight altitude for each lens option with the same coverage area.
 
-Referring to Figure~\ref{fig:fov_ifov}, the \gls{GSD} \( \delta A \) is related to flight altitude \( S \) and camera resolution \( N \) via the following expression derived from~\ref{eq:fov}:
+Referring to Figure~\ref{fig:fov_ifov}, the \gls{GSD} \( \delta A \) is related to flight altitude \( S \) and camera resolution \( N \) via the following expression derived from Equation~\ref{eq:fov}:
 
 \begin{equation}
 \delta A = \frac{2 \cdot (S \cdot \tan(\frac{FOV}{2}))}{N}
@@ -236,11 +236,11 @@ Using these equations, we evaluate each focal length option while holding \( \de
 \begin{table}[H]
 \small
 \centering
-\caption{Estimated flight height for different Focal Lengths (at GSD = 1.4~cm/pixel)}
+\caption[Flight height vs. focal length at 1.4~cm/pixel GSD]{Estimated flight height for different focal lengths (at GSD = 1.4~cm/pixel)}
 \label{tab:fov_results}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Focal Length (mm)} & \textbf{\gls{FOV} (H × V)} & \textbf{Height (m)} \\
+\textbf{Focal Length (mm)} & \textbf{FOV (H × V)} & \textbf{Height (m)} \\
 \hline
 9  & 69° × 56° & 6.52   \\
 \hline

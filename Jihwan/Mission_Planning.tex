@@ -400,7 +400,22 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
     \label{tab:msp_efficiencyvariables}
 \end{table}
 
-$C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the sensors as well as the geometry of the \gls{roi}. The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1\,m for a landmine detection drone using a magnetic sensor compared to 9\,m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125\,m$^2$ per deminer per day in terms of efficiency. The value includes both detection and removal. 
+It is difficult to quantify an exact value for the improvement in efficiency by adopting the layered approach because the values of $C_{\mathrm{sensor}}$, $v_{\mathrm{sensor}}$ and $T_{\mathrm{GPR}}$ are dependent on the specifications of the chosen sensors as well as the geometry of the \gls{roi}. Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- this is because they vary depending on the sensor specifications and the fine-tuning for the specific detection scenario. The value of $\varepsilon_{\mathrm{manual}}$ given by \cite{gichd2005manual} has a large range between 12.5 and 125\,m$^2$ per deminer per day, making it difficult for direct comparison. 
+
+By introducing several assumptions, we can make an attempt at estimating the difference between $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$. 
+
+\paragraph{Assumption 1} $C_{\mathrm{sensor}}$ is proportional to the coverage width of the corresponding sensor. In reality, non-linearities will be introduced during the \gls{bcd} and the connection of straight line segments. 
+
+\paragraph{Assumption 2} $\frac{C_{\mathrm{thermal}}}{v_{\mathrm{thermal}}} \gg \frac{T_{\mathrm{GPR}}}{v_{\mathrm{GPR}}}$. 
+
+
+
+
+
+ The main difference in $\varepsilon_{\mathrm{layered}}$ and $\varepsilon_{\mathrm{magnetic}}$ rise from the small coverage width of a magnetic sensor compared to a thermal sensor. \cite{Yoo2024UnmannedAV} suggests a coverage width (survey interval) of 1\,m for a landmine detection drone using a magnetic sensor compared to 9\,m for our thermal sensor, which would significantly increase $C_{\mathrm{sensor}}$ (similarly to Figure~\ref{fig:msp_bahnemann}). 
+
+
+Most of the parameters could not be found in related works on thermal, \gls{GPR} and magnetic sensor equipped drones -- real world experiments will need to be conducted with fine-tuning to find their values achieving the best results. \cite{gichd2005manual} states that manual mine clearance (with ground penetration) range between 12.5 and 125\,m$^2$ per deminer per day in terms of efficiency. The value includes both detection and removal. 
 
 \subsubsection{Expandability}
 
