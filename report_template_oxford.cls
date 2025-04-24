@@ -70,8 +70,7 @@
 \newacronym{6s}{6s}{6-cell series}
 \newacronym{6s3p}{6s3p}{6-series 3-parallel}
 \newacronym{tim}{TIMs}{thermal interface materials}
-\newacronym{dcdc}{DC-DC}{Direct Current to Direct Current [power converter]
-}
+\newacronym{dcdc}{DC-DC}{Direct Current to Direct Current [power converter]}
 
 \newacronym{bs}{BS}{British Standards}
 \newacronym{esr}{ESR}{equivalent series resistance}
@@ -81,6 +80,7 @@
 \newacronym{soc}{SOC}{state of charge}
 \newacronym{ntc}{NTC}{negative-temperature-coefficient}
 \newacronym{ekf}{EKF}{extended Kalman filter}
+\newacronym{kf}{KF}{Kalman filter}
 \newacronym{fem}{FEM}{finite element method}
 \newacronym{mosfet}{MOSFET}{metal–oxide–semiconductor field-effect transistor}
 \newacronym{cad}{CAD}{computer-aided design}
