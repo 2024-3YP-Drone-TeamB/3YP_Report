@@ -7,13 +7,15 @@
     \ForAll{\(u\in V\)}  
       \State \(d(u)\gets l(u)\) \Comment{Default to landing cost}
     \EndFor
+    \ForAll{\((u\to v)\in E\)} \Comment{Precompute movement costs}
+      \State \(m(u, v) \gets c(u)(1-p) + c(v)p(1-p)\) 
+    \EndFor
     \State \(\mathit{Converged}\gets \text{false}\)
     \While{not \(\mathit{Converged}\)}
       \State \(\mathit{Converged}\gets \text{true}\)
       \ForAll{\((u\to v)\in E\)}
-        \State \(w \gets c(u)\,(1-p)\;+\;c(v)\,p(1-p)\) \Comment{Movement Cost}
-        \If{\(w + p^2\,d(v) < d(u)\)}
-          \State \(d(u)\gets w + p^2\,d(v)\)
+        \If{\(m(u, v) + p^2\,d(v) < d(u)\)} 
+          \State \(d(u)\gets m(u, v) + p^2\,d(v)\)
           \State \(\mathit{Converged}\gets \text{false}\)
         \EndIf
       \EndFor
