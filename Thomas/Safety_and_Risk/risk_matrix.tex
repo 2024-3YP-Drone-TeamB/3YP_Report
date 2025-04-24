@@ -1,14 +1,18 @@
 \begin{table}
   \centering
-  \begin{tabular}{|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|}
     \hline
-    \textbf{Likelihood} $\backslash$ \textbf{Impact} & \textbf{Low} & \textbf{Medium} & \textbf{High} \\
+    \textbf{} & \textbf{Low Impact} & \textbf{Medium Impact} & \textbf{High Impact}& \textbf{Very High Impact} \\
     \hline
-    \textbf{High}  & Medium & High   & High \\
-    \textbf{Medium} & Low    & Medium & High \\
-    \textbf{Low}    & Low    & Low    & Medium \\
+    \textbf{Very High Risk}  & \HighRisk & \HighRisk   & \VeryHighRisk & \VeryHighRisk \\
+    \hline
+    \textbf{High Risk}  & \MediumRisk & \HighRisk   & \HighRisk & \VeryHighRisk\\
+    \hline
+    \textbf{Medium Risk}  & \LowRisk & \MediumRisk   & \HighRisk & \HighRisk\\
+    \hline
+    \textbf{Low Risk}  & \LowRisk & \LowRisk   & \MediumRisk & \HighRisk\\
     \hline
   \end{tabular}
-    \caption{Simple Risk Assessment Matrix}
+    \caption{Risk Assessment Matrix}
   \label{tab:risk-matrix}
 \end{table}

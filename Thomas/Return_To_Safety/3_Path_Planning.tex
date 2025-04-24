@@ -38,12 +38,10 @@ The probability that a gust exceeds \( v \) in any given second is derived from 
 \begin{equation}\label{eq:weibull_survive}
     P(X > v) = 1 - F_X(v) = \exp\left(-\left(\frac{v}{\lambda}\right)^k\right).
 \end{equation}
-The model $k, \lambda$ parameters are estimated by calculating the Maximum Likelihood Estimation of 
+The model $k, \lambda$ parameters are estimated by calculating the Maximum Likelihood Estimation of Equation \ref{eq:weibull_likilihood} using numerical methods such as Newton-Raphson \cite{rinne2008}.
 \begin{equation}\label{eq:weibull_likilihood}
      \mathcal{L}(k, \lambda) = \prod_{i=1}^N f_X(x_i; k, \lambda)
 \end{equation}
-\ref{eq:weibull_likilihood} using numerical methods such as Newton-Raphson \cite{rinne2008}.
-
 \paragraph{Calculating $p$}
 The maximum wind speed rejection, $v$, is a known parameter for all deployed controllers discussed in Section \ref{sub_sub_section:tgt_actuator_fault}. From this we can calculate $p$ as discussed in Section \ref{sub_sub_section:tgt_cost_function} in Equation \ref{eq:p_calc}, $\tau$ is set as the as the expected travel time for the characteristic distance of $p$.
 \begin{equation}\label{eq:p_calc}
@@ -69,8 +67,8 @@ Carrying out memory and time complex operations on real-time hardware should alw
 \paragraph{$p$ ranges}
 While the value of $p$ can take any value between 0 and 1, there can be only 7 outputs for the next best move (going to each of the 6 neighbours or landing). Therefore, instead of creating a specific map for a specific value of $p$ on the flight controller you can pre-compute all the ranges of $p$ that would cause each of these outcomes. Then the device selects the option corresponding to its current $p$ value.
 \paragraph{Map}
-% week for complexity as this is worst case and general -> specific case is psuedo square so more like V^1.5 which is very differnet
-In order to minimise on-board compute, a map is uploaded where it simply tells the device where to go next given the value of $p$ and its current position. To calculate this the optimal next-node must be calculated for $p\in[0\to1]$ with a step-size of $\beta$.  To calculate the optimal next-node for all nodes at a specified value of $p$ I developed Algorithm \ref{alg:flow}. This is based on a Bellman-Ford approach and therefore restricts the system to non-negative cycles however given that this is a damage mitigation task having non-negative costs is to be expected.  Bellman-Ford algorithms have a time complexity of $O(|E|\times |V|)$. In dense graphs this becomes  $O(|V|^3)$ however, we know $|E| \leq |V| \times 7$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual complexity is $O(|V|^2)$\cite{cormen2009}. The complexity of Dijkstra's algorithm with priority queue for similarly sparse maps is $O(|E| + |V|log|V|)$ however it is not appropriate for this application as updates to child nodes effect the cost of parent nodes so nodes cannot be closed off as required for Dijkstra.
+\input{Thomas/Return_To_Safety/complexity}
+In order to minimise on-board compute, a map is uploaded where it simply tells the device where to go next given the value of $p$ and its current position. To calculate this the optimal next-node must be calculated for $p\in[0\to1]$ with a suitable step size (0.01 was used in testing).  To calculate the optimal next-node for all nodes at a specified value of $p$ I developed Algorithm \ref{alg:flow}. This is based on a Bellman-Ford approach and therefore restricts the system to non-negative cycles however given that this is a damage mitigation task having non-negative costs is to be expected.  Bellman-Ford algorithms have a wost case time complexity of $O(|E|\times |V|)$. In dense graphs this becomes  $O(|V|^3)$ however, we know $|E| \leq |V| \times 7$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual worst case complexity is $O(|V|^2)$\cite{cormen2009}. The complexity of Dijkstra's algorithm with priority queue for similarly sparse maps is $O(|E| + |V|log|V|)$ however it is not appropriate for this application as updates to child nodes effect the cost of parent nodes so nodes cannot be closed off as required for Dijkstra. Furthermore, as seen in Figure \ref{fig:rts_complexity} the worst case is not how the data would realistically transfer and the typical case is far fewer nodes, approximately $|V|^{0.5}$ giving a typical complexity of $O(|V|^{1.5})$.
 
 \subsubsection{Real-time application}\label{sub_sub_section:tgt_real_time}
 \paragraph{Deployment}

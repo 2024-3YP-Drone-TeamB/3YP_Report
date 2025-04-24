@@ -12,7 +12,7 @@ Components with similar functionalities should be restricted to specific regions
 
 \subsubsection{Circuit Protection}\label{sub_sub_section:tgt_circuit_protection}
 \paragraph{\gls{ESD}}
-\gls{ESD} occurs when there is a significant static charge built up in a ground operator or contacting surface that is then shorted in contact with the board causing a current transient and circuit damage. For most applications protection up to IEC 61000-4-2 level 4 is sufficient and all circuits meet this criterion (8 kV contact/15 kV air gap)\footnote{\url{https://www.ti.com/document-viewer/lit/html/SSZT871}}. 
+\gls{ESD} occurs when there is a significant static charge built up in a ground operator or contacting surface that is then shorted in contact with the board causing a current transient and circuit damage. IEC 61000-4-2 level 4 is the highest IEC 61000-4-2 standard at 8 kV contact/15 kV\footnote{\url{https://www.ti.com/document-viewer/lit/html/SSZT871}} and will be considered a lower bound specification for the design. 
 \paragraph{Touch Protection Devices}
 In order to protect against \gls{ESD} the circuit must provide a low resistance pathway to the ground. This can be using \gls{TVS} diodes that above certain voltages act like a wire that diverts the current flow\footnote{\url{https://resources.altium.com/p/pcb-design-guidelines-using-tvs-diode-transient-protection}}. In my designs I use the \gls{TVS} diode produced by Vishay (Part number: VCUT03G1-SD0) bidirectional \gls{TVS} diode that are rated to 30kV in both contact and air gap\footnote{\url{https://www.vishay.com/docs/86315/vcut03g1-sd0.pdf}} to ensure to \gls{ESD} protection. 
 \paragraph{Over current protection}
