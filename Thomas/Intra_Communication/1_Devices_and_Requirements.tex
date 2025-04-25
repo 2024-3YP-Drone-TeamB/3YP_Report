@@ -20,7 +20,7 @@ In order to support the \gls{ESC} telemetry required Cyphal should be used as it
 The images used in GPR and Thermal require significantly more data then both telemetry and command signals and are therefore separately connected to the on-board computer using  1000BASE-T Gigabit Ethernet, this supports high data transfer speeds of 1 Gbps and utilises a copper twisted pair and differential signal for noise rejection \cite{Ethernet}.  This supports thermal and GPR imaging in addition to future upgrades and increased data transfer rates.
 \paragraph{Node Distribution}
 Safety critical devices ensure that the drone does not sustain damage or isolate itself. This includes components necessary for flight and the sensors required for \gls{RTS}. To ensure that failures are minimised, safety critical devices should be redundant. If a safety critical device does not have a redundant version it should be able to communicate on at least two different lines preventing a single module failure causing device failure. Distributing the devices on different communication lines reduces the risk of failure as it reduces the risk of common mode failure. For example, if a \gls{GNSS} module were to have an improper fixture and move in a way that it severs all connections; if both communication lines are in it, both are severed. However, if it is on only one communication line then the other communication line is undamaged. This layout is shown in Figure \ref{fig:CAN_bus}. 
- \begin{figure}[h!]
+ \begin{figure}[h]
  \centering
   \includegraphics[width=1\textwidth]{figs/Thomas/Intra Communication/CAN bus.png}
  \caption{Bus layout}
