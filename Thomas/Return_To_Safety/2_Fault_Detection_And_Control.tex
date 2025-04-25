@@ -10,32 +10,32 @@ Cell ageing and actuator ageing can cause inaccurate state of charge predictions
 \paragraph{Causes}
 A loss of actuator effectiveness can be either from motor damage or propeller damage. The possible causes of motor damage specific to the operating environments include: wire damage, cooling blockages and dust or sand getting into the components. For propeller damage this could be from impacts, thermal effects or fatigue cracks.
 \paragraph{Monitoring}
-Consider motor effectiveness factors $\eta_i \in [0,1]$ as random walks. Using the \gls{RPM} telemetry, predicted thrust for each motor $T_{\text{pred},i} = \eta_i k_T \omega_i^2$ can be generated. This is used predict the acceleration, $\mathbf{a}_{prediction}$, of the device and then compare with IMU-measured acceleration,  $\mathbf{a}_{actual}$ to calculate the residual as shown in Equation \ref{eq:residual}. 
+Consider motor effectiveness factors $\eta_i \in [0,1]$ as random walks. Using the \gls{RPM} telemetry, predicted thrust for each motor $T_{\text{pred},i} = \eta_i k_T \omega_i^2$ can be generated. This is used predict the acceleration using an \gls{EKF} observer, $\mathbf{a}_{prediction}$, of the device and then compare with IMU-measured acceleration,  $\mathbf{a}_{actual}$ to calculate the residual as shown in Equation \ref{eq:residual}. 
 \begin{equation}\label{eq:residual}
     \mathbf{r}(t) = \mathbf{a}_{prediction}(t) - \mathbf{a}_{actual}(t)
 \end{equation}
-Using an \gls{EKF} observer the model parameters $\eta_i$ can be approximated. This should be sufficient to handle the non-linearities of the model however, if is found to be insufficient a \gls{UKF} filter could be used instead \cite{WAN2000}.
+The model parameters $\eta_i$ can be approximated using \gls{EKF} updates. This should be sufficient to handle the non-linearities of the model however, if is found to be insufficient a \gls{UKF} filter could be used instead \cite{WAN2000}.
 \paragraph{Fault Detection}
-If $\eta_i$ falls below $\eta_{thresh}$ failure is detected however this has a slow detection time for sudden faults. Given in the case of sudden faults \gls{RTS} should not be attempted due to the likelihood of crashing, a separate detection system is required to trigger emergency landing. The residual $\mathbf{r}(t)$ is shown in Equation \ref{eq:residual}, if there is a sudden spike in residual it is likely due to an extreme gust , a change in state dynamics or a sudden fault. In each case emergency landing should be attempted immediately. To detect this spike with changing residual dynamics which can be caused by increased wind or sensor drift, the mean and covariance of $\mathbf{r(t)}$ are found as shown in Equations \ref{eq:residual_mean} and \ref{eq:residual_cov} where  $\mathbf{\tilde{r}}(t) = \mathbf{r}(t) - \mu_r(t)$, and $\alpha \in [0,1)$ is the forgetting factor \cite{roberts1959}.
+If $\eta_i$ falls below $\eta_{\text{thresh}}$ failure is detected however this has a slow detection time for sudden faults. Given in the case of sudden faults \gls{RTS} should not be attempted due to the likelihood of crashing, a separate detection system is required to trigger emergency landing. The residual $\mathbf{r}(t)$ is shown in Equation \ref{eq:residual}, if there is a sudden spike in residual it is likely due to an extreme gust , a change in state dynamics or a sudden fault. In each case emergency landing should be attempted immediately. To detect this spike with changing residual dynamics which can be caused by increased wind or sensor drift, the mean and covariance of $\mathbf{r(t)}$ are found as shown in Equations \ref{eq:residual_mean} and \ref{eq:residual_cov} where  $\mathbf{\tilde{r}}(t) = \boldsymbol{\tilde{r}}(t) - \boldsymbol{\mu_r}(t)$, and $\alpha \in [0,1)$ is the forgetting factor that will be tuned during testing \cite{roberts1959}.
 \begin{equation}\label{eq:residual_mean}
-     \mu_r(t) = \alpha \mu_r(t-1) + (1 - \alpha) \mathbf{r}(t)
+     \boldsymbol{\mu_r}(t) = \alpha \boldsymbol{\mu_r}(t-1) + (1 - \alpha) \mathbf{r}(t)
 \end{equation}
 \begin{equation}\label{eq:residual_cov}
-    \mathbf{\Sigma}_r(t) = \alpha \mathbf{\Sigma}_r(t-1) + (1 - \alpha) \mathbf{\tilde{r}}(t)\mathbf{\tilde{r}}(t)^T
+    \boldsymbol{\Sigma_r}(t) = \alpha \boldsymbol{\Sigma_r}(t-1) + (1 - \alpha) \boldsymbol{\tilde{r}}(t)\boldsymbol{\tilde{r}}(t)^T
 \end{equation}
-Then the lower and upper bound detection limits are then calculated as shown in Equations \ref{eq:upper_bound} and \ref{eq:lower_bound} with sensitivity $k$ that can be tuned during testing. Then if $\mathbf{r(t)}$ exists outside the bounds a fault is triggered \cite{Perry2010}.
+Then the lower and upper bound detection limits are then calculated as shown in Equations \ref{eq:upper_bound} and \ref{eq:lower_bound} with sensitivity $k$ that can be tuned during testing. Then if $\mathbf{r(t)}$ has a value outside the bounds a fault is triggered \cite{Perry2010}.
 \begin{equation}\label{eq:upper_bound}
-    C_{upper}(t) = \mu_r(t) + k \sqrt{\text{diag}(\mathbf{\Sigma}_r(t))} 
+    C_{\text{upper}}(t) = \boldsymbol{\mu_r}(t) + k \sqrt{\text{diag}(\boldsymbol{\Sigma_r}(t))} 
 \end{equation}
 \begin{equation}\label{eq:lower_bound}
-    C_{lower}(t) =  \mu_r(t) - k \sqrt{\text{diag}(\mathbf{\Sigma}_r(t))}
+    C_{\text{lower}}(t) =  \boldsymbol{\mu_r}(t) - k \sqrt{\text{diag}(\boldsymbol{\Sigma_r}(t))}
 \end{equation}
 \paragraph{Reconfiguration}
 For path planning as discussed in Section \ref{sub_sub_section:tgt_weather_failure} we need known characteristics of the device, specifically its travel speed and maximum wind speed rejection. Therefore, pre-computed control gains are calculated for different intervals of $\eta$, simulated and then tested with hardware-in-the-loop using fault injections. These controllers are preloaded into the device. These controllers are more robust to parameters and less aggressive then during typical operation to minimise the risk of actuator saturation, instability due to parameter inaccuracy and further damage to actuators. In order for the control behaviour to remain applicable with differing model parameters the motor control signals, $\mathbf{E}$, are scaled as shown in Equation \ref{eq:adj_thrust} where $\mathbf{N} = \mathbf{diag}(\eta_1, \dots,\eta_4)$.
 \begin{equation}\label{eq:adj_thrust}
-    \mathbf{E}_{adusted} = \mathbf{N}^{-1}\times \mathbf{E}_{control}, 
+    \mathbf{E}_{\text{adusted}} = \mathbf{N}^{-1}\times \mathbf{E}_{\text{control}}, 
 \end{equation}
-If any $\eta_i$ falls below a threshold $\eta_{thresh}$ for each controller it will be transferred to different control gains and if any $\eta_i$ falls below $\eta_{thresh}$ it will trigger emergency landing. To ensure transitions between controllers is smooth, the transition step should be simulated and tested with hardware before deployment. If this proves ineffective due to saturation of the damaged actuators, constrained quadratic programming can be used \cite{JOHANSEN2013} to distribute thrust to the stronger motors.
+If any $\eta_i$ falls below a threshold $\eta_{\text{thresh}}$ for each controller it will be transferred to different control gains and if any $\eta_i$ falls below $\eta_{\text{critical}}$ it will trigger emergency landing. To ensure transitions between controllers is smooth, the transition step should be simulated and tested with hardware before deployment. If this proves ineffective due to saturation of the damaged actuators, constrained quadratic programming can be used \cite{JOHANSEN2013} to distribute thrust to the stronger motors.
 
 \begin{comment}
 Furthermore, using static thresholds can lead to false positives when performing aggressive manoeuvres or in gusty conditions. This can be mitigated using statistical methods as explored in \cite{REF} but given that the device follows smooth paths and does not fly in extreme weather this mitigation is unnecessary.

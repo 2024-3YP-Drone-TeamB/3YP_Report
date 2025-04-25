@@ -1,11 +1,11 @@
 \subsection{Emergency Path Planning}\label{sub_section:tgt_path_planning}
 
 \subsubsection{Cost Function}\label{sub_sub_section:tgt_cost_function}
-The key objective is to reduce the downtime and cost of operation of the drone. This means both the cost of damage to the drone through crashing and the difficulty of retrieval need consideration. Considering the centre of each hexagon in the cost map as a node and modelling the probability of surviving half of a node node traversal between adjacent nodes as constant, $p$, the cost function of any path of length $D$ is shown in \ref{eq:cost function}. The specific $c_{crashing}$ and $c_{landing}$ can be defined by the ground operators for each classification. The ones used in testing are shown in \ref{tab:cost_values}.
+The key objective is to reduce the downtime and cost of operation of the drone. This means both the cost of damage to the drone through crashing and the difficulty of retrieval need consideration. Considering the centre of each hexagon in the cost map as a node and modelling the probability of surviving half of a node node traversal between adjacent nodes as constant, $p$, the cost function of any path of length $D$ is shown in \ref{eq:cost function}. The specific $c_{\text{crashing}}$ and $c_{\text{landing}}$ can be defined by the ground operators for each classification. The ones used in testing are shown in \ref{tab:cost_values}.
 \begin{equation}\label{eq:cost function}
     E(x) 
-    = \sum_{n=1}^{D-1} c_{crashing}\bigl(x_n\bigr)\, (1-p) \,p^n 
-    \;+\; c_{landing}\bigl(x_D\bigr)\, p^D
+    = \sum_{n=1}^{D-1} c_{\text{crashing}}\bigl(x_n\bigr)\, (1-p) \,p^n 
+    \;+\; c_{\text{landing}}\bigl(x_D\bigr)\, p^D
 \end{equation}
 \begin{table}[h]
     \centering
@@ -13,8 +13,8 @@ The key objective is to reduce the downtime and cost of operation of the drone. 
     \hline
          \textbf{} & \textbf{Safe} & \textbf{Semi-Dangerous} & \textbf{Dangerous} & \textbf{Obstacle} \\
          \hline
-         \textbf{$c_{landing}$} & 0 & 1 & 10 & 100 \\
-         \textbf{$c_{crashing}$} & 10 & 10 & 100 & 1000\\
+         $c_{\text{landing}}$ & 0 & 1 & 10 & 100 \\
+         $c_{\text{crashing}}$ & 10 & 10 & 100 & 1000\\
          \hline
     \end{tabular}
     \caption{Testing Costs}
