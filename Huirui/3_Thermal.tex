@@ -97,7 +97,7 @@ Pixel resolution refers to the number of individual sensing elements in a therma
 Since this project involves thermal scanning from relatively high altitudes, high resolution is necessary to preserve image clarity. At the same time, constraints on \gls{UAV} payload and system cost limit the use of ultra-high-resolution (1280×1024) cameras. This project selects a \textbf{640×480 resolution} as an effective compromise between performance and hardware feasibility.
 
 
-\paragraph{\gls{FOV} and \gls{IFOV}}
+\paragraph{FOV and IFOV}
 
 The \gls{FOV} of a thermal camera defines the total angular extent within which the sensor can detect radiation. For drone-based applications where the camera is mounted in a nadir (downward-facing) orientation, the \gls{FOV} spans two angular directions—commonly referred to as the horizontal and vertical \gls{FOV}. In this aerial context, both directions lie in the horizontal plane relative to the ground: the horizontal \gls{FOV} determines the ground width of the captured area, while the vertical FOV corresponds to the ground length.
 
@@ -128,7 +128,7 @@ where \( f \) is the focal length of the lens, \( S \) is the height of sensor, 
 For a fixed flying height and sensor resolution, a wider \gls{FOV} allows the drone to scan a larger area per frame, improving survey efficiency. However, it also increases the \gls{IFOV}, reducing the spatial detail of each pixel. Conversely, a narrower \gls{FOV} enhances resolution but limits coverage per frame. This trade-off is critical in drone-based landmine detection and must be evaluated collectively with the selection of flight altitude for this project in the section later.
 
 
-\paragraph{\gls{GSD}}
+\paragraph{Ground Sample Distance}
 
 \gls{GSD} is the physical ground distance between each pixel in an image (represented as \( \delta A \) in Figure~\ref{fig:fov_ifov}). For example, in an image with a 1~m \gls{GSD}, adjacent pixels image locations are 1~m apart on the ground\footnote{\url{https://en.wikipedia.org/wiki/Ground_sample_distance}}. \gls{GSD} is determined by the drone’s altitude, the camera’s field of view, and the pixel resolution of the sensor.
 

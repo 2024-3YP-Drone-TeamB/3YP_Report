@@ -1,6 +1,6 @@
 \subsection{Ground Penetrating Radar}\label{GPR_system}
 
-\subsubsection{Fundamentals of \gls{GPR}}\label{GPR_fundamental}
+\subsubsection{Fundamentals of GPR}\label{GPR_fundamental}
 
 \gls{GPR} is a non-invasive subsurface sensing technique that detects buried objects by emitting \gls{EM} waves and analyzing their reflections. A typical \gls{GPR} system is consisted of a wideband antenna and an active sensor. The antenna emits \gls{EM} waves into the ground, and reflections are captured where there is a contrast in dielectric properties, like between soil and a buried landmine~\cite{paik2002image}.
 
@@ -33,7 +33,7 @@ Since our project focuses on localizing and estimating the depth of landmines ra
 
 
 
-\subsubsection{\gls{GPR} Performance Factors}\label{GPR_Factors}
+\subsubsection{GPR Performance Factors}\label{GPR_Factors}
 
 The performance of a \gls{GPR} system for \gls{UAV}-based landmine detection depends on a variety of factors that influence its resolution, penetration depth, and system complexity. These include waveform generation methods, operating frequency and bandwidth, spatial resolution metrics, antenna design, signal processing techniques such as \gls{SAR}, and orientation of the radar with respect to the ground surface. This section outlines the main design parameters and discusses their implications for airborne \gls{GPR} deployment.
 
@@ -79,7 +79,7 @@ The physical size of a \gls{GPR} antenna is closely linked to the operating freq
 This relationship introduces a trade-off between penetration depth and physical size: lower frequencies penetrate deeper but require larger antennas, which may exceed the payload and form-factor limits of \gls{UAV} platforms.
 
 
-\paragraph{\gls{SAR} Processing}
+\paragraph{SAR Processing}
 
 Traditional \gls{GPR} systems have limited cross-range resolution due to the small sizes of antennas. \gls{SAR} addresses this limitation by coherently integrating radar echoes collected along the \gls{UAV}’s flight path, synthesizing a larger aperture, and significantly improving lateral resolution. This is especially beneficial for \gls{UAV}-based \gls{GPR} where antenna size and weight are constrained~\cite{9758040}.
 
@@ -128,7 +128,7 @@ The orientation of the \gls{GPR} antenna on a \gls{UAV} plays a critical role in
 
 
 
-\subsubsection{\gls{GPR} System Design}\label{GPR_design}
+\subsubsection{GPR System Design}\label{GPR_design}
 
 While numerous \gls{GPR} architectures have been explored in previous research, most high-performance \gls{UAV}-based landmine detection systems rely on custom radar platforms. These typically incorporate \gls{SDR}, customized waveform generators, and advanced antenna arrays to maximize their environmental adaptability, resolution, and penetration~\cite{cerquera2017uav}.
 
@@ -144,7 +144,7 @@ This system architecture based on a down-looking \gls{COTS} impulse radar at low
 
 
 
-\subsubsection{\gls{GPR} System Flight Configuration}\label{GPR_flight}
+\subsubsection{GPR System Flight Configuration}\label{GPR_flight}
 
 In our system, the \gls{GPR} drone is designed to fly at an altitude around \textbf{2~m}. This low flight height ensures a balance between maximizing power coupling into the ground and maintaining safe clearance for autonomous operations, consistent with previous \gls{DLGPR} studies on \gls{UAV} landmine detection ~\cite{schartel2018uav,9758040}.
 
