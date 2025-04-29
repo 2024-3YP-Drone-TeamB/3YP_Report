@@ -81,7 +81,7 @@ However, there are important sustainability considerations regarding the \acrsho
 \subsubsection{Microcontroller, Charger and Sensor Selection}
 \label{microcon}
 
-The \acrshort{bms} requires a microcontroller with sufficient processing power to perform the state estimations using Kalman filters and to run the algorithms controlling the battery cells. The device used must also be able to communicate with sensors and other devices using \gls{i2c} and \gls{uart} protocols \cite{Denggao2022}. Accordingly, the \textbf{STM32F405} microcontroller was selected. It offers a clock speed of 168 MHz, 192 Kbytes of \gls{sram} and 512 Kbytes of flash memory. These performance metrics mean that the \textbf{STM32F405} is sufficiently powerful to compute accurately the state estimations and run the \acrshort{bms} algorithms. \textbf{iMAX B6 V2 Chargers} were selected, allowing for quick and efficient charging between missions.
+The \acrshort{bms} requires a microcontroller with sufficient processing power to perform the state estimations using Kalman filters and to run the algorithms controlling the battery cells. The device used must also be able to communicate with sensors and other devices using \gls{i2c} and \gls{uart} protocols \cite{Denggao2022}. Accordingly, the \textbf{STM32F405} microcontroller was selected. It offers a clock speed of 168 MHz, 192 Kbytes of \gls{sram} and 512 Kbytes of flash memory \cite{st_dm00037051}. These performance metrics mean that the \textbf{STM32F405} is sufficiently powerful to compute accurately the state estimations and run the \acrshort{bms} algorithms. \textbf{iMAX B6 V2 Chargers} were selected, allowing for quick and efficient charging between missions \cite{digikey_prt16793}.
 
 A variety of measurements are required to provide the \acrshort{bms} with the required data to estimate the \gls{soc} of the cells. First, the \textbf{TI BQ76972} sensors provide accurate cell voltage measurements and communicate using the \acrshort{i2c} interface. The \textbf{TI BQ769142} battery monitor provides measurements of the battery current, and also communicates using the \acrshort{i2c}. protocol. An advantage of using the \textbf{TI BQ769142} is that it additionally supports temperature sensing using \gls{ntc} thermistors positioned inside the battery pack; the thermistors are used to provide accurate measurements for each cell within the battery cell stack. Texas Instruments provided the methodology that was followed \cite{TI_SNIA032}, specifically for use within a \gls{bms}.
 
@@ -90,7 +90,7 @@ A variety of measurements are required to provide the \acrshort{bms} with the re
 
 Kalman filters are implemented on the \textbf{STM32F405} microcontroller to estimate the various states in the battery, such as temperatures, voltages and currents. The Kalman filter's purpose is to estimate the states using indirect, uncertain measurements \cite{kalfilt}. 
 
-For each state, the underlying physical process is modelled in state-space form, and the system is discretised to allow a Kalman filter to be implemented in C using a Kalman filtering library designed for embedded systems \cite{computers11110165}. As an example of the process, the estimation of the \gls{soc} using an \gls{ekf} was simulated. The \gls{ekf} algorithm is explained in detail by Qiang Li et al. \cite{kalfilt}.  The \gls{soc} is defined by Equation \ref{eq:soc}, where $C$ represents the battery's capacity.
+For each state, the underlying physical process is modelled in state-space form, and the system is discretised to allow a Kalman filter to be implemented in C using a Kalman filtering library designed for embedded systems \cite{computers11110165}. As an example of the process, the estimation of the \gls{soc} using an \gls{ekf} was simulated. The \gls{ekf} algorithm is explained in detail by \cite{kalfilt}.  The \gls{soc} is defined by Equation \ref{eq:soc}, where $C$ represents the battery's capacity.
 
 \begin{equation}
 \label{eq:soc}
@@ -123,16 +123,17 @@ For the \gls{soc} measurement, an \gls{ekf} is used in conjunction with the Coul
 
 \subsection{Internal System}
 
-The overall structure of the \acrshort{bms} is shown in Figure \ref{fig:bms_layout}, adapted from Buccolini et al. \cite{7555475}. For clarity, the battery pack depicts one set of the \acrshort{6s} cells. In reality, the system has a \acrshort{6s3p} configuration of cells. Sensor information from each cell in the battery pack is transmitted to the State Estimator, where Kalman filtering techniques are used to infer the states from the measurements. The State Estimator, including the \gls{ekf}, was incorporated into the model in MATLAB and Simulink utilising the Simscape Battery Toolbox.
+The overall structure of the \acrshort{bms} is shown in Figure \ref{fig:bms_layout}, adapted from \cite{7555475}. For clarity, the battery pack depicts one set of the \acrshort{6s} cells. In reality, the system has a \acrshort{6s3p} configuration of cells. Sensor information from each cell in the battery pack is transmitted to the State Estimator, where Kalman filtering techniques are used to infer the states from the measurements. The State Estimator, including the \gls{ekf}, was incorporated into the model in MATLAB and Simulink utilising the Simscape Battery Toolbox.
 
 The Master Control Unit represents the \textbf{STM32F405} microcontroller chosen in Section \ref{microcon}. The microcontroller implements the \gls{resc} switching techniques detailed in Section \ref{swit}, as depicted by the \textbf{Cell Equalisation} component of the BMS.
 
 \begin{figure}[H]
   \centering
   \vspace{5mm}
-  \includegraphics[width=0.95\textwidth]{figs/Samuel/Figures/BMS Internal (1)-cropped.pdf}
-  \caption[Battery Management System Layout]{Battery Management System Layout adapted from Buccolini et al. \cite{7555475}}
+  \includegraphics[width=0.75\textwidth]{figs/Samuel/Figures/BMS Internal (1)-cropped.pdf}
+  \caption[Battery Management System Layout]{Battery Management System Layout adapted from \cite{7555475}}
   \label{fig:bms_layout}
+  \vspace{5mm}
 \end{figure}
 
 
@@ -148,9 +149,9 @@ The use of capacitors, inductors and resistors allows for reduced equalisation t
 
 \begin{figure}[H]
 \centering
-\vspace{5mm}
+\vspace{10mm}
 \includegraphics[width=0.99\textwidth]{figs/Samuel/Figures/resc1-cropped.pdf}
-\caption[Simplified Battery Cell Stack Configuration]{Simplified battery cell stack configuration, adapted from Moghaddam et al. \cite{8467638}}
+\caption[Simplified Battery Cell Stack Configuration]{Simplified battery cell stack configuration, adapted from \cite{8467638}}
 \label{fig:bcs}
 \end{figure}
 
@@ -177,13 +178,13 @@ The results produced by the simulation are consistent with results from similar 
         \caption{Simpler switched-capacitor strategy}
         \label{fig:reccrop}
     \end{subfigure}
-    \caption[Comparison of Cell Equalisation Strategies]{Comparison of cell equalisation strategies using the method outlined in Moghaddam et al. \cite{8467638}}
+    \caption[Comparison of Cell Equalisation Strategies]{Comparison of cell equalisation strategies using the method outlined in \cite{8467638}}
     \label{fig:rescvrec}
 \end{figure}
 
 \subsubsection{Thermal Management Design and Simulations}
 
-Designing an efficient thermal management system has numerous advantages for battery operation, with the most significant benefit being the ability to extend the cells' lifetimes by 30-50\% \cite{TOGUN20251077}. The design used in this \gls{bms} focuses on utilising passive cooling techniques to regulate and balance the battery's temperature. Specifically, \gls{tim} are used to regulate the transfer of heat between individual cells and their surroundings. In this design, a thin thermally conductive layer is inserted between the cells to aid heat dissipation. This passive cooling measure is especially useful when there are many cells, ensuring that even if some cells generate more heat, the overall temperature distribution remains balanced. Figure \ref{fig:tempythings} shows how temperature influences the discharge time (Figure \ref{fig:tempy1} from Chen, 2013 \cite{chen2013heat}) and the cycle life (Figure \ref{fig:tempy2} from Rezvanizaniani et al. \cite{REZVANIZANIANI2014110}). These graphs illustrate the importance of effective thermal management. Maintaining an operating temperature within the 20$^\circ\text{C}$ to 45$^\circ\text{C}$ range prevents the cell from discharging too rapidly and maximises the cycle life.
+Designing an efficient thermal management system has numerous advantages for battery operation, with the most significant benefit being the ability to extend the cells' lifetimes by 30-50\% \cite{TOGUN20251077}. The design used in this \gls{bms} focuses on utilising passive cooling techniques to regulate and balance the battery's temperature. Specifically, \gls{tim} are used to regulate the transfer of heat between individual cells and their surroundings. In this design, a thin thermally conductive layer is inserted between the cells to aid heat dissipation. This passive cooling measure is especially useful when there are many cells, ensuring that even if some cells generate more heat, the overall temperature distribution remains balanced. Figure \ref{fig:tempythings} shows how temperature influences the discharge time (Figure \ref{fig:tempy1} from Chen, 2013 \cite{chen2013heat}) and the cycle life (Figure \ref{fig:tempy2} from \cite{REZVANIZANIANI2014110}). These graphs illustrate the importance of effective thermal management. Maintaining an operating temperature within the 20$^\circ\text{C}$ to 45$^\circ\text{C}$ range prevents the cell from discharging too rapidly and maximises the cycle life.
 
 \begin{figure}[H]
     \centering

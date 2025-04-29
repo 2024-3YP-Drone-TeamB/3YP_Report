@@ -139,12 +139,12 @@ By using the mass properties modelled in Section \ref{cad}, it was possible to c
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.66\textwidth]{figs/Samuel/Figures/nekoo1-0005-large.png}
-\caption[Diagram of the drone's dynamics in inertial and body coordinates]{Diagram of the drone's dynamics in inertial and body coordinates. Source: Nekoo et al. \cite{nekoo}}
+\caption[Diagram of the drone's dynamics in inertial and body coordinates]{Diagram of the drone's dynamics in inertial and body coordinates. Source: \cite{nekoo}}
 \label{fig:nekoodiag}
 \end{figure}
 
 \subsubsection{Cascade PID Control}
-Since cascade \gls{pid} is ubiquitous in commercial drones, this technique was considered first. The method involves constructing nested feedback loops, with the \textbf{Attitude Controller} located inside the \textbf{Position Controller} loop. A simplified representation of the cascade \gls{pid} scheme used in the drone is shown in Figure \ref{fig:pidloop}, as in reality, the loops each have 3-dimensional states as inputs and outputs. A detailed description of the control strategy is given by Changhao Sun et al. \cite{electronics10040376}.
+Since cascade \gls{pid} is ubiquitous in commercial drones, this technique was considered first. The method involves constructing nested feedback loops, with the \textbf{Attitude Controller} located inside the \textbf{Position Controller} loop. A simplified representation of the cascade \gls{pid} scheme used in the drone is shown in Figure \ref{fig:pidloop}, as in reality, the loops each have 3-dimensional states as inputs and outputs. A detailed description of the control strategy is given by \cite{electronics10040376}.
 
 \begin{figure}[H]
 \centering
@@ -165,7 +165,7 @@ In the hovering condition, position (\(x_c, y_c, z_c\)) and orientation (\(\phi,
 J = \int_0^\infty \left( x^\top Q x + u^\top R u \right) \, dt 
 \end{equation}
 
-$Q$ and $R$ represent the running state and input penalties, respectively. It is necessary to achieve a balance between minimising disturbances and having input demands that can reasonably be met by the actuators and battery, meaning that there is an inherent compromise between control effort and performance. Because there is no set method for selecting the state and input cost matrices, \textbf{Bryson's rule} is used to heuristically select appropriate diagonal $Q$ and $R$ matrices by setting $Q_{ii} = ({\text{maximum acceptable}( [x_i]^2 )})^{-1}$ and $R_{ii} = ({\text{maximum acceptable}( [u_i]^2 )})^{-1}$ where $[x_i]$ and $[u_i]$ are the states and inputs respectively \cite{chibum2014adv09designofsfb1}. These values are selected according to the drone's sensing capabilities and flight hardware. $Q$ and $R$ are then tuned iteratively to produce the final LQR controller design.
+$Q$ and $R$ represent the running state and input penalties, respectively. It is necessary to achieve a balance between minimising disturbances and having input demands that can reasonably be met by the actuators and battery, meaning that there is an inherent compromise between control effort and performance. Because there is no set method for selecting the state and input cost matrices, \textbf{Bryson's rule} is used to heuristically select appropriate diagonal $Q$ and $R$ matrices by setting $Q_{ii} = { [x_i]^{-2} }$ and $R_{ii} = { [u_i]^{-2} }$ where $[x_i]$ and $[u_i]$ are the states and inputs respectively \cite{chibum2014adv09designofsfb1}. The initial values are selected according to the drone's sensing capabilities and flight hardware. $Q$ and $R$ are then tuned iteratively to produce the final LQR controller design.
 
 \subsubsection{Evaluation of Control Strategies}
 
@@ -174,14 +174,14 @@ Both strategies were implemented in Simulink, with the methods performing simila
 \subsubsection{Cascade PID Analysis}
 \label{sec:cascpid}
 
-The strategy selected for implementation onboard the drone is cascade \gls{pid} control. This strategy is implemented using lightweight code on the microcontroller and can be readily optimised for any given weather conditions and mass properties. In addition, cascade \gls{pid} control is almost ubiquitous within the \gls{uav} industry, which further suggests that it is a sensible choice. The model used for the MATLAB and Simulink simulations was modified from a cascade \gls{pd} implementation by Nekoo et al. \cite{nekoo}, by incorporating an integral term into each feedback loop. The results obtained from this simulation are shown in Figure \ref{fig:12sims}, with the symbols used defined in Section \ref{sec:symbs}. The simulation data was obtained from the case study detailed in Section \ref{mocs} and shows the drone's first 10 seconds of motion, during which it travels 10 metres in the X, Y and Z axes before settling in a constant hovering position. The disturbance of 0.4 m in the X direction during take-off is due to a gust of wind; the controller then rapidly settles to track the reference with high accuracy. The oscillation with an amplitude of 0.2 m in the Y direction is caused by the nonlinear dynamics which the simulation models, but are neglected in the \gls{pid} controller used. The dynamics in the Z-direction are less significantly affected by wind, and the output trajectory remains within 0.1 m of the reference after take-off. Around 3 seconds into the simulation, there are relatively large disturbances to the roll and pitch of up to 0.4 rad, which suggests a sudden gust of wind. The disturbance would ideally be mitigated, and is discussed further in Section \ref{gust}. The linear velocities in the X, Y and Z directions all reach between 3 and 4 ms${^{-1}}$, before decreasing towards the hovering condition of 0 ms${^{-1}}$ in all directions. The constant offset of around 0.2 ms${^{-1}}$ visible in the velocities suggests that, despite the integrator element, a non-decaying error is present in the velocity. The use of a model-free controller discussed in Section \ref{sec:modelfree} may help to alleviate this issue. Overall, the simulation produces feasible results and suggests that the model has been constructed accurately.
+The strategy selected for implementation onboard the drone is cascade \gls{pid} control. This strategy is implemented using lightweight code on the microcontroller and can be readily optimised for any given weather conditions and mass properties. In addition, cascade \gls{pid} control is almost ubiquitous within the \gls{uav} industry, which further suggests that it is a sensible choice. The model used for the MATLAB and Simulink simulations was modified from a cascade \gls{pd} implementation by \cite{nekoo}, by incorporating an integral term into each feedback loop. The results obtained from this simulation are shown in Figure \ref{fig:12sims}, with the symbols used defined in Section \ref{sec:symbs}. The simulation data was obtained from the case study detailed in Section \ref{mocs} and shows the drone's first 10 seconds of motion, during which it travels 10 metres in the X, Y and Z axes before settling in a constant hovering position. The disturbance of 0.4 m in the X direction during take-off is due to a gust of wind; the controller then rapidly settles to track the reference with high accuracy. The oscillation with an amplitude of 0.2 m in the Y direction is caused by the nonlinear dynamics which the simulation models, but are neglected in the \gls{pid} controller used. The dynamics in the Z-direction are less significantly affected by wind, and the output trajectory remains within 0.1 m of the reference after take-off. Around 3 seconds into the simulation, there are relatively large disturbances to the roll and pitch of up to 0.4 rad, which suggests a sudden gust of wind. The disturbance would ideally be mitigated, and is discussed further in Section \ref{gust}. The linear velocities in the X, Y and Z directions all reach between 3 and 4 ms${^{-1}}$, before decreasing towards the hovering condition of 0 ms${^{-1}}$ in all directions. The constant offset of around 0.2 ms${^{-1}}$ visible in the velocities suggests that, despite the integrator element, a non-decaying error is present in the velocity. The use of a model-free controller discussed in Section \ref{sec:modelfree} may help to alleviate this issue. Overall, the simulation produces feasible results and suggests that the model has been constructed accurately.
 
 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{figs/Samuel/Figures/twelveplotsvectorgraphic.pdf}
-\caption[State Responses from the MATLAB Simulation]{State responses from the MATLAB simulation, using software adapted from Nekoo et al. \cite{nekoo}}
+\caption[State Responses from the MATLAB Simulation]{State responses from the MATLAB simulation, using software adapted from \cite{nekoo}}
 \label{fig:12sims}
 \end{figure}
 
@@ -369,7 +369,7 @@ These results suggest that, by only using gyroscope measurements, an online esti
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.90\textwidth]{figs/Samuel/Figures/feature_importance_smote (cropped) (pdfresizer.com).pdf}
+\includegraphics[width=0.70\textwidth]{figs/Samuel/Figures/feature_importance_smote (cropped) (pdfresizer.com).pdf}
 \caption{Bar chart showing the normalised feature importance for the random forest classifier.}
 \label{fig:featureimportance}
 \end{figure}
@@ -377,7 +377,9 @@ These results suggest that, by only using gyroscope measurements, an online esti
 
 
 
-Figure \ref{fig:radchart} shows how the random forest classifier performs depending on the number of decision+ trees used in the model. As expected, the addition of trees behaves as a law of diminishing returns, with the improvement from 10 to 50 trees being more noticeable than that from 50 to 100 trees. The model and data used to perform these predictions serve as a proof of concept, hence there is significant scope to improve the model and make it more robust to a wider range of sensor noise and uncertainties. \textbf{F-2 score} was selected instead of the more conventional F-1 score to place greater importance on precision compared to recall. The formulae for all of the performance metrics used on the diagram are given in Equations \ref{eq:precision} to \ref{eq:mcc}. The \gls{mcc} is used here due to its higher suitability for evaluating binary classifiers compared to the \gls{rocauc}. The benefits of the \acrshort{mcc} for binary classifier evaluation are discussed in Chicco et al. \cite{Chicco2023}.
+Figure \ref{fig:radchart} shows how the random forest classifier performs depending on the number of decision+ trees used in the model. As expected, the addition of trees behaves as a law of diminishing returns, with the improvement from 10 to 50 trees being more noticeable than that from 50 to 100 trees. The model and data used to perform these predictions serve as a proof of concept, hence there is significant scope to improve the model and make it more robust to a wider range of sensor noise and uncertainties. 
+
+\textbf{F-2 score} was selected instead of the more conventional F-1 score to place greater importance on precision compared to recall. The formulae for all of the performance metrics used on the diagram are given in Equations \ref{eq:precision} to \ref{eq:mcc}. The \gls{mcc} is used here due to its higher suitability for evaluating binary classifiers compared to the \gls{rocauc}. The benefits of the \acrshort{mcc} for binary classifier evaluation are discussed in \cite{Chicco2023}.
 
 \begin{equation}
 \label{eq:precision}
