@@ -126,7 +126,7 @@ A key benefit of this approach is the ability to automatically generate the \tex
         \caption{Inertia Matrix}
         \label{fig:2b}
     \end{subfigure}
-    \caption[CAD model of the UAV]{CAD model of the UAV quadcopter in SolidWorks from Westin, 2019 \cite{westin2019x4} shown in (a), with the corresponding inertia matrix shown in (b).}
+    \caption[CAD model of the UAV]{CAD model of the UAV quadcopter in SolidWorks from \cite{westin2019x4} shown in (a), with the corresponding inertia matrix shown in (b).}
     \label{fig:dronecad}
 \end{figure}
 
@@ -159,7 +159,7 @@ Since cascade \gls{pid} is ubiquitous in commercial drones, this technique was c
 \subsubsection{LQR with Integral Action}
 \label{sec:symbs}
 
-In the hovering condition, position (\(x_c, y_c, z_c\)) and orientation (\(\phi, \theta, \psi\)) remain constant, with linear and angular velocities taken to be $\approx$ 0. By following the procedure outlined in \cite{cengiz2024quadcopter}, the linearised dynamics are obtained. This allows a Linear Quadratic Regulator (LQR) to be constructed for the system. An LQR is an optimal state-feedback controller, computed by minimising the cost function shown in Equation \ref{eq:cost_function}:
+In the hovering condition, position (\(x_c, y_c, z_c\)) and orientation (\(\phi, \theta, \psi\)) remain constant, with linear and angular velocities taken to be $\approx$ 0. By following the procedure outlined in \cite{cengiz2024quadcopter}, the linearised dynamics are obtained. This allows an \gls{lqr} to be constructed for the system. An LQR is an optimal state-feedback controller, computed by minimising the cost function shown in Equation \ref{eq:cost_function}:
 
 \begin{equation} \label{eq:cost_function}
 J = \int_0^\infty \left( x^\top Q x + u^\top R u \right) \, dt 
@@ -365,7 +365,9 @@ To perform a comparative evaluation on the effect of the number of trees used in
 
 Figure \ref{fig:featureimportance} shows the normalised feature importance for each of the measurements used in the machine learning model. The most important feature is the \textbf{gyroscope z axis measurement}. This result is expected since the measurement is directly proportional to the angular velocity in the x-y plane, and the drone will rotate about the z-axis when the wind exerts a lateral force. The \textbf{gyroscope x and y axes measurements} are the next most important features, which is to be expected since the wind will also cause the drone to tilt in the x-z and y-z planes. The \textbf{accelerometer measurements} are much less important, as they measure linear motion rather than rotational, and are more sensitive to high frequency noise than comparable gyroscopes \cite{CASSON2016175}. 
 
-These results suggest that, by only using gyroscope measurements, an online estimate could be computed more efficiently with minimal accuracy loss. The utility of this approach would depend on the processing power available onboard the drone since, if this were severely limited, using a smaller set of features may be crucial in effectively applying the classifier. If processing power was less of a constraint, however, the advantage of utilising the additional features may outweigh the associated increase in computational cost. Verifying the applicability of this observation would require a physical implementation onboard a drone in a real-world environment.
+These results suggest that, by only using gyroscope measurements, an online estimate could be computed more efficiently with minimal accuracy loss. The utility of this approach would depend on the processing power available onboard the drone since, if this were severely limited, using a smaller set of features may be crucial in effectively applying the classifier. 
+
+If processing power was less of a constraint, however, the advantage of utilising the additional features may outweigh the associated increase in computational cost. Verifying the applicability of this observation would require a physical implementation onboard a drone in a real-world environment.
 
 \begin{figure}[H]
 \centering
@@ -377,31 +379,58 @@ These results suggest that, by only using gyroscope measurements, an online esti
 
 
 
-Figure \ref{fig:radchart} shows how the random forest classifier performs depending on the number of decision+ trees used in the model. As expected, the addition of trees behaves as a law of diminishing returns, with the improvement from 10 to 50 trees being more noticeable than that from 50 to 100 trees. The model and data used to perform these predictions serve as a proof of concept, hence there is significant scope to improve the model and make it more robust to a wider range of sensor noise and uncertainties. 
+Figure \ref{fig:radchart} shows how the random forest classifier performs depending on the number of decision trees used in the model. As expected, the addition of trees behaves as a law of diminishing returns, with the improvement from 10 to 50 trees being more noticeable than that from 50 to 100 trees. The model and data used to perform these predictions serve as a proof of concept, hence there is significant scope to improve the model and make it more robust to a wider range of sensor noise and uncertainties. The formulae for all of the performance metrics used on the diagram are given in Equations \ref{eq:precision} to \ref{eq:mcc}, where TP, TN, FP and FN represent true positives, true negatives, false positives and false negatives respectively.
 
-\textbf{F-2 score} was selected instead of the more conventional F-1 score to place greater importance on precision compared to recall. The formulae for all of the performance metrics used on the diagram are given in Equations \ref{eq:precision} to \ref{eq:mcc}. The \gls{mcc} is used here due to its higher suitability for evaluating binary classifiers compared to the \gls{rocauc}. The benefits of the \acrshort{mcc} for binary classifier evaluation are discussed in \cite{Chicco2023}.
+\textbf{F-2 score} was selected instead of the more conventional F-1 score to place greater importance on recall compared to precision. The \gls{mcc} was also used due to its higher suitability for evaluating binary classifiers compared to the \gls{rocauc}. The benefits of the \acrshort{mcc} for binary classifier evaluation are discussed in \cite{Chicco2023}.
+
+The model has a high average recall of approximately 0.8, when 50 or more decision trees are used. The F-2 score also approaches 0.8 when more than 50 trees are used. These results suggest that the model is performing as anticipated, and effectively detects the majority of gusts, even if it occasionally flags false positives. labeTo achieve further improvements, the model would likely require a larger dataset or the use of deep neural networks, as discussed in Section \ref{sec:modelfree}.
+
+
+
+\vspace{10mm}
+
+
+\noindent
+\begin{minipage}{0.45\textwidth}
+  \begin{equation}
+    \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+    \label{eq:precision}
+  \end{equation}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+  \begin{equation}
+    \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+  \end{equation}
+\end{minipage}
+
+\vspace{1mm}
+
+\noindent
+\begin{minipage}{0.45\textwidth}
+  \begin{equation}
+    \text{F-2}\text{ Score} = \frac{\text{5} \cdot \text{Precision} \cdot \text{Recall}}{\text{4} \cdot \text{Precision} + \text{Recall}}
+  \end{equation}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\vspace{7mm}
+  \begin{equation}
+    \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{FP} + \text{TN} + \text{FN}}
+  \end{equation}
+\end{minipage}
+
+\vspace{7mm}
 
 \begin{equation}
-\label{eq:precision}
-\text{Precision} = \frac{\text{TP (True Positives)}}{\text{TP} + \text{FP (False Positives)}}
-\end{equation}
-
-\begin{equation}
-\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN (False Negatives)}}
-\end{equation}
-
-\begin{equation}
-\text{F-}2\text{ Score} = \frac{5 \cdot \text{Precision} \cdot \text{Recall}}{4 \cdot \text{Precision} + \text{Recall}}
-\end{equation}
-
-\begin{equation}
-\text{Accuracy} = \frac{\text{TP} + \text{TN (True Negatives)}}{\text{TP} + \text{FP} + \text{TN} + \text{FN}}
-\end{equation}
-
-\begin{equation}
-\label{eq:mcc}
 \text{MCC} = \frac{ \text{TP} \cdot \text{TN} - \text{FP} \cdot \text{FN} }{ \sqrt{ (\text{TP} + \text{FP}) (\text{TP} + \text{FN}) (\text{TN} + \text{FP}) (\text{TN} + \text{FN}) } }
+\label{eq:mcc}
 \end{equation}
+
+
+
+
+
 
 
 
@@ -434,7 +463,7 @@ The cascade \gls{pid} control system is implemented onboard the drone using a co
 
 Although the model used as a proof of concept in Section \ref{sec:mlalgos} was implemented using Python, future implementations could be trained using fast, lightweight random forest software in C++. The Random Forest C++ implementation by Bjoern Andres\footnote{\url{https://github.com/bjoern-andres/random-forest}} was selected for further analysis here. 
 
-A \gls{uml} class diagram summarising the implementation is shown in Figure \ref{fig:uml}, with the attributes omitted for brevity. The model would then be implemented within an existing C library for random forests, allowing its implementation onboard the drone for online gust predictions.\footnote{\url{https://github.com/andriidski/random-forests-c/tree/master}} The separation of the training and implementation software ensures that the hyperparameters are sufficiently optimised without requiring excessive processing power onboard the drone.
+A \gls{uml} class diagram summarising the implementation is shown in Figure \ref{fig:uml}, with the attributes of the classes omitted for brevity. The model would then be implemented by using an existing C library for random forests, allowing its implementation onboard the drone for online gust predictions.\footnote{\url{https://github.com/andriidski/random-forests-c/tree/master}} The separation of the training and implementation software ensures that the hyperparameters are sufficiently optimised without requiring excessive processing power onboard the drone.
 
 \begin{figure}[H]
 \centering
