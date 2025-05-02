@@ -25,7 +25,7 @@ The key objective is to reduce the downtime and cost of operation of the drone. 
 \paragraph{Cause}
 When a gust of wind exceeds the control capabilities of the drone it will cause an extreme disturbance and likely failure resulting in a crash. This is especially important to consider when their is an actuator fault as the maximum rejected gust becomes lower in magnitude and therefore more likely to occur.
 \paragraph{Wind Speed Modelling}
-To model the wind in the operational environment a wind speed monitor is deployed at base stations. Wind speeds are measured at 1 Hz in m/s. For a given time,$\tau$ we can a gust vector $\mathbf{x_{\tau}} =  \{x_1, x_2, \dots, x_N\}$ where $x_i$ is the max wind speed in that time. The wind speed is then modelled using the Weibull distribution \cite{weibull1951} with PDF given by Equation \ref{eq:weibull_pdf}.
+To model the wind in the operational environment a wind speed monitor is deployed at base stations. Wind speeds are measured at 1 Hz in m/s. For a given time, $\tau$ we can a gust vector $\mathbf{x_{\tau}} =  \{x_1, x_2, \dots, x_N\}$ where $x_i$ is the max wind speed in that time. The wind speed is then modelled using the Weibull distribution \cite{weibull1951} with PDF given by Equation \ref{eq:weibull_pdf}.
 \begin{equation}\label{eq:weibull_pdf}
     f_X(x; k, \lambda) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} \exp\left(-\left(\frac{x}{\lambda}\right)^k\right),
 \end{equation}
@@ -48,28 +48,24 @@ The maximum wind speed rejection, $v$, is a known parameter for all deployed con
     p = 1-P(X>v)
 \end{equation}
 \paragraph{Deployment}
-For each deployed controller there is a defined maximum wind speed rejection $v$ and travel speed $s$. For a cost map the half-nodal distance for $p$, $d$, is also predefined. Therefore, we can can calculate $\tau$ on base given we know the controller deployed on the drone using Equation \ref{eq:tau_calc}. This can then be used to calculate a $p$ using data from the last $50\tau$ data points to balance recency with noise rejection. This can be calculated continuously on the base station to give a live approximation.
-\begin{equation}\label{eq:tau_calc}
-    \tau = d/s
-\end{equation}
-Using the LoRa communication system already deployed the system shown in Figure \ref{fig:wind_process} is used where the device sends out the controller it is using to the base-station, $p$ is calculated on the base station and sent back to the device. 
+For each deployed controller there is a defined maximum wind speed rejection $v$ and travel speed $s$. For a cost map the half-nodal distance for $p$, $d$, is also predefined. Therefore, we can can calculate $\tau$ on base given we know the controller deployed on the drone using $\tau = d/s$. This can then be used to calculate a $p$ using data from the last $50\tau$ data points to balance recency with noise rejection. This can be calculated continuously on the base station to give a live approximation. Using the LoRa communication system already deployed the system shown in Figure \ref{fig:wind_process} is used where the device sends out the controller it is using to the base-station, $p$ is calculated on the base station and sent back to the device. 
 \input{Thomas/Return_To_Safety/wind_process}
 
 \subsubsection{Path Planning}\label{sub_sub_section:tgt_search}
 %\input{Thomas/Return_To_Safety/search_algo}
 \input{Thomas/Return_To_Safety/flow_algo}
-\begin{comment}
-\paragraph{Exhaustive Search}
-The simplest algorithm is the recursive function shown in Algorithm \ref{alg:search}. There are steps taken to increase the efficiency, including pruning lines that already exceed the minimum cost as the cost is monotonic increasing and automatically terminating lines when they can land safely. However, the worst case time complexity remains $O(|V|6^{depth})$ as each node has 6 neighbours that get called recursively. To get guaranteed correct results it would require searching all paths as long as $|V|$ as costs cannot fall below 0 so it is never advantageous to revisit a node. Therefore, the worst case complexity for guaranteed optimal paths is $O(|V|6^{|V|})$. This is not usable for practical applications, therefore it requires a compromise to depth of search, no longer getting optimal path results.
-\end{comment}
 \paragraph{Pre-Compute}
 Carrying out memory and time complex operations on real-time hardware should always be avoided as operations require specific timings for optimal use. If all the values are pre-computed and uploaded to the device, the time and memory complexity becomes $O(1)$ which supports precise, timed operations. Within the path planning workflow, as much as possible should be pre-computed and simply accessed, however, if any algorithms are deployed they should be $O(1)$.
 \paragraph{$p$ ranges}
 While the value of $p$ can take any value between 0 and 1, there can be only 7 outputs for the next best move (going to each of the 6 neighbours or landing). Therefore, instead of creating a specific map for a specific value of $p$ on the flight controller you can pre-compute all the ranges of $p$ that would cause each of these outcomes. Then the device selects the option corresponding to its current $p$ value.
 \paragraph{Map}
 \input{Thomas/Return_To_Safety/complexity}
-In order to minimise on-board compute, a map is uploaded where it simply tells the device where to go next given the value of $p$ and its current position. To calculate this the optimal next-node must be calculated for $p\in[0\to1]$ with a suitable step size (0.01 was used in testing).  To calculate the optimal next-node for all nodes at a specified value of $p$ I developed Algorithm \ref{alg:flow}. This is based on a Bellman-Ford \cite{bellman1958}\cite{ford1956} approach and therefore restricts the system to non-negative cycles however given that this is a damage mitigation task having non-negative costs is to be expected.  Bellman-Ford algorithms have a worst case time complexity of $O(|E|\times |V|)$ where $|V|$ represents the longest path length. In We know $|E| \leq |V| \times 7$ and is therefore $O(|V)$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual worst case complexity is $O(|V|^2)$\cite{cormen2009}.  Furthermore, as seen in Figure \ref{fig:rts_complexity} in the typical case the longest path length is $O(\sqrt{|V|})$ reducing the overall complexity to $O(|V|^{1.5})$. The complexity of Dijkstra's algorithm \cite{dijkstra1959} with priority queue for similarly sparse maps is $O(|E| + |V|log|V|)$ however it is not appropriate as Algorithm \ref{alg:flow} has recursive dependencies making edge weights non-static violating the greedy condition \cite{cormen2009}.
+In order to minimise on-board compute, a map is uploaded where it simply tells the device where to go next given the value of $p$ and its current position. To calculate this the optimal next-node must be calculated for $p\in[0\to1]$ with a suitable step size (0.01 was used in testing).  To calculate the optimal next-node for all nodes at a specified value of $p$, I developed Algorithm \ref{alg:flow}. This is based on a Bellman-Ford \cite{bellman1958}\cite{ford1956} approach and therefore restricts the system to non-negative cycles however given that this is a damage mitigation task having non-negative costs is to be expected.
+\paragraph{Complexity}
+Bellman-Ford algorithms have a worst case time complexity of $O(|E|\times |V|)$ where $|V|$ represents the longest path length. In We know $|E| \leq |V| \times 7$ and is therefore $O(|V)$ as we are using hexagons can have an edge to 6 neighbours and a self edge indicating landing. Therefore the actual worst case complexity is $O(|V|^2)$\cite{cormen2009}.  Furthermore, as seen in Figure \ref{fig:rts_complexity} in the best case the longest path length is $O(\sqrt{|V|})$ reducing the best case complexity to $O(|V|^{1.5})$. 
 
+\paragraph{Dijkstra}
+The complexity of Dijkstra's algorithm \cite{dijkstra1959} with priority queue for similarly sparse maps is $O(|E| + |V|log|V|)$ however it is not appropriate as Algorithm \ref{alg:flow} has recursive dependencies making edge weights non-static violating the greedy condition \cite{cormen2009}. 
 \subsubsection{Real-time application}\label{sub_sub_section:tgt_real_time}
 \paragraph{Deployment}
 For a deployed algorithm consistent timings and a minimal memory footprint are essential. Algorithm \ref{alg:threshold} is used to select the next action based on the value of $p$ and the node $p$ ranges.
@@ -119,3 +115,9 @@ struct Node {
 \paragraph{Testing}
 Using 10 random satellite images from the Kharkiv region, 256 node cost maps were generated including visible obstacles and assumed regions of interest. Each trail consisted of starting at each node in the region of interest and finding the actual cost, using the values given in Table \ref{tab:cost_values}, experienced following maps generated by each nodal structure for a specified value of $p$. 20 trials were run between $p$ values 0.01 and 0.99 with intervals of 0.01 and the aggregate average performances between Stop-Go, Reduced and Implemented nodes were all within 0.01\% showing equivalent performance of each nodal structure over the dataset. However, the Stop-Go method can no longer guarantee optimal results leaving them vulnerable to unforeseen situations and varying cost functions. Therefore, the reduced node given in Listing \ref{lst:reducednode} should be implemented unless there are significant memory requirements. Further field validation is required as the dataset used may be different to real-world application.
 
+
+
+\begin{comment}
+\paragraph{Exhaustive Search}
+The simplest algorithm is the recursive function shown in Algorithm \ref{alg:search}. There are steps taken to increase the efficiency, including pruning lines that already exceed the minimum cost as the cost is monotonic increasing and automatically terminating lines when they can land safely. However, the worst case time complexity remains $O(|V|6^{depth})$ as each node has 6 neighbours that get called recursively. To get guaranteed correct results it would require searching all paths as long as $|V|$ as costs cannot fall below 0 so it is never advantageous to revisit a node. Therefore, the worst case complexity for guaranteed optimal paths is $O(|V|6^{|V|})$. This is not usable for practical applications, therefore it requires a compromise to depth of search, no longer getting optimal path results.
+\end{comment}

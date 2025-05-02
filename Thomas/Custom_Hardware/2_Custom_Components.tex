@@ -1,12 +1,14 @@
 \subsection{Custom Components}\label{sub_sub_section:tgt_custom_components}
 
 \subsubsection{Component Selection}\label{sub_sub_section:tgt_component_selection}
-\input{Thomas/Custom_Hardware/component_choices}
+\input{Thomas/Custom_Hardware/component_choices_IMU}
 \paragraph{\gls{IMU}}
 While the BMI323 is cheaper it has higher noise characteristics than the the ICM-42688-P, therefore the latter was selected for use on all boards due to its low price point and high performance. The use of the same \gls{IMU} over all modules should be maintained if possible so that the control characteristics are unchanged across devices and lower costs due to higher order quantities.
 \paragraph{\gls{MCU}}
+\input{Thomas/Custom_Hardware/component_choices_MCU}
 For the flight controller the STM32H743VGT6 is the best option given its \gls{RAM}, price point and support of dual \gls{CAN} buses. However, for the less computationally intense operations required for the \gls{GNSS} module the smaller footprint (due to the lower number of pins) and lower priced MSPM0G3506SRHBR is a better option.
 \paragraph{\gls{GNSS} Module}
+\input{Thomas/Custom_Hardware/component_choices_GNSS}
 Exact positions for where the images were taken to centimetre precision is required as discussed in Section \ref{GPR_design}, this is possible using a \gls{RTK} setup with a base station sending out correction vectors over LoRa getting within centimetre accuracy\cite{RTK_LORA}. Furthermore, in the case of the loss of all \gls{GNSS} signal built in dead reckoning, allowing \gls{RTS}, is also a desirable feature. Therefore, the LG69T-AP is selected. However, when not executing imaging tasks, this precision is not needed and the modules are more expensive than the \gls{GNSS} modules without these features. Therefore, for the redundant device the MAX-F10S-00B was selected, and is shown in \ref{fig:custom_hardware_overview}, due to the significantly better documentation available and similar price points when compared to the LC29HAAMD.
 
 \subsubsection{Power Supply}\label{sub_sub_section:tgt_power_supply}
@@ -24,17 +26,8 @@ t = \frac{C \cdot (V_0 - V_{\text{cutoff}})}{I}
 t_{\text{worst-case}} = \frac{0.47 \cdot (3.3 - 2.8)}{1} = 0.235\ \text{seconds}
 \label{eq:worst_case_time}
 \end{equation}
-\begin{equation}
-\tau = R \cdot C = 20 \cdot 0.47 = 9.4\ \text{seconds}
-\label{eq:charging_time_constant}
-\end{equation}
-The time before dropout, with the worst case conditions is over 0.2 seconds \ref{eq:worst_case_time}, this will provide sufficient time to record any last messages. Furthermore, the time constant is 9.4s \ref{eq:charging_time_constant} meaning that there are current spikes when turning the device on but it is still charged over 3V within 30 seconds \ref{fig:charging_curve}.
+The time before dropout, with the worst case conditions is over 0.2 seconds \ref{eq:worst_case_time}, this will provide sufficient time to record any last messages. Furthermore, the time constant is $\tau = R \cdot C = 20 \cdot 0.47 = 9.4\ \text{seconds}$ meaning that there are current spikes when turning the device on but it is still charged over 3V within 30 seconds \ref{fig:charging_curve}.
 
-\subsubsection{Built for compliance}
-\paragraph{Regulations}
-Compliance to local laws is an important part of \gls{PCB} design, to operate in the European Union it would need to be CE compliant and for general use it should be up to IPC2221 standards\footnote{\url{https://www-eng.lbl.gov/~shuman/NEXT/CURRENT_DESIGN/TP/MATERIALS/IPC-2221A(L).pdf}}. To ensure the design was up to IPC2221 standards all spacings and widths of traces are compliant throughout the design. To ensure a smooth compliance process for CE it was ensured all components are \gls{RoHS} compliant, all solder is lead free and the design principals outlined in Section \ref{sub_section:tgt_design_considerations} are followed.
-\paragraph{Process}
-Compliance is often confirmed by 3rd party labs, TUV SUD offers UA DoC (EMC) which is required for products under 75 VDC in Ukraine with the CE as pre-requisite\footnote{\url{https://www.tuvsud.com/en-us/services/product-certification/ukraine-safety-certification}}. However, before being sent to external labs it should be internally tested for Electro-Magnetic Interference, thermal stability and vibration robustness with rapid prototyping to ensure minimal redesigns are needed.  
 
 \subsubsection{Comparison to Commercial Options}\label{sub_sub_section:tgt_commercial_options}
 \input{Thomas/Custom_Hardware/BOMs}

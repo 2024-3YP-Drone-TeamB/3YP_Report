@@ -23,17 +23,14 @@ If $\eta_i$ falls below $\eta_{\text{thresh}}$ failure is detected however this 
 \begin{equation}\label{eq:residual_cov}
     \boldsymbol{\Sigma_r}(t) = \alpha \boldsymbol{\Sigma_r}(t-1) + (1 - \alpha) \boldsymbol{\tilde{r}}(t)\boldsymbol{\tilde{r}}(t)^T
 \end{equation}
-Then the lower and upper bound detection limits are then calculated as shown in Equations \ref{eq:upper_bound} and \ref{eq:lower_bound} with sensitivity $k$ that can be tuned during testing. Then if $\mathbf{r(t)}$ has a value outside the bounds a fault is triggered \cite{Perry2010}.
-\begin{equation}\label{eq:upper_bound}
-    C_{\text{upper}}(t) = \boldsymbol{\mu_r}(t) + k \sqrt{\text{diag}(\boldsymbol{\Sigma_r}(t))} 
-\end{equation}
-\begin{equation}\label{eq:lower_bound}
-    C_{\text{lower}}(t) =  \boldsymbol{\mu_r}(t) - k \sqrt{\text{diag}(\boldsymbol{\Sigma_r}(t))}
+The acceptance range is then set using Equation \ref{eq:bounds} with sensitivity $k$ that can be tuned during testing. Then if $\mathbf{r(t)}$ has a value outside the acceptable region a fault is triggered \cite{Perry2010}. This provides a computationally lightweight algorithm well suited for real-time embedded application that automatically adjusts the detection bounds based uppon the characteristics of the sensors. This is especially important in \gls{UAV}s due to the gyroscopic drift and exposure to gusty winds that can cause false positives with fixed bounds.
+\begin{equation}\label{eq:bounds}
+    C_{\text{acceptance}}(t) = \boldsymbol{\mu_r}(t) \pm k \sqrt{\text{diag}(\boldsymbol{\Sigma_r}(t))}
 \end{equation}
 \paragraph{Reconfiguration}
-For path planning as discussed in Section \ref{sub_sub_section:tgt_weather_failure} we need known characteristics of the device, specifically its travel speed and maximum wind speed rejection. Therefore, pre-computed control gains are calculated for different intervals of $\eta$, simulated and then tested with hardware-in-the-loop using fault injections. These controllers are preloaded into the device. These controllers are more robust to parameters and less aggressive then during typical operation to minimise the risk of actuator saturation, instability due to parameter inaccuracy and further damage to actuators. In order for the control behaviour to remain applicable with differing model parameters the motor control signals, $\mathbf{E}$, are scaled as shown in Equation \ref{eq:adj_thrust} where $\mathbf{N} = \mathbf{diag}(\eta_1, \dots,\eta_4)$.
+For path planning as discussed in Section \ref{sub_sub_section:tgt_weather_failure} we need known characteristics of the device, specifically its travel speed and maximum wind speed rejection. Therefore, pre-computed control gains are calculated for different intervals of $\eta$, simulated and then tested with hardware-in-the-loop using fault injections. These controllers are preloaded into the device. These controllers are more robust to parameters and less aggressive then during typical operation to minimise the risk of actuator saturation, instability due to parameter inaccuracy and further damage to actuators. In order for the control behaviour to remain applicable with differing model parameters the motor control signals, $\mathbf{E}$, are scaled as shown in Equation \ref{eq:adj_thrust} where $\mathbf{N} = \text{diag}(\eta_1, \dots,\eta_4)$.
 \begin{equation}\label{eq:adj_thrust}
-    \mathbf{E}_{\text{adusted}} = \mathbf{N}^{-1}\times \mathbf{E}_{\text{control}}, 
+    \mathbf{E}_{\text{adjusted}} = \mathbf{N}^{-1}\times \mathbf{E}_{\text{control}}, 
 \end{equation}
 If any $\eta_i$ falls below a threshold $\eta_{\text{thresh}}$ for each controller it will be transferred to different control gains and if any $\eta_i$ falls below $\eta_{\text{critical}}$ it will trigger emergency landing. To ensure transitions between controllers is smooth, the transition step should be simulated and tested with hardware before deployment. If this proves ineffective due to saturation of the damaged actuators, constrained quadratic programming can be used \cite{JOHANSEN2013} to distribute thrust to the stronger motors.
 
