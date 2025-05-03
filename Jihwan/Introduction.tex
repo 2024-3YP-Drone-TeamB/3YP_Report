@@ -5,31 +5,40 @@ The use of \gls{APL} remains a persistent threat to welfare worldwide. According
 
 Since Russia's invasion of Ukraine in February 2022, Ukraine has become the most mined country in the world \cite{globsec2024ukraine}. 30\,\% of Ukraine's territory needs to be inspected for mines (over 174,000\,km$^2$), and it is expected to take up to 757 years to demine the potentially contaminated territory with the available resources (given that they are actually contaminated) as of 2023. The average market rate of mine clearance is about 4,000,000\,USD/km$^2$ \cite{globsec2023ukraine}, indicating a challenge in both time and cost to combat the landmine crisis. 
 
-The mission of this \gls{3yp} is to expedite the detection and mapping of \gls{APL} through an autonomous multi-aerial drone system, improving safety, efficiency and accessibility in demining operations worldwide. We present the key findings for the areas of focus outlined in Table~\ref{tab:intro_focus}. Some of our designs are then tested in the context of Ukraine through simulations to further validate its applicability in current situations.  
+The mission of this \gls{3yp} is to expedite the detection and mapping of \gls{APL} through an autonomous multi-aerial drone system, improving safety, efficiency and accessibility in demining operations worldwide. 
 
-\begin{table}[h!]
-    \centering
-    \begin{tabular}{|p{0.6\linewidth}|c|}
-    \hline
-        \textbf{Area of Focus} & \textbf{Sections} \\
-    \hline\hline
-        Research and selection of components for a multi-modal (thermal and \gls{GPR}) sensor system to collect the field data. & \ref{sensor_hardware_data_acquisition} \\
-    \hline
-        Design of a mission planning framework to efficiently deploy the multi-aerial drone system. & \ref{sec:msp} \\
-    \hline
-        Implementation of computer vision and sensor fusion software utilising machine learning methods to detect the landmines. & \ref{computervision}, \ref{fusion} \\
-    \hline
-        Design and selection of communication, battery management and custom hardware systems to construct the drones. & \ref{Intra Communication}, \ref{sec:euc}, \ref{section:Custom Hardware}, \ref{sec:bms} \\
-    \hline
-        Design and simulation of the control system to ensure its robustness in various weather conditions. & \ref{sec:simcontrol} \\
-    \hline
-        Design of the emergency protocol to safely retrieve the drones in case of hardware failure. & \ref{Return to Safety} \\
-    \hline
-        Analysis of non-technical details of the project in the scope of Engineering in Society. & \ref{Safety and Risk}, \ref{financing}, \ref{sec:techstrat}, \ref{sustainability_ethics} \\
-    \hline
-    \end{tabular}
-    \caption{Areas of Focus}
-    \label{tab:intro_focus}
-\end{table}
+We start by researching and selecting the appropriate components for a multi-modeal (thermal and \gls{GPR}) sensor system to collect the field data (Section \ref{sensor_hardware_data_acquisition}). A mission planning framework adopting the novel \textit{Layered Approach} is designed to efficiently deploy the multi-aerial drone system (Section \ref{sec:msp}). The collected data is then processed through the computer vision (Section \ref{computervision}) and sensor fusion (Section \ref{fusion}) software to infer the location of the landmines for the demining organisations to use. 
+
+Design and selection of communication (Sections \ref{Intra Communication}, \ref{sec:euc}), custom hardware (Section \ref{section:Custom Hardware}) and battery management system (Section \ref{sec:bms}) are considered. We further explore the design and simulation of the control system under various weather conditions (Section \ref{sec:simcontrol}), as well as a novel emergency protocol to safely retrieve the drones in case of hardware failure (Section \ref{Return to Safety}). Non-technical details of the project in the scope of Engineering in Society are explored in the final sections (Sections \ref{Safety and Risk}, \ref{financing}, \ref{sec:techstrat}, \ref{sustainability_ethics}). 
+
+% We present the key findings for the areas of focus outlined in Table~\ref{tab:intro_focus}. Some of our designs are then tested in the context of Ukraine through simulations to further validate its applicability in current situations.  
+
+% \begin{table}[h!]
+%     \centering
+%     \begin{tabular}{|p{0.6\linewidth}|c|}
+%     \hline
+%         \textbf{Area of Focus} & \textbf{Sections} \\
+%     \hline\hline
+%         Research and selection of components for a multi-modal (thermal and \gls{GPR}) sensor system to collect the field data. & \ref{sensor_hardware_data_acquisition} \\
+%     \hline
+%         Design of a mission planning framework to efficiently deploy the multi-aerial drone system. & \ref{sec:msp} \\
+%     \hline
+%         Implementation of computer vision and sensor fusion software utilising machine learning methods to detect the landmines. & \ref{computervision}, \ref{fusion} \\
+%     \hline
+%         Design and selection of communication, battery management and custom hardware systems to construct the drones. & \ref{Intra Communication}, \ref{sec:euc}, \ref{section:Custom Hardware}, \ref{sec:bms} \\
+%     \hline
+%         Design and simulation of the control system to ensure its robustness in various weather conditions. & \ref{sec:simcontrol} \\
+%     \hline
+%         Design of the emergency protocol to safely retrieve the drones in case of hardware failure. & \ref{Return to Safety} \\
+%     \hline
+%         Analysis of non-technical details of the project in the scope of Engineering in Society. & \ref{Safety and Risk}, \ref{financing}, \ref{sec:techstrat}, \ref{sustainability_ethics} \\
+%     \hline
+%     \end{tabular}
+%     \caption{Areas of Focus}
+%     \label{tab:intro_focus}
+% \end{table}
+
+
 
 Throughout the report, we aim to follow a consistent design philosophy to achieve a high standard. Our designs are made to be \textbf{modular}, \textbf{cost-efficient}, \textbf{easy-to-use}, \textbf{robust}, \textbf{repairable} and \textbf{sustainable}.
+
