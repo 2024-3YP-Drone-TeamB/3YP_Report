@@ -4,7 +4,7 @@
 \paragraph{Component Ageing}
 Cell ageing and actuator ageing can cause inaccurate state of charge predictions. Therefore, the planned path may exceed the limit of the device leading to a state of charge fault and the necessity of \gls{RTH} if the state of charge is within 10\% of the predicted required state of charge required for \gls{RTH}. However, the state-vector telemetry recorded by the flight controller will be used to regularly inspect the cell performance and replace the cells or actuators if needed before failure.
 \paragraph{Cell Failure}
-\gls{Li-ion} batteries can have a thermal runaway. This is seen with a massive spike in temperature from the \gls{BMS} telemetry data and should lead to immediate landing and battery shutdown as it is a chain reaction effect that can cause excessive thermal damage\cite{LiONRunaway}.
+\gls{Li-ion} batteries can have a thermal runaway. This is seen with a massive spike in temperature from the \gls{BMS} telemetry data and should lead to immediate landing and battery shutdown as it is a chain reaction effect that can cause excessive thermal damage\cite{LiONRunaway}. To avoid this, if the battery temperature exceeds the safe bounds designated by the \gls{BMS} the device will land and execute \gls{RTS} when the battery has cooled sufficiently.
 
 \subsubsection{Actuator Fault}\label{sub_sub_section:tgt_actuator_fault}
 \paragraph{Causes}
@@ -15,6 +15,7 @@ Consider motor effectiveness factors $\eta_i \in [0,1]$ as random walks. Using t
     \mathbf{r}(t) = \mathbf{a}_{prediction}(t) - \mathbf{a}_{actual}(t)
 \end{equation}
 The model parameters $\eta_i$ can be approximated using \gls{EKF} updates. An \gls{EKF} is used due to its wide industry use and proven effectiveness and should be sufficient to handle the non-linearities of the model however, if is found to be insufficient a \gls{UKF} filter could be used instead \cite{WAN2000}.
+
 \paragraph{Fault Detection}
 If $\eta_i$ falls below $\eta_{\text{thresh}}$ failure is detected however this has a slow detection time for sudden faults. Given in the case of sudden faults \gls{RTS} should not be attempted due to the likelihood of crashing, a separate detection system is required to trigger emergency landing. The residual $\mathbf{r}(t)$ is shown in Equation \ref{eq:residual}, if there is a sudden spike in residual it is likely due to an extreme gust , a change in state dynamics or a sudden fault. In each case emergency landing should be attempted immediately. To detect this spike with changing residual dynamics which can be caused by increased wind or sensor drift, the mean and covariance of $\mathbf{r(t)}$ are found as shown in Equations \ref{eq:residual_mean} and \ref{eq:residual_cov} where  $\mathbf{\tilde{r}}(t) = \boldsymbol{\tilde{r}}(t) - \boldsymbol{\mu_r}(t)$, and $\alpha \in [0,1)$ is the forgetting factor that will be tuned during testing \cite{roberts1959}.
 \begin{equation}\label{eq:residual_mean}
@@ -23,10 +24,15 @@ If $\eta_i$ falls below $\eta_{\text{thresh}}$ failure is detected however this 
 \begin{equation}\label{eq:residual_cov}
     \boldsymbol{\Sigma_r}(t) = \alpha \boldsymbol{\Sigma_r}(t-1) + (1 - \alpha) \boldsymbol{\tilde{r}}(t)\boldsymbol{\tilde{r}}(t)^T
 \end{equation}
-The acceptance range is then set using Equation \ref{eq:bounds} with sensitivity $k$ that can be tuned during testing. Then if $\mathbf{r(t)}$ has a value outside the acceptable region a fault is triggered \cite{Perry2010}. This provides a computationally lightweight algorithm well suited for real-time embedded application that automatically adjusts the detection bounds based uppon the characteristics of the sensors. This is especially important in \gls{UAV}s due to the gyroscopic drift and exposure to gusty winds that can cause false positives with fixed bounds.
+The acceptance range is then set using Equation \ref{eq:bounds} with sensitivity $k$ that can be tuned during testing. Then if $\mathbf{r(t)}$ has a value outside the acceptable region a fault is triggered \cite{Perry2010}. This provides a computationally lightweight algorithm well suited for real-time embedded application that automatically adjusts the detection bounds based upon the characteristics of the sensors. This is especially important in \gls{UAV}s due to the gyroscopic drift and exposure to gusty winds that can cause false positives with fixed bounds.
 \begin{equation}\label{eq:bounds}
     C_{\text{acceptance}}(t) = \boldsymbol{\mu_r}(t) \pm k \sqrt{\text{diag}(\boldsymbol{\Sigma_r}(t))}
 \end{equation}
+
+\paragraph{Calibration}
+The fault detection and estimation methods used are
+dependent on accurate estimation of plant and sensor characteristics. Therefore, regular calibration is required by running boot tests that run fixed control inputs and record sensor outputs. If the sensor outputs do not match the predicted values the device raising an error and is debugged at the base station. The \gls{LED} array explored in \ref{section:Custom Hardware} displays the faulty module using sensor isolation where possible. For example, if all inertial sensors match the predicted value except one, this sensor would be isolated as faulty.
+
 \paragraph{Reconfiguration}
 For path planning as discussed in Section \ref{sub_sub_section:tgt_weather_failure} we need known characteristics of the device, specifically its travel speed and maximum wind speed rejection. Therefore, pre-computed control gains are calculated for different intervals of $\eta$, simulated and then tested with hardware-in-the-loop using fault injections. These controllers are preloaded into the device. These controllers are more robust to parameters and less aggressive then during typical operation to minimise the risk of actuator saturation, instability due to parameter inaccuracy and further damage to actuators. In order for the control behaviour to remain applicable with differing model parameters the motor control signals, $\mathbf{E}$, are scaled as shown in Equation \ref{eq:adj_thrust} where $\mathbf{N} = \text{diag}(\eta_1, \dots,\eta_4)$.
 \begin{equation}\label{eq:adj_thrust}

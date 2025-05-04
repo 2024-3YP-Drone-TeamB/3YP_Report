@@ -1,8 +1,8 @@
 \subsection{Risk Analysis}\label{sub_section:tgt_risk}
 \subsubsection{Ground Operator Owned Risks}\label{sub_sub_section:tgt_ground_operator_risk} \input{Thomas/Safety_and_Risk/risk_matrix}
 \input{Thomas/Safety_and_Risk/risk_register_ground}
-\paragraph{Field Testing}
-Ground operators can load in tests that have known expected results. These tests are formed of control signals and then sensor measurements. If everything is working then the results match the expected results and the device is operable. If there is an actuator fault the sensors will all record similar results different to the expected results and if there is a sensor fault the sensors will all record the expected results except for the faulty sensors. Furthermore, all communication lines are tested to check they are operable even if they are redundant. This isolates any module faults so that they can be replaced and sent for repair.
+\paragraph{Boot Testing}
+Before the start of any mission, the controller gives standard control signals directly after take-off. If the sensor recordings match the expected results for the control signals the mission goes ahead. If there is an actuator fault the sensors will all record similar results different to the expected results and if there is a sensor fault the sensors will all record the expected results except for the faulty sensors. Furthermore, all communication lines are tested to check they are operable even if they are redundant. This isolates any module faults so that they can be replaced and sent for repair.
 \paragraph{Role of Design}
 The design of the device should support ground operators at all times. Therefore, clear and easy documentation will be provided and all interfaces are as simple and easy to use as possible. However, in order to continue to support progress feedback must be gathered to improve the design in a testing phase and throughout operation.
 
