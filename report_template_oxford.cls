@@ -26,14 +26,114 @@
 \usepackage{booktabs}
 
 \usepackage{fancyhdr}
+\usepackage{comment}
 \pagestyle{fancy}
 \fancyhead[L]{} % Left side of the header
 \fancyhead[C]{} % Center of the header (optional)
 \fancyhead[R]{} % Right side of the header (optional)
 
 \usepackage[nonumberlist]{glossaries}
-\makeglossaries
 
+\makeglossaries
+\newacronym{3YP}{3YP}{Third-Year Project}
+\newacronym{6S}{6s}{6-cell series}
+\newacronym{6S3P}{6s3p}{6-series 3-parallel}
+\newacronym{ADC}{ADC}{Analog-to-Digital Converter}
+\newacronym{APL}{APL}{Anti-Personnel Landmine}
+\newacronym{ATL}{ATL}{Anti-Tank Landmine}
+\newacronym{BCD}{BCD}{Boustrophedon Cellular Decomposition}
+\newacronym{BMS}{BMS}{Battery Management System}
+\newacronym{BP}{BP}{Back-Projection}
+\newacronym{BS}{BS}{British Standards}
+\newacronym{CAD}{CAD}{computer-aided design}
+\newacronym{CAN}{CAN}{Controller Area Network}
+\newacronym{CCDT}{CCDT}{Constrained Conforming Delaunay Triangulation}
+\newacronym{CDT}{CDT}{Constrained Delaunay Triangulation}
+\newacronym{CGAL}{CGAL}{Computational Geometry Algorithms Library}
+\newacronym{COTS}{COTS}{Commercial Off-The-Shelf}
+\newacronym{CPP}{CPP}{Coverage Path Planning}
+\newacronym{CSS}{CSS}{Chirp Spread Spectrum}
+\newacronym{DCDC}{DC-DC}{Direct Current to Direct Current [power converter]}
+\newacronym{DLGPR}{DLGPR}{Down-Looking Ground Penetrating Radar}
+\newacronym{DNN}{DNN}{Deep Neural Network}
+\newacronym{DTCM}{DTCM}{Data Tightly Coupled Memory}
+\newacronym{EKF}{EKF}{Extended Kalman Filter}
+\newacronym{EM}{EM}{Electromagnetic}
+\newacronym{EMI}{EMI}{Electromagnetic Induction}
+\newacronym{ESC}{ESC}{Electronic Speed Controller}
+\newacronym{ESD}{ESD}{Electrostatic Discharge}
+\newacronym{ESR}{ESR}{equivalent series resistance}
+\newacronym{FEM}{FEM}{finite element method}
+\newacronym{FIR}{FIR}{Far-Infrared}
+\newacronym{FLGPR}{FLGPR}{Forward-Looking Ground Penetrating Radar}
+\newacronym{FMCW}{FMCW}{Frequency-Modulated Continuous Wave}
+\newacronym{FOV}{FOV}{Field of View}
+\newacronym{GBP}{GBP}{Great British Pound}
+\newacronym{GIS}{GIS}{Geographic Information System}
+\newacronym{GNSS}{GNSS}{Global Navigation Satellite System}
+\newacronym{GPR}{GPR}{Ground Penetrating Radar}
+\newacronym{GSD}{GSD}{Ground Sample Distance}
+\newacronym{GUI}{GUI}{Graphical User Interface}
+\newacronym{HAZOP}{HAZOP}{Hazard Operability}
+\newacronym{I2C}{I2C}{Inter-Integrated Circuit}
+\newacronym{IFOV}{IFOV}{Instantaneous Field of View}
+\newacronym{IMU}{IMU}{Inertial Measurement Unit}
+\newacronym{IR}{IR}{Infrared}
+\newacronym{ISM}{ISM}{Industrial, Scientific and Medical}
+\newacronym{ITCM}{ITCM}{Instruction Tightly-Coupled Memory}
+\newacronym{LED}{LED}{Light Emitting Diode}
+\newacronym{LIION}{Li-ion}{Lithium-Ion}
+\newacronym{LIPO}{LiPo}{lithium polymer}
+\newacronym{LORA}{LoRa}{Long Range}
+\newacronym{LORAWAN}{LoRaWAN}{Long Range Wide Area Network}
+\newacronym{LPWAN}{LPWAN}{Low-Power Wide Area Network}
+\newacronym{LQR}{LQR}{linear-quadratic regulator}
+\newacronym{LWIR}{LWIR}{Long-Wave Infrared}
+\newacronym{MAC}{MAC}{Medium Access Control}
+\newacronym{MCC}{MCC}{Matthews correlation coefficient}
+\newacronym{MCU}{MCU}{Microcontroller Unit}
+\newacronym{MOSFET}{MOSFET}{metal–oxide–semiconductor field-effect transistor}
+\newacronym{MPC}{MPC}{model predictive control}
+\newacronym{MWIR}{MWIR}{Mid-Wave Infrared}
+\newacronym{NETD}{NETD}{Noise Equivalent Temperature Difference}
+\newacronym{NIR}{NIR}{Near-Infrared}
+\newacronym{NTC}{NTC}{negative-temperature-coefficient}
+\newacronym{PCB}{PCB}{Printed Circuit Board}
+\newacronym{PD}{PD}{proportional–derivative}
+\newacronym{PHY}{PHY}{Physical}
+\newacronym{PID}{PID}{proportional–integral–derivative}
+\newacronym{POI}{POI}{Point of Interest}
+\newacronym{QGIS}{QGIS}{Quantum Geographic Information System}
+\newacronym{RAM}{RAM}{Random Access Memory}
+\newacronym{RESC}{ReSC}{resonant switched capacitor}
+\newacronym{ROCAUC}{ROC AUC}{area under the receiver operating characteristic curve}
+\newacronym{ROHS}{RoHS}{Restriction of Hazardous Substances}
+\newacronym{ROI}{ROI}{Region of Interest}
+\newacronym{RPM}{RPM}{Rotations Per Minute}
+\newacronym{RTH}{RTH}{Return To Home}
+\newacronym{RTK}{RTK}{Real-Time Kinematics}
+\newacronym{RTS}{RTS}{Return To Safety}
+\newacronym{SAR}{SAR}{Synthetic Aperture Radar}
+\newacronym{SDR}{SDR}{Software Defined Radio}
+\newacronym{SFCW}{SFCW}{Stepped-Frequency Continuous Wave}
+\newacronym{SNR}{SNR}{Signal-to-Noise Ratio}
+\newacronym{SOC}{SOC}{state of charge}
+\newacronym{SRAM}{SRAM}{Static Random-Access Memory}
+\newacronym{SWD}{SWD}{Serial Wire Debug}
+\newacronym{SWIR}{SWIR}{Short-Wave Infrared}
+\newacronym{TCD}{TCD}{Trapezoidal Cellular Decomposition}
+\newacronym{TIMS}{TIMs}{thermal interface materials}
+\newacronym{TNT}{TNT}{Trinitrotoluene}
+\newacronym{TSP}{TSP}{Travelling Salesman Problem}
+\newacronym{TSPO}{TSP-O}{Travelling Salesman Problem with Obstacles}
+\newacronym{TVS}{TVS}{Transient Voltage Suppressor}
+\newacronym{UART}{UART}{Universal Asynchronous Receiver/Transmitter}
+\newacronym{UAV}{UAV}{Unmanned Aerial Vehicle}
+\newacronym{UKF}{UKF}{Unscented Kalman Filter}
+\newacronym{UML}{UML}{Unified Modelling Language}
+\newacronym{USD}{USD}{United States Dollar}
+
+\begin{comment}
 % ADD ACRONYMS HERE
 \newacronym{3yp}{3YP}{Third-Year Project}
 \newacronym{cpp}{CPP}{Coverage Path Planning}
@@ -94,7 +194,8 @@
 \newacronym{uml}{UML}{Unified Modelling Language}
 \newacronym{rocauc}{ROC AUC}{area under the receiver operating characteristic curve}
 \newacronym{mcc}{MCC}{Matthews correlation coefficient}
-%%%
+\end{comment}
+
 
 
 \newcommand{\subtitle}[1]{\def\@subtitle{#1}}%
