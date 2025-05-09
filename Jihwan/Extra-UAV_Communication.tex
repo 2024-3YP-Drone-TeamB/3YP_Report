@@ -1,6 +1,6 @@
 \newpage
 \fancyhead[C]{Jihwan Shin}
-\section{Extra-UAV Communication Architecture - Jihwan Shin} \label{sec:euc}
+\section{Extra-UAV Communication Architecture} \label{sec:euc}
 
 Most of the procedures required in our system are processed offline either within the drone's internal hardware (e.g. control system, emergency protocol, data collection) or the base station computer (e.g. data processing, mission planning). However, it is necessary to enable an online communication system that can be used to send/receive necessary information between the drones and the base station during flight time. In this section, we outline the requirements of the extra-\gls{UAV} communication system and explore the use of \gls{lora} communication as the solution. A ns-3 simulation for \gls{lora} communication is also considered for integration with the mission planning framework. 
 
@@ -24,10 +24,10 @@ Table~\ref{tab:euc_messages} lists all messages that should be communicated betw
 
 \begin{table}[h]
     \centering
-    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.5cm}|X|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{1.8cm}|}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.5cm} X >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{1.8cm}}
         \hline 
         \centering{\textbf{Message}} & \centering{\textbf{Detail}} & \textbf{Direction (Drone-Base)} & \textbf{Size (bits)} \\ 
-        \hline\hline
+        \hline
         Timestamp & Time data for confirmation of transmission period. & $\leftrightarrow$ & 64 \\
         \hline
         Drone ID & Distinct ID given to each drone to distinguish at the base station. Unsigned char (0-255) is used. & $\leftrightarrow$ & 8 \\
@@ -43,10 +43,9 @@ Table~\ref{tab:euc_messages} lists all messages that should be communicated betw
         Return to Safety Flag & Flag triggered when Return to Safety is required. Boolean (0-1) is used. & $\leftarrow$ & 1 \\
         \hline
         Return to Home Flag & Flag triggered when Return to Home is required. Boolean (0-1) is used. & $\leftarrow$ & 1 \\
-        \hline\hline
-        \multicolumn{2}{|c|}{\textbf{Total Drone-to-Base Packet Size (bits)}} & $\rightarrow$ & 772 \\
         \hline
-        \multicolumn{2}{|c|}{\textbf{Total Base-to-Drone Packet Size (bits)}} & $\leftarrow$ & 90 \\
+        \rowcolor{gray!10} \multicolumn{2}{c}{\textbf{Total Drone-to-Base Packet Size (bits)}} & $\rightarrow$ & \textbf{772} \\
+        \rowcolor{gray!10} \multicolumn{2}{c}{\textbf{Total Base-to-Drone Packet Size (bits)}} & $\leftarrow$ & \textbf{90} \\
         \hline
     \end{tabularx}
     \caption[Messages for Extra-UAV Communication]{Messages required for extra-\gls{UAV} communications with details on content, direction and size.}
@@ -78,16 +77,13 @@ We choose the \gls{lora} communication technology with \gls{lorawan} protocol fo
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|}
+    \begin{tabular}{c c c}
     \hline
         \textbf{Spreading Factor} (For UL at 125 kHz) & \textbf{Bit Rate} & \textbf{Range} (Depends on Terrain) \\
-    \hline\hline
+    \hline
         SF10 & 980\,bps & 8\,km \\
-    \hline
         SF9 & 1760\,bps & 6\,km \\
-    \hline
         SF8 & 3125\,bps & 4\,km \\
-    \hline
         SF7 & 5470\,bps & 2\,km \\
     \hline
     \end{tabular}
@@ -99,10 +95,10 @@ We choose the \gls{lora} communication technology with \gls{lorawan} protocol fo
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|p{0.8\linewidth}|}
+    \begin{tabular}{c p{0.8\linewidth}}
     \hline
         \textbf{Class} & \textbf{Explanation} \\
-    \hline\hline
+    \hline
         A & Communication is initiated by the end device (uplink transmission) and the network server can only send information back (downlink transmission) during a short interval after an uplink packet is received. This is the most power efficient but restricted in downlink transmission. \\
     \hline
         B & In addition to class A communication, the end device has regularly-scheduled windows to receive information from the network server (downlink transmission). The time synchronisation is managed by beacons which periodically broadcast timing reference (based on GPS timing source of the gateways) to the end devices. This consumes more power than class A but offers more flexible downlink transmission. \\

@@ -1,6 +1,6 @@
 \newpage
 \fancyhead[C]{Jihwan Shin}
-\section{Mission Planning - Jihwan Shin} \label{sec:msp}
+\section{Mission Planning} \label{sec:msp}
 
 %%%%%%%%%%
 \subsection{Introduction}
@@ -39,14 +39,12 @@ As mentioned in Section~\ref{sensor_hardware_data_acquisition}, we utilise therm
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{| c || c | c |}
+    \begin{tabular}{ c |  c  c }
         \hline
         Sensor & Thermal & \gls{GPR} \\
-        \hline\hline
+        \hline
         Altitude & \textbf{High} & Low \\
-        \hline
         Speed & \textbf{Fast} & Slow \\
-        \hline
         Confidence & Low & \textbf{High} \\
         \hline
     \end{tabular}
@@ -179,10 +177,10 @@ The \gls{tsp} is an optimisation problem in which the minimum traversal path to 
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|p{0.5\linewidth}|c|}
+    \begin{tabular}{c p{0.5\linewidth} c}
         \hline
         \textbf{Method} & \centering{\textbf{Explanation}} & \textbf{Complexity} \\
-        \hline \hline
+        \hline
         Brute-Force Algorithm & Naïve method where all possible permutations are calculated to find the optimal solution. & $O(n!)$ \\ \hline
         Held-Karp Algorithm \cite{held1962hktsp} & Dynamic Programming method where subsets of nodes are explored to find the optimal solution. It improves on the brute-force method in terms of complexity while maintaining the optimal solution, but comes at the cost of large memory requirements. & $O(n^2 2^n)$ \\ \hline
         Genetic Algorithm \cite{potvin1996gentsp} & Searches for the heuristic solution by combining the best features of good solutions over multiple generations. & $O(n^2 g)$ \\ \hline
@@ -378,24 +376,24 @@ To evaluate the efficiency of the landmine detection system, we can compare the 
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|p{0.5\linewidth}|c|}
+    \begin{tabular}{c p{0.5\linewidth} c}
     \hline
         \textbf{Symbol} & \textbf{Explanation} & \textbf{Unit} \\
-    \hline\hline
+    \hline
         $\varepsilon_{\mathrm{method}}$ & Coverage time per unit area of the given method. & $\mathrm{m}^{-2} \cdot \mathrm{s}$ \\
-    \hline
+        \hline
         $C_{\mathrm{sensor}}$ & Length of the coverage path generated using \gls{bcd} algorithm for the coverage width of the given sensor.  & $\mathrm{m}$ \\
-    \hline
+        \hline
         $v_{\mathrm{sensor}}$ & Maximum flight speed of the drone attached with the given sensor. & $\mathrm{m} \cdot \mathrm{s}^{-1}$ \\
-    \hline
+        \hline
         $T_{\mathrm{GPR}}$ & Length of the target path generated using \gls{tspo} algorithm that should be surveyed using the \gls{GPR} sensor. & $\mathrm{m}$ \\
-    \hline
+        \hline
         $n_{\mathrm{suspected}}$ & Number of suspected landmine points that must be visited by the \gls{GPR} sensor. & N/A \\
-    \hline
+        \hline
         $t_{\mathrm{GPR}}$ & The fixed time required to perform the scanning procedure for a point of interest using the \gls{GPR} sensor as described in Section \ref{GPR_flight} & $\mathrm{s}$ \\
-    \hline
+        \hline
         $t_{\mathrm{manual}}$ & Time taken for the \gls{roi} to be fully covered using manual detection methods. & $\mathrm{s}$ \\
-    \hline
+        \hline
         $A_{\mathrm{ROI}}$ & Area of the \gls{roi}. & $\mathrm{m}^{2}$ \\
     \hline
     \end{tabular}
