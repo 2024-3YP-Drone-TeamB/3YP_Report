@@ -96,6 +96,7 @@
 \newacronym{MPC}{MPC}{model predictive control}
 \newacronym{MWIR}{MWIR}{Mid-Wave Infrared}
 \newacronym{NETD}{NETD}{Noise Equivalent Temperature Difference}
+\newacronym{NGOS}{NGOs}{non-governmental organizations}
 \newacronym{NIR}{NIR}{Near-Infrared}
 \newacronym{NTC}{NTC}{negative-temperature-coefficient}
 \newacronym{PCB}{PCB}{Printed Circuit Board}
