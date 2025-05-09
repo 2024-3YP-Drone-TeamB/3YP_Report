@@ -134,7 +134,7 @@ While numerous \gls{GPR} architectures have been explored in previous research, 
 
 In contrast, the focus of our project is to demonstrate the feasibility of integrating \gls{GPR} within a layered, multi-\gls{UAV} landmine detection framework. Given the constraints of time, budget, and hardware development, we propose the use of a \gls{COTS} impulse \gls{GPR} system for our initial implementation.
 
-We select the \textbf{SPH Engineering Zond Aero 1000 MHz \gls{GPR}} (~1.8~kg\footnote{\label{Zond}\url{https://cdn.shopify.com/s/files/1/0596/9451/4353/files/RadSys_Zond_Aero_1000_NG_datasheet.pdf?v=1732295405}}). It operates in the 600–1300~MHz band with a center frequency of 1~GHz\textsuperscript{\ref{Zond}}, offering reasonable balance between resolution and penetration. Unlike high-frequency systems that offer fine detail at shallow depths, this system prioritizes deeper penetration—essential for detecting mines in compact or moist soils. Although its vertical resolution (around 10--15~cm) may not allow precise depth estimation, this is acceptable for our use case, where the primary goal is to confirm the existence rather than reconstruct detailed object geometry of the buried landmines.
+We select the \textbf{SPH Engineering Zond Aero 1000 MHz \gls{GPR}} (~1.8~kg\footnote{\label{Zond}\url{cdn.shopify.com/s/files/1/0596/9451/4353/files/RadSys_Zond_Aero_1000_NG_datasheet.pdf?v=1732295405}}). It operates in the 600–1300~MHz band with a center frequency of 1~GHz\textsuperscript{\ref{Zond}}, offering reasonable balance between resolution and penetration. Unlike high-frequency systems that offer fine detail at shallow depths, this system prioritizes deeper penetration—essential for detecting mines in compact or moist soils. Although its vertical resolution (around 10--15~cm) may not allow precise depth estimation, this is acceptable for our use case, where the primary goal is to confirm the existence rather than reconstruct detailed object geometry of the buried landmines.
 
 The system uses a \textbf{\gls{DLGPR}} configuration, maximizing reflected signal power from targets and simplifying hardware integration. While \gls{DLGPR} does introduce surface clutter due to strong air–ground reflections, it can be mitigated through signal processing techniques such as Singular Value Decomposition (SVD) and migration algorithms ~\cite{garcia2024comparison}. Furthermore, \gls{DLGPR} is the most widely adopted orientation in past \gls{UAV}-\gls{GPR} applications, supporting its practical reliability ~\cite{9758040}.
 
@@ -152,7 +152,7 @@ As illustrated in Figure~\ref{fig:swath_geometry}, for our \gls{DLGPR} system ($
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=6cm]{figs/Huirui/gpr_swath}
+    \includegraphics[height=6.5cm]{figs/Huirui/gpr_swath}
     \caption[Stripmap SAR geometry]{Illustration of the stripmap SAR geometry.~\cite{schartel2018uav}.}
     \label{fig:swath_geometry}
 \end{figure}

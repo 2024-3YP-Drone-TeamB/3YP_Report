@@ -2,9 +2,9 @@
 
 \subsubsection{Fundamentals of Thermal Imaging}\label{thermal_fundamental}
 
-Thermal imaging is a passive, non-contact sensing technique that captures the \gls{IR} radiation naturally emitted by objects with temperatures above absolute zero\footnote{\label{thermography}\url{https://en.wikipedia.org/wiki/Thermography}}. Unlike visible-light cameras that rely on reflected light, thermal cameras measure emitted radiation and generate spatial maps of surface temperature.
+Thermal imaging is a passive, non-contact sensing technique that captures the \gls{IR} radiation naturally emitted by objects with temperatures above absolute zero. Unlike visible-light cameras that rely on reflected light, thermal cameras measure emitted radiation and generate spatial maps of surface temperature.
 
-The emission of thermal radiation follows the principles of blackbody radiation, where the intensity of emitted energy increases with surface temperature. Thermal cameras detect this radiation using infrared-sensitive sensors and convert the resulting signal into digital thermograms. These thermograms visualize temperature distributions: warmer objects emit more \gls{IR} radiation and appear brighter, while cooler objects emit less and appear darker\textsuperscript{\ref{thermography}}. The recorded thermal pattern depends not only on surface temperature, but also on material-specific thermal properties such as emissivity, conductivity, heat capacity, and density, which all determine how objects absorb and release heat over time.
+The emission of thermal radiation follows the principles of blackbody radiation, where the intensity of emitted energy increases with surface temperature. Thermal cameras detect this radiation using infrared-sensitive sensors and convert the resulting signal into digital thermograms. These thermograms visualize temperature distributions: warmer objects emit more \gls{IR} radiation and appear brighter, while cooler objects emit less and appear darker. The recorded thermal pattern depends not only on surface temperature, but also on material-specific thermal properties such as emissivity, conductivity, heat capacity, and density, which all determine how objects absorb and release heat over time.
 
 In landmine detection, buried mines disrupt the natural thermal behavior of the soil. Due to differences in material composition, landmines and the surrounding soil exhibit distinct thermal inertia—their resistance to temperature change. As a result, the presence of a landmine creates a subtle but detectable thermal anomaly on the soil surface. Techniques such as Differential Apparent Thermal Inertia (DATI) can enhance these patterns by capturing the dynamic response of the soil and buried object to temperature changes over time~\cite{nikulin2018detection}.
 
@@ -21,28 +21,26 @@ The infrared spectrum is typically divided into five regions: Near-Infrared (NIR
 
 \gls{MWIR} and \gls{LWIR} provide temperature-based imaging that is robust under varied environmental conditions. Unlike \gls{SWIR}, which relies on reflected radiation, \gls{MWIR} and \gls{LWIR} sense emitted thermal energy, making them effective in low-light or obscured environments and well suited for buried landmine detection. According to Planck’s law, as an object’s temperature increases, its emitted radiation intensifies and shifts to shorter wavelengths. For objects near ambient temperature (300~K), peak emission occurs in the \gls{LWIR} range (8–12~\textmu m), making it the most appropriate band for detecting landmines both on the surface ad in the soil. In contrast, \gls{MWIR} is more effective for hotter objects (1000~K)\textsuperscript{\ref{LWIR}}. This relationship is illustrated in Figure~\ref{fig:wien_law}.
 
-Atmospheric transmission also plays a role in band selection. Thermal imaging is most effective in atmospheric windows—wavelength regions with minimal absorption by water vapor and other gases. While \gls{MWIR} can perform slightly better in humid conditions, \gls{LWIR} benefits from a broader and more stable atmospheric window, making it ideal for terrestrial imaging in standard environments\textsuperscript{\ref{LWIR}} (see Figure~\ref{fig:atmos_window}).
-
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[height=3.5cm]{figs/Huirui/wien_law_plot.png}
-        \caption{Planck spectral emission curve for different temperatures\textsuperscript{\ref{LWIR}}.}
-        \label{fig:wien_law}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[height=3.5cm]{figs/Huirui/atmospheric_window_plot.png}
-        \caption{Atmospheric transmission across infrared wavelengths\textsuperscript{\ref{LWIR}}.}
-        \label{fig:atmos_window}
-    \end{subfigure}
-    \caption{Infrared sensing fundamentals.}
+    \includegraphics[width=0.45\textwidth]{figs/Huirui/wien_law_plot.png}
+    \caption[Planck spectral emission curve]{Planck spectral emission curve for different temperatures\textsuperscript{\ref{LWIR}}.}
+    \label{fig:wien_law}
 \end{figure}
 
 
-Specific sensor design varies by spectral band as well. \gls{MWIR} cameras typically rely on cooled photodetectors made from semiconductor materials and require cryogenic cooling to reduce sensor noise. These systems provide high image quality but take much space, require lots of power, and is expensive. In contrast, \gls{LWIR} cameras usually employ uncooled microbolometer arrays, which detect temperature-induced changes in resistance, current, or voltage. While these sensors offer lower resolution and are more sensitive to self-heating effects, they are compact, lightweight, and energy-efficient\textsuperscript{\ref{thermography}}.
+Atmospheric transmission also plays a role in band selection. Thermal imaging is most effective in atmospheric windows—wavelength regions with minimal absorption by water vapor and other gases. While \gls{MWIR} can perform slightly better in humid conditions, \gls{LWIR} benefits from a broader and more stable atmospheric window, making it ideal for terrestrial imaging in standard environments\textsuperscript{\ref{LWIR}} (see Figure~\ref{fig:atmos_window}).
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/Huirui/atmospheric_window_plot.png}
+    \caption[Atmospheric transmission]{Atmospheric transmission across infrared wavelengths\textsuperscript{\ref{LWIR}}.}
+    \label{fig:atmos_window}
+\end{figure}
+
+
+Specific sensor design varies by spectral band as well. \gls{MWIR} cameras typically rely on cooled photodetectors made from semiconductor materials and require cryogenic cooling to reduce sensor noise. These systems provide high image quality but take much space, require lots of power, and is expensive. In contrast, \gls{LWIR} cameras usually employ uncooled microbolometer arrays, which detect temperature-induced changes in resistance, current, or voltage. While these sensors offer lower resolution and are more sensitive to self-heating effects, they are compact, lightweight, and energy-efficient\footnote{\url{https://en.wikipedia.org/wiki/Thermography}}.
 
 Given the need to detect subtle temperature differences under ambient conditions and the payload and power limitations of \gls{UAV} platforms, this project selects \textbf{\gls{LWIR}} as the preferred spectral band.
 
@@ -54,14 +52,12 @@ Also defined as \textbf{Noise Equivalent Temperature Difference} (NETD)\glsused{
 To estimate a realistic \gls{NETD} requirement, we refer to a laboratory study in which researchers used an infrared lamp to heat sand containing buried landmines, then monitored thermal signatures during passive cooling, which is an analog to solar heating in field conditions~\cite{lamorski2002thermal}. Table~\ref{tab:netd_table} summarizes the observed temperature differences at various burial depths and moisture levels from this research.
 
 
-\begin{table}[H]
+\begin{table}[htbp]
     \centering
     \footnotesize
-    \renewcommand{\arraystretch}{1}
+    \renewcommand{\arraystretch}{1.1}
     \setlength{\tabcolsep}{6pt}
-    \caption[Maximum temperature differences across moisture levels and depths]{Maximum temperature differences measured by thermocouples and infrared imaging under different moisture levels and burial depths~\cite{lamorski2002thermal}.}
-    \label{tab:netd_table}
-    \begin{tabular}{llccc}
+    \begin{tabular}{@{}llccc@{}}
         \toprule
         \textbf{Moisture Content} & \textbf{Measurement Type} & \textbf{2 cm Depth} & \textbf{3 cm Depth} & \textbf{4 cm Depth} \\
         \midrule
@@ -82,7 +78,10 @@ To estimate a realistic \gls{NETD} requirement, we refer to a laboratory study i
             & IR Image     & 4.0 °C & 1.8 °C & 2.5 °C \\
         \bottomrule
     \end{tabular}
+    \caption[Max temperature differences by depth and moisture]{Maximum temperature differences measured by thermocouples and infrared imaging under different moisture levels and burial depths~\cite{lamorski2002thermal}.}
+    \label{tab:netd_table}
 \end{table}
+
 
 
 Although the experiment used a controlled heat source which is stronger than natural sunlight, it provides an upper bound on expected thermal contrast. In real-world outdoor settings, thermal differences are likely to be smaller due to deeper burial depth, slower heating, variable soil properties, and changing environmental conditions.
@@ -92,7 +91,7 @@ Accounting for these factors and the minimum temperature difference recorded fro
 
 \paragraph{Pixel Resolution}
 
-Pixel resolution refers to the number of individual sensing elements in a thermal camera’s detector array and determines the level of spatial detail of the system. It is typically expressed as width × height on the plane facing the camera, with common resolutions including 160×120 (low), 320×240 (medium), and 640×480 (high). Higher resolutions allow finer thermal detail and improved discrimination of small or partially obscured targets, which is essential for detecting landmines. However, increased resolution also raises sensor cost, power consumption, and weight\textsuperscript{\ref{thermography}}.
+Pixel resolution refers to the number of individual sensing elements in a thermal camera’s detector array and determines the level of spatial detail of the system. It is typically expressed as width × height on the plane facing the camera, with common resolutions including 160×120 (low), 320×240 (medium), and 640×480 (high). Higher resolutions allow finer thermal detail and improved discrimination of small or partially obscured targets, which is essential for detecting landmines. However, increased resolution also raises sensor cost, power consumption, and weight.
 
 Since this project involves thermal scanning from relatively high altitudes, high resolution is necessary to preserve image clarity. At the same time, constraints on \gls{UAV} payload and system cost limit the use of ultra-high-resolution (1280×1024) cameras. This project selects a \textbf{640×480 resolution} as an effective compromise between performance and hardware feasibility.
 
@@ -107,7 +106,7 @@ Figure~\ref{fig:fov_ifov} illustrates the two-dimensional geometry of \gls{FOV} 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\textwidth]{figs/Huirui/fov_ifov_2d_diagram.png}
+    \includegraphics[width=0.4\textwidth]{figs/Huirui/fov_ifov_2d_diagram.png}
     \caption[Optical system FOV and IFOV]{FOV and IFOV for optical system~\cite{pencheva2006design}.}
     \label{fig:fov_ifov}
 \end{figure}
@@ -141,7 +140,7 @@ Based on the theoretical principles and performance criteria established in the 
 
 Because a thermal camera’s resolution performance depends heavily on imaging geometry, we adopt a top-down approach: we first identify a suitable camera model, then derive the flight parameters (particularly altitude) needed to meet our spatial resolution (\gls{GSD}) target. This ensures that the selected hardware can realistically support the mission’s imaging requirements. The altitude calculation and coverage analysis are presented in the next section.
 
-Due to time constraints and the complexity of hardware design, this project does not consider a customized thermal camera solution. Instead, we aim to identify a \gls{COTS} thermal camera based on sensors used in past research on drone-based thermal landmine detection across various environments and platforms~\cite{baur2020applying,nikulin2018detection,krause2018diurnal,TENORIOTAMAYO2024105567,FORERORAMIREZ2022104307,rs15040967,dena2020image,Fardoulis2020PROOFHS,butt2024uav,AgrawalChung2024ComparingSL,Popov2022MethodFM,TENORIOTAMAYO2023109443}. From these papers, we compiled a shortlist of \gls{LWIR} thermal cameras and summarized their key specifications, including pixel resolution, \gls{NETD}, \gls{FOV}, weight, and price, in Table~\ref{tab:camera_specs}.
+Due to time constraints and the complexity of hardware design, this project does not consider a customized thermal camera solution. Instead, we aim to identify a \gls{COTS} thermal camera based on sensors used in past research on drone-based thermal landmine detection across various environments and platforms~\cite{baur2020applying,nikulin2018detection,krause2018diurnal,TENORIOTAMAYO2024105567,FORERORAMIREZ2022104307,rs15040967,dena2020image,Fardoulis2020PROOFHS,butt2024uav,AgrawalChung2024ComparingSL,Popov2022MethodFM,TENORIOTAMAYO2023109443}. From these papers, we compiled a shortlist of \gls{LWIR} thermal cameras and summarized their key specifications, including pixel resolution, \gls{NETD}, \gls{FOV}, weight, and price, in Table~\ref{tab:camera_specs}. Prices were sourced from various suppliers and retail websites and are intended as estimates because the actual values may vary over time.
 
 Four models meet the minimum resolution requirement of 640×512 pixels: FLIR Vue Pro, FLIR Duo Pro R, FLIR Tau 2, and DJI Zenmuse XT. All fall within the estimated 4kg payload capacity of standard multi-rotor drones and offer excellent thermal sensitivity, with \gls{NETD} values below 50mK.
 
@@ -151,56 +150,56 @@ Four models meet the minimum resolution requirement of 640×512 pixels: FLIR Vue
 
 \begin{table}[H]
     \centering
-    \caption[Comparison of LWIR thermal camera models]{Comparison of LWIR thermal camera models used in previous studies.}
-    \label{tab:camera_specs}
     \scriptsize
     \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-    \textbf{Thermal Camera} & \textbf{Pixel Resolution} & \textbf{\gls{NETD} (mK)} & \textbf{Lens \& \gls{FOV} (H × V)} & \textbf{Weight (g)} & \textbf{Price} \\
-    \hline
+        \hline
+        \textbf{Thermal Camera} & \textbf{Pixel Resolution} & \textbf{NETD (mK)} & \textbf{Lens \& FOV (H × V)} & \textbf{Weight (g)} & \textbf{Price} \\
+        \hline
 
-    \textbf{FLIR Vue Pro\tablefootnote{\url{https://flir.netx.net/file/asset/10907/original/attachment}}} 
-    & 640 × 512 & < 50 & 
-    \begin{tabular}[c]{@{}c@{}}9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 92–113.4 & 3895 (USD)\tablefootnote{\url{https://groupgets.com/products/flir-vue-pro}} \\
-    \hline
+        \textbf{FLIR Vue Pro\tablefootnote{\url{https://flir.netx.net/file/asset/10907/original/attachment}}} 
+        & 640 × 512 & < 50 & 
+        \begin{tabular}[c]{@{}c@{}}9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
+        & 92–113.4 & 3895 (USD) \\
+        \hline
 
-    \multirow{2}{*}{\textbf{FLIR Duo Pro R\tablefootnote{\url{https://flir.netx.net/file/asset/8136/original/attachment}}}} 
-    & 640 × 512 & < 50 & 
-    \begin{tabular}[c]{@{}c@{}}13 mm: 45° × 37° \\ 19 mm: 32° × 26° \\ 25 mm: 25° × 20° \end{tabular} 
-    & 325–375 & 6599 (USD)\tablefootnote{\url{https://www.tequipment.net/FLIR/DUO-PRO-R-640-19mm-9Hz/UAVs-and-Drones/}} \\
-    \cline{2-6}
-    & 336 × 256 & < 50 & 
-    \begin{tabular}[c]{@{}c@{}}9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
-    & 325 & 4499 (USD)\tablefootnote{\url{https://dronedoctorusa.com/products/flir-duo-pro-r-336-30hz-19mm-open-box}} \\
-    \hline
+        \multirow{2}{*}{\textbf{FLIR Duo Pro R\tablefootnote{\url{https://flir.netx.net/file/asset/8136/original/attachment}}}} 
+        & 640 × 512 & < 50 & 
+        \begin{tabular}[c]{@{}c@{}}13 mm: 45° × 37° \\ 19 mm: 32° × 26° \\ 25 mm: 25° × 20° \end{tabular} 
+        & 325–375 & 6599 (USD) \\
+        \cline{2-6}
+        & 336 × 256 & < 50 & 
+        \begin{tabular}[c]{@{}c@{}}9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
+        & 325 & 4499 (USD) \\
+        \hline
 
-    \textbf{FLIR One Pro\tablefootnote{\url{https://flir.netx.net/file/asset/14770/original/attachment}}} 
-    & 160 × 120 & 70 & 50° × 43° & 36.5 & 349 (GBP)\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-pro/?model=435-0006-03&vertical=condition+monitoring&segment=solutions}} \\
-    \hline
+        \textbf{FLIR One Pro\tablefootnote{\url{https://flir.netx.net/file/asset/14770/original/attachment}}} 
+        & 160 × 120 & 70 & 50° × 43° & 36.5 & 349 (GBP) \\
+        \hline
 
-    \textbf{FLIR One Edge Pro\tablefootnote{\url{https://flir.netx.net/file/asset/5631/original/attachment}}} 
-    & 160 × 120 & 70 & 54° × 42° & 153 & 435 (GBP)\tablefootnote{\url{https://www.flir.co.uk/products/flir-one-edge-pro/}} \\
-    \hline
+        \textbf{FLIR One Edge Pro\tablefootnote{\url{https://flir.netx.net/file/asset/5631/original/attachment}}} 
+        & 160 × 120 & 70 & 54° × 42° & 153 & 435 (GBP) \\
+        \hline
 
-    \textbf{FLIR Tau 2\tablefootnote{\url{https://www.unmannedsystemstechnology.com/wp-content/uploads/2012/04/FLIR-Tau2-Brochure.pdf}}} 
-    & 640 × 512 & < 30 & 
-    \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 69° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 72 & 6813 (USD)\tablefootnote{\url{https://www.thermalvideo.com/46640001x.htm}} \\
-    \hline
+        \textbf{FLIR Tau 2\tablefootnote{\url{https://www.unmannedsystemstechnology.com/wp-content/uploads/2012/04/FLIR-Tau2-Brochure.pdf}}} 
+        & 640 × 512 & < 30 & 
+        \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 69° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
+        & 72 & 6813 (USD) \\
+        \hline
 
-    \multirow{2}{*}{\textbf{DJI Zenmuse XT\tablefootnote{\url{https://www.dji.com/uk/zenmuse-xt/specs}}}} 
-    & 640 × 512 & < 50 & 
-    \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 68° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
-    & 270 & 9900 (USD)\tablefootnote{\url{https://www.thedroneproshop.com/blogs/product-info/dji-zenmuse-xt-specifications}} \\
-    \cline{2-6}
-    & 336 × 256 & < 50 & 
-    \begin{tabular}[c]{@{}c@{}}6.8 mm: 49.1° × 37.4° \\ 9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
-    & 270 & 7999 (USD)\tablefootnote{\url{https://www.bhphotovideo.com/c/product/1318086-REG/dji_cp_zm_000337_zenmuse_xt_336x256_6_8mm.html}} \\
-    \hline
-
+        \multirow{2}{*}{\textbf{DJI Zenmuse XT\tablefootnote{\url{https://www.dji.com/uk/zenmuse-xt/specs}}}} 
+        & 640 × 512 & < 50 & 
+        \begin{tabular}[c]{@{}c@{}}7.5 mm: 90° × 68° \\ 9 mm: 69° × 56° \\ 13 mm: 45° × 37° \\ 19 mm: 32° × 26° \end{tabular} 
+        & 270 & 9900 (USD) \\
+        \cline{2-6}
+        & 336 × 256 & < 50 & 
+        \begin{tabular}[c]{@{}c@{}}6.8 mm: 49.1° × 37.4° \\ 9 mm: 35° × 27° \\ 13 mm: 25° × 19° \\ 19 mm: 17° × 13° \end{tabular} 
+        & 270 & 7999 (USD) \\
+        \hline
     \end{tabular}
+    \caption[Comparison of LWIR thermal cameras]{Comparison of LWIR thermal camera models used in previous studies. Prices are approximate and based on various retail or supplier listings.}
+    \label{tab:camera_specs}
 \end{table}
+
 
 
 Among them, the FLIR Tau 2 provides the highest sensitivity (<30~mK) and is also the lightest (72~g), followed by the FLIR Vue Pro (92–113.4~g), DJI Zenmuse XT (270~g), and FLIR Duo Pro R (325–375~g). In terms of cost, the FLIR Vue Pro is the most affordable (3895~\gls{USD}), while the DJI Zenmuse XT is the most expensive (9900~\gls{USD}).
@@ -233,22 +232,21 @@ S = \frac{\delta A \cdot N}{2 \cdot \tan(\frac{FOV}{2})}
 
 Using these equations, we evaluate each focal length option while holding \( \delta A \)  constant at 1.4cm/pixel. The resulting \( S \) are summarized in Table~\ref{tab:fov_results}.
 
-\begin{table}[H]
-\small
-\centering
-\caption[Flight height vs. focal length at 1.4~cm/pixel GSD]{Estimated flight height for different focal lengths (at GSD = 1.4~cm/pixel)}
-\label{tab:fov_results}
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{Focal Length (mm)} & \textbf{FOV (H × V)} & \textbf{Height (m)} \\
-\hline
-9  & 69° × 56° & 6.52   \\
-\hline
-13 & 45° × 37° & 10.82  \\
-\hline
-19 & 32° × 26° & 15.62  \\
-\hline
-\end{tabular}
+\begin{table}[htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} c c c @{}}
+        \toprule
+        \textbf{Focal Length (mm)} & \textbf{FOV (H × V)} & \textbf{Height (m)} \\
+        \midrule
+        9  & 69° × 56° & 6.52 \\
+        13 & 45° × 37° & 10.82 \\
+        19 & 32° × 26° & 15.62 \\
+        \bottomrule
+    \end{tabular}
+    \caption[Flight height vs. focal length at 1.4~cm/pixel GSD]{Estimated flight height for different focal lengths (at GSD = 1.4~cm/pixel).}
+    \label{tab:fov_results}
 \end{table}
 
 From Table~\ref{tab:fov_results}, the required flight height increases substantially with focal length (from 6.52~m at 9~mm to 15.62~m at 19~mm). Since thermal radiation intensity diminishes with distance due to geometric spreading and atmospheric attenuation, flying at lower altitudes maximizes signal strength and image contrast. Therefore, the \textbf{9~mm} lens with flight altitude around \textbf{6~m} is selected as the optimal configuration.

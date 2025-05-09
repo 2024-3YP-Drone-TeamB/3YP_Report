@@ -113,29 +113,30 @@ In addition to the mainstream sensing methods discussed above, several alternati
 
 \subsubsection{Comparative Summary and Method Selection}\label{sensor_compare_select}
 
-The goal of this project is to develop a \gls{UAV}-based landmine detection system capable of identifying both surface-laid and buried anti-personnel landmines. To ensure operational safety and efficient area coverage, the selected sensors must be suitable for aerial deployment at altitudes above 1 meter and must be rigidly mounted on the drone platform. In this context, three classes of sensing approaches are considered: \textbf{magnetometers}, \textbf{\gls{GPR}}, and \textbf{spectral imaging sensors}, including optical, thermal, and hyperspectral or multispectral cameras. The quantitative comparison of the evaluated sensors (1 = very favorable, 5 = very unfavorable) on detection capability, accuracy, power usage, system complexity, and cost, with is summarized in Table~\ref{tab:sensor_comparison}.
+The goal of this project is to develop a \gls{UAV}-based landmine detection system capable of identifying both surface-laid and buried anti-personnel landmines. To ensure operational safety and efficient area coverage, the selected sensors must be suitable for aerial deployment at altitudes above 1 meter and must be rigidly mounted on the drone platform. In this context, three classes of sensing approaches are considered: \textbf{magnetometers}, \textbf{\gls{GPR}}, and \textbf{spectral imaging sensors}, including optical, thermal, and hyperspectral or multispectral cameras. The quantitative comparison of the evaluated sensors (1 = very favorable, 5 = very unfavorable) on detection capability, accuracy, power usage, system complexity, and cost, with is summarized in Table~\ref{tab:sensor_selection}.
 
 
-\begin{table}[h]
+\begin{table}[htbp]
     \centering
     \small
-    \renewcommand{\arraystretch}{1.3}
-    \caption[Comparison of UAV landmine detection sensors]{Quantitative comparison of UAV-compatible landmine detection sensors.}
-    \label{tab:sensor_comparison}
-    \begin{tabular}{l c c c c c c c}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l c c c c c c c @{}}
         \toprule
         \textbf{Sensor Type} & \textbf{Robustness} & \textbf{Accuracy} & \textbf{Power} & \textbf{Weight} & \textbf{Complexity} & \textbf{Cost} & \textbf{Total} \\
         \midrule
-        Thermal \gls{IR} Camera        & 2 & 2 & 2 & 2 & 2 & 2 & 12 \\
-        Ground Penetrating Radar & 1 & 1 & 3 & 3 & 3 & 3 & 14 \\
-        Magnetometer             & 5 & 3 & 1 & 2 & 3 & 1 & 15 \\
-        Optical Camera           & 5 & 4 & 1 & 1 & 1 & 1 & 13 \\
-        Hyperspectral Sensor     & 4 & 3 & 5 & 5 & 5 & 5 & 27 \\
+        Thermal \gls{IR} Camera     & 2 & 2 & 2 & 2 & 2 & 2 & 12 \\
+        Ground Penetrating Radar   & 1 & 1 & 3 & 3 & 3 & 3 & 14 \\
+        Magnetometer               & 5 & 3 & 1 & 2 & 3 & 1 & 15 \\
+        Optical Camera             & 5 & 4 & 1 & 1 & 1 & 1 & 13 \\
+        Hyperspectral Sensor       & 4 & 3 & 5 & 5 & 5 & 5 & 27 \\
         \bottomrule
     \end{tabular}
+    \caption[Comparison of UAV landmine detection sensors]{Quantitative comparison of UAV-compatible landmine detection sensors.}
+    \label{tab:sensor_selection}
 \end{table}
 
-From Table~\ref{tab:sensor_comparison}, most options except hyperspectral cameras receive similar overall scores. This suggests that no single technique can offer both wide-area coverage and accurate detection. Since these sensors can be broadly divided into \textbf{high-altitude} imaging systems (thermal or optical cameras) and \textbf{low-altitude} subsurface sensors (magnetometers or \gls{GPR}), to ensure both efficiency and accuracy, a \textbf{layered sensing strategy} in which a high-altitude scan identifying regions of interest is followed by low-altitude inspections over those areas is adopted.
+
+From Table~\ref{tab:sensor_selection}, most options except hyperspectral cameras receive similar overall scores. This suggests that no single technique can offer both wide-area coverage and accurate detection. Since these sensors can be broadly divided into \textbf{high-altitude} imaging systems (thermal or optical cameras) and \textbf{low-altitude} subsurface sensors (magnetometers or \gls{GPR}), to ensure both efficiency and accuracy, a \textbf{layered sensing strategy} in which a high-altitude scan identifying regions of interest is followed by low-altitude inspections over those areas is adopted.
 
 For high-altitude scanning, \textbf{thermal infrared imaging} is preferred over optical camera because the later one is limited to detecting visible surface features and cannot identify buried landmines. For low-altitude validation, \textbf{\gls{GPR}} is selected over magnetometers due to its ability to detect both metallic and non-metallic landmines and a possible safer flight altitude (above 1 m).
 
