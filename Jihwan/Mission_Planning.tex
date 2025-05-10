@@ -310,7 +310,7 @@ Thus far, the mission planning algorithm has been explored for a single-drone op
 
 \paragraph{Divide} To divide the \gls{ROI}, we can use triangulation algorithms which generate a mesh of triangles for a given set of vertices. In particular, we apply the \gls{CDT} from \gls{CGAL} 2D Triangulations package \cite{cgal2024triangulation} to the \gls{ROI}. Delaunay triangulation generates triangles which must conform to the Delaunay property: the circumcircle of a triangle must not include any other vertices than the triangle itself. \gls{CDT} is a variation in which pre-defined edges (i.e. the edges of the \gls{ROI}) must be included in the final triangulation, while allowing some relaxation in the Delaunay property. The result of applying \gls{CDT} to an example Polygon with Holes is shown in Figure~\ref{fig:msp_cdt}. 
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.6\linewidth]{figs/Jihwan/cdt.pdf}
     \caption[Constrained Delaunay Triangulation of Polygon with Holes]
@@ -322,7 +322,7 @@ Thus far, the mission planning algorithm has been explored for a single-drone op
 
 The Divide and Cluster method is visualised by Figure~\ref{fig:msp_divide_cluster} where the clusters have been manually allocated to demonstrate the idea in theory. A real implementation of the clustering algorithm will need to be made to fully validate the method in practice. 
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\linewidth]{figs/Jihwan/Divide and Cluster.png}
     \caption[Divide and Cluster Method]
