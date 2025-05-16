@@ -8,7 +8,7 @@
 
     \subsubsection{Literature Review and Design Decisions} 
     
-        Deep learning-based solutions for computer vision and data fusion are advocated for in recent literature, as deep learning (DL) can demonstrate superior performance in managing high-dimensional, noisy data \cite{Li2023Robust}. Barnawi et al. \cite{barnawi2022review} recommend \textit{"developing an automated deep learning based solution that integrates several technologies relevant to imaging and automation"} for landmine detection, highlighting that deep learning is the state of the art in both inference, and sensor fusion. Alqudsi et al. \cite{alqudsi2021review} recommend \textit{"developing an integrated detection system ... with the assist of ground sensors to achieve better detection and mapping results"}, which indicates that \textbf{environmental contextual data can improve the fused detection results}.
+        Deep learning-based solutions for computer vision and data fusion are advocated for in recent literature, as deep learning (DL) can demonstrate superior performance in managing high-dimensional, noisy data \cite{Li2023Robust}. Barnawi et al. \cite{barnawi2022review} recommend \textit{``developing an automated deep learning based solution that integrates several technologies relevant to imaging and automation''} for landmine detection, highlighting that deep learning is the state of the art in both inference, and sensor fusion. Alqudsi et al. \cite{alqudsi2021review} recommend \textit{``developing an integrated detection system ... with the assist of ground sensors to achieve better detection and mapping results''}, which indicates that \textbf{environmental contextual data can improve the fused detection results}.
     
     \paragraph{Computer Vision} 
 
@@ -16,7 +16,7 @@
     
     \paragraph{Sensor Fusion} 
     
-        \noindent Several works in literature (for example, \cite{qui2023fusion}) propose an early/mid stage fusion approach. The approach taken in Section \ref{fusion} is late stage, deep learning fusion. Late stage fusion facilitates the addition of environmental contextual data, as recommended by Alqudsi et al. The justification for the specific implementation of the fusion algorithm, and how contextual data is implemented, is in Section \ref{fusion}. The fusion strategy is justified on the basis that it yields more reliable results on diverse environmental conditions under-represented in the training data. The fusion method makes use of the environmental contextual data by \textbf{constraining the fusion weights to be 'physically plausible'}.
+        \noindent Several works in literature (for example, \cite{qui2023fusion}) propose an early/mid stage fusion approach. The approach taken in Section \ref{fusion} is late stage, deep learning fusion. Late stage fusion facilitates the addition of environmental contextual data, as recommended by Alqudsi et al \cite{alqudsi2021review}. The justification for the specific implementation of the fusion algorithm, and how contextual data is implemented, is in Section \ref{fusion}. The fusion strategy is justified on the basis that it yields more reliable results on diverse environmental conditions under-represented in the training data. The fusion method makes use of the environmental contextual data by \textbf{constraining the fusion weights to be `physically plausible'}.
     
 
 

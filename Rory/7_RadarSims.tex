@@ -11,7 +11,7 @@
 
         \paragraph{Radar}
         
-             \noindent The radar configuration follows recommendations by Huirui (Section \ref{hardware}), and a Ricker waveform is used as the excitation signal. A central frequency of 1.5\,GHz was used, as it provides a good compromise between penetration depth and resolution, as shown in Section \ref{hardware}. The transmitter and receiver are modelled as Herzian dipole antennas \footnote{\url{https://engineering.purdue.edu/wcchew/ece604s21/Lecture\%20Notes/Lect25.pdf}} 10cm from the surface of the soil, and separated from each other by 2cm. B-scans are produced by taking successive A-scans while moving the source and receiver in 4\,mm increments from left to right across the simulation domain
+             \noindent The radar configuration follows recommendations by Huirui (Section \ref{sensor_hardware_data_acquisition}), and a Ricker waveform is used as the excitation signal. A central frequency of 1.5\,GHz was used, as it provides a good compromise between penetration depth and resolution, as shown in Section \ref{GPR_system}. The transmitter and receiver are modelled as Herzian dipole antennas \footnote{\url{https://engineering.purdue.edu/wcchew/ece604s21/Lecture\%20Notes/Lect25.pdf}} 10cm from the surface of the soil, and separated from each other by 2cm. B-scans are produced by taking successive A-scans while moving the source and receiver in 4\,mm increments from left to right across the simulation domain
     
         \paragraph{Domain}
 
@@ -23,23 +23,28 @@
             \noindent Perfectly matched layers (PMLs) \footnote{\url{https://en.wikipedia.org/wiki/Perfectly_matched_layer}} are used as absorbing boundary conditions on all sides of the domain, to mimic an open boundary. The source and receiver were placed more than 20 cells away from the PML regions to avoid erroneous interference, as is advised in the gprMax docs. Each simulation was run for 5$\times$10$^{\text{-9}}$\,s, enough to capture all the relevant electromagnetic phenomena.
             \begin{figure}[htbp]
             \centering
-            \begin{minipage}[b]{0.48\textwidth}
+            \begin{subfigure}[b]{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figs/Rory/radar_domain.pdf}
-                \caption[Simulation domain]{Simulation domain viewed in ParaView \tablefootnote{\url{https://www.paraview.org/}}}
-                \label{fig:radar_domain}
-            \end{minipage}
+                \caption{ } 
+                \label{fig:radar_domain_sub} % Updated label for the subfigure
+            \end{subfigure}
             \hfill
-            \begin{minipage}[b]{0.48\textwidth}
+            \begin{subfigure}[b]{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figs/Rory/sim_bscan_cropped.png}
-                \caption{Raw simulated B-scan (no digital enhancement)}
-                \label{fig:original_bscan}
-            \end{minipage}
-        \end{figure}    
-    \subsubsection{Heterogeneous Soil Model}
+                \caption{ }
+                \label{fig:original_bscan_sub} % Updated label for the subfigure
+            \end{subfigure}
+            
+            \caption[Simulation Domain and Raw B-scan Overview]{%
+              \textbf{(a)} Simulation domain viewed in ParaView\footnote{\url{https://www.paraview.org/} (repeated for consistency if main caption is primary source)}.
+              \textbf{(b)} Raw simulated B-scan (no digital enhancement).
+            }
+            \label{fig:domain_and_bscan_overview} % A new label for the overall figure
+        \end{figure}   
     
-        \noindent The heterogeneous soil is modelled using the Peplinski model, detailed in \cite{warren2016gprmax}. The model characterises soil dielectric properties based on sand fraction, clay fraction, bulk density, sand-particle density and volumetric water fraction range. To capture natural spatial variability, a fractal generation technique is employed, where self-similar patterns observed in natural soils are replicated over multiple scales (also detailed in Warren et al.).
+        \noindent The heterogeneous soil is modelled using the Peplinski model, detailed in \cite{warren2016gprmax}. The model characterises soil dielectric properties based on sand fraction, clay fraction, bulk density, sand-particle density and volumetric water fraction range. To capture natural spatial variability, a fractal generation technique is employed, where self-similar patterns observed in natural soils are replicated over multiple scales (also detailed in \cite{warren2016gprmax}).
 
         \paragraph{Soil Parameters}
 
@@ -47,7 +52,7 @@
 
             \begin{table}[htbp]
               \centering
-              \caption{Properties of Chernozem Soils}
+
               \begin{tabular}{@{} l l @{}} 
                 \toprule
                 \textbf{Property} & \textbf{Value} \\
@@ -59,6 +64,7 @@
                 Volumetric water fraction range & $1\% - 10\%$ \\
                 \bottomrule
               \end{tabular}
+              \caption{Properties of Chernozem Soils}
               \label{tab:chernozem}
             \end{table}
     
@@ -66,33 +72,44 @@
     
     \subsubsection{Simulation Results and Validation}
 
-        \noindent Figure~\ref{fig:original_bscan} shows the simulated noisy radar B-scan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the 'clean' B-scans in the training set (Section \ref{computervision}) shows that the simulated B-scan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
+        \noindent Figure~\ref{fig:original_bscan} shows the simulated noisy radar B-scan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the `clean' B-scans in the training set (Section \ref{computervision}) shows that the simulated B-scan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
 
     
     \subsubsection{Data Augmentation}
 
-      Running these simulations is computationally intensive (\(\approx\) 30 minutes per simulation), so the most should be made of each simulation. From one simulation, multiple image augmentations were applied, each representing a physical process. The transforms considered were stretching (representing different soil properties and mine shape), cropping (representing B-scans that did not capture the whole mine), adding Gaussian blur (representing greater attenuation of high frequencies due to different soil properties), and combinations of these. Contrast limited adaptive histogram equalisation (CLAHE) \footnote{\url{https://en.wikipedia.org/wiki/Adaptive_histogram_equalization}} is also applied to every transformed image, to enhance image clarity whilst keeping the contrast manageable. When these transformations were applied to the simulated B-scan, a dataset of 90 images was generated, 3 of which are shown in Figure \ref{fig:sim_bscan_comparison} with the bounding box predictions from the pre-trained YOLO model. This is sufficient to test whether the pre-trained CNN (Section \ref{compvis_implementation}) is robust to heterogeneous soil properties and other physical loss phenomena.
+      Running these simulations is computationally intensive (\(\approx\) 30 minutes per simulation), so it is important to extract the most value from each simulation. From one simulation, multiple image augmentations were applied, each representing a physical process. The transforms considered were stretching (representing different soil properties and mine shape), cropping (representing B-scans that did not capture the whole mine), adding Gaussian blur (representing greater attenuation of high frequencies due to different soil properties), and combinations of these. Contrast limited adaptive histogram equalisation (CLAHE) \footnote{\url{https://en.wikipedia.org/wiki/Adaptive_histogram_equalization}} is also applied to every transformed image, to enhance image clarity whilst keeping the contrast manageable. When these transformations were applied to the simulated B-scan, a dataset of 90 images was generated, 3 of which are shown in Figure \ref{fig:sim_bscan_comparison} with the bounding box predictions from the pre-trained YOLO model. This is sufficient to test whether the pre-trained CNN (Section \ref{compvis_implementation}) is robust to heterogeneous soil properties and other physical loss phenomena.
 
         
-        \begin{figure}[htbp]
-          \centering
-        
-          \adjustbox{valign=c}{\includegraphics[width=0.32\textwidth]{figs/Rory/sim_bscan_clahe_detection_cropped.png}}
-          \hfill
-          \adjustbox{valign=c}{\includegraphics[width=0.32\textwidth]{figs/Rory/sim_bscan_clahe_detection_blur_cropped.png}}
-          \hfill
-          \adjustbox{valign=c}{\includegraphics[width=0.32\textwidth]{figs/Rory/sim_bscan_clahe_detection_blur_stretched_cropped.png}}
-        
-          \caption[Comparison of simulated B-scans under different pre-processing steps]{Comparison of simulated B-scans under different pre-processing steps. 
-          \textbf{(a)} Simulated B-scan with CLAHE applied. 
-          \textbf{(b)} Simulated B-scan with CLAHE and Gaussian blur applied. 
-          \textbf{(c)} Simulated B-scan with CLAHE, Gaussian blur, and a vertical stretch applied. 
-          In each case, the bounding boxes from the pre-trained CNN in Section \ref{compvis_implementation} are visible, with the corresponding numerical confidence level.}
-          \label{fig:sim_bscan_comparison}
-        \end{figure}
+    \begin{figure}[htbp]
+      \centering
+      
+      \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \adjustbox{valign=c}{\includegraphics[width=\textwidth]{figs/Rory/sim_bscan_clahe_detection_cropped.png}}
+        \caption{ }
+        \label{fig:sim_bscan_a}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \adjustbox{valign=c}{\includegraphics[width=\textwidth]{figs/Rory/sim_bscan_clahe_detection_blur_cropped.png}}
+        \caption{ }
+        \label{fig:sim_bscan_b}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \adjustbox{valign=c}{\includegraphics[width=\textwidth]{figs/Rory/sim_bscan_clahe_detection_blur_stretched_cropped.png}}
+        \caption{ }
+        \label{fig:sim_bscan_c}
+      \end{subfigure}
+      
+      \caption[Comparison of simulated B-scans under different pre-processing steps]{Comparison of simulated B-scans under different pre-processing steps: \textbf{(a)} CLAHE applied, \textbf{(b)} CLAHE with Gaussian blur applied, and \textbf{(c)} CLAHE with Gaussian blur and a vertical stretch applied. In each case, the bounding boxes from the pre-trained CNN in Section \ref{compvis_implementation} are visible, with the corresponding numerical confidence level.}
+      \label{fig:sim_bscan_comparison}
+    \end{figure}
         
     
-    \subsubsection{CV Results}
+    \subsubsection{Computer Vision Results}
     
         The augmented radar data were then fed into the radar CV model (Section \ref{compvis_implementation}) to evaluate the robustness of the model to the physical loss processes described in Section \ref{rory_radar_principles}. Precision and recall metrics were calculated on the augmented dataset, with the results summarised in Table~\ref{tab:cv_results}. The high precision of 91.5\% indicates that the combined approach of GPR and YOLOv11 is well-suited for practical landmine detection. In particular the high precision is achieved with a moderately high recall of 83.3\%, which shows that although the radar computer vision model was trained on a homogenous, 'clean' dataset, it generalised well to a more varied dataset from simulations that directly model noise processes. Therefore, a radar computer vision model trained on a larger dataset of experimentally obtained noisy B-scans should be robust to features not present in the training data, and will generalise well across a range of environmental conditions.
 
