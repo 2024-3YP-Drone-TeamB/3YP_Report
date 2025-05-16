@@ -30,9 +30,9 @@
     \subsubsection{Naive Bayes Fusion: Quantifying Bounds} \label{Rory_quantifying_bounds}
     
         Using the YOLO model performance metrics in Table \ref{tab:sensor_comparison}, and a prior landmine density of 2\% ($\rho_0 = 0.02$), the following values are obtained: $R_T = 0.919,~ F_T = 0.15,~ R_R = 0.833,~ F_R = 0.085.$ These values are used to calculate the posterior density after thermal screening and subsequent radar scanning, using Equation \ref{eq:rho_2}:
-        \[
+        \begin{equation}
         P_{sys} \geq \rho_2 = \frac{R_R \rho_1}{R_R \rho_1 + F_R (1-\rho_1)} = \frac{0.833 \times 0.112}{0.833 \times 0.112 + 0.085 \times 0.888} \approx 0.553.
-        \]
+        \end{equation}
         
         Therefore, this fusion process concentrates the mine likelihood from an initial 2\% to \textit{at least} 55.3\% in the regions flagged by the radar sensor—\textbf{a  27.7× improvement over indiscriminate "blind" demining}. The expected system recall is $R_{sys} \geq R_T \times R_R \approx 0.919 \times 0.833 \approx 0.765$, indicating a maximum recall drop of about $0.919 - 0.765 \approx 15.3\%$ compared to using just the thermal sensor alone.
 

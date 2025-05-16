@@ -1,10 +1,10 @@
 \subsection{Introduction and Objectives} \label{compvis_intro}
 
-     \noindent The computer vision system is responsible for converting sensor data into intelligent predictions of landmine locations, while being robust to variations in landmines and environmental conditions. The effectiveness of this component directly determines the overall system’s ability to save lives and restore land to productive use. The design and performance of the computer vision system are considered in this section. 
+     \noindent The computer vision system is responsible for converting sensor data into intelligent predictions of landmine locations, while being robust to variations in landmines and environmental conditions. The effectiveness of this component determines the overall system’s ability to save lives and restore land to productive use. The design and performance of the computer vision system are considered in this section. 
      
     \subsubsection{Key Objectives}
     
-        \noindent The primary objective of the computer vision system is to accurately detect landmines using the available multi-modal sensor data. The system is designed to detect landmines with high system recall $R_{sys}$, and moderately high system precision $P_{sys}$, across a wide range of environmental conditions, while balancing system performance with operational autonomy and overall cost. Given the greater cost associated with false negatives (labelling a mined region as safe) compared to false positives (labelling a safe region as mined), the system is designed to prioritize recall over precision. This aspect is discussed further in Section \ref{lossmatrix}.
+        \noindent The primary objective of the computer vision system is to accurately detect landmines using the available multi-modal sensor data. The system is designed to detect landmines with high system recall $R_{sys}$ (defined as the fraction of landmines correctly predicted), and moderately high system precision $P_{sys}$ (defined as the fraction of predictions that were correct), across a wide range of environmental conditions, while balancing system performance with operational autonomy and overall cost. Given the greater cost associated with false negatives (labelling a mined region as safe) compared to false positives (labelling a safe region as mined), the system is designed to prioritize recall over precision. This aspect is discussed further in Section \ref{lossmatrix}.
 
     \subsubsection{Literature Review and Design Decisions} 
     
