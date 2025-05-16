@@ -235,13 +235,13 @@
 \usepackage{setspace}
 \usepackage{multicol}
 
-\newcommand{\printbibliography}[2]{
+\newcommand{\printbibliography}[1]{%
 \begingroup\onehalfspacing
-{\small
+{\small % Added braces for robustness of \small scope
 \begin{multicols}{2}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt} % Changed to abbrv style
 \bibliography{#1}
-\end{multicols}}
+\end{multicols}}% % Added % to avoid spurious spaces
 \endgroup
 }
 

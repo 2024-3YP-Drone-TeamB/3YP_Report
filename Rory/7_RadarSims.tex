@@ -15,7 +15,7 @@
     
         \paragraph{Domain}
 
-            \noindent The simulated computational domain spans $0.8\times 0.3\times0.02$\,m ($x\times y\times z$), representing a quasi-2D space. The domain is discretised into cubic elements of side length 0.002\,m , 100 times smaller than the wavelength of the radar pulse\footnote{The wavelength of the pulse at the central frequency is 20~cm}. Two thirds of the domain is occupied with soil, and the rest with air. A circular landmine with radius 5\,cm is buried with its centre 0.1\,m below the surface of the soil, and is modelled as a perfect electric conductor (PEC), representative of a metallic landmine. See Figure \ref{fig:radar_domain} for a visualisation of the simulation domain.
+            \noindent The simulated computational domain spans $0.8\times 0.3\times0.02$\,m ($x\times y\times z$), representing a quasi-2D space. The domain is discretised into cubic elements of side length 0.002\,m , 100 times smaller than the wavelength of the radar pulse\footnote{The wavelength of the pulse at the central frequency is 20~cm}. Two thirds of the domain is occupied with soil, and the rest with air. A circular landmine with radius 5\,cm is buried with its centre 0.1\,m below the surface of the soil, and is modelled as a perfect electric conductor (PEC), representative of a metallic landmine. See Figure \ref{fig:radar_domain_sub} for a visualisation of the simulation domain.
 
 
         \paragraph{Boundary Conditions}
@@ -27,14 +27,14 @@
                 \centering
                 \includegraphics[width=\textwidth]{figs/Rory/radar_domain.pdf}
                 \caption{ } 
-                \label{fig:radar_domain_sub} % Updated label for the subfigure
+                \label{fig:radar_domain_sub} 
             \end{subfigure}
             \hfill
             \begin{subfigure}[b]{0.48\textwidth}
                 \centering
                 \includegraphics[width=\textwidth]{figs/Rory/sim_bscan_cropped.png}
                 \caption{ }
-                \label{fig:original_bscan_sub} % Updated label for the subfigure
+                \label{fig:original_bscan_sub}
             \end{subfigure}
             
             \caption[Simulation Domain and Raw B-scan Overview]{%
@@ -72,7 +72,7 @@
     
     \subsubsection{Simulation Results and Validation}
 
-        \noindent Figure~\ref{fig:original_bscan} shows the simulated noisy radar B-scan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the `clean' B-scans in the training set (Section \ref{computervision}) shows that the simulated B-scan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
+        \noindent Figure~\ref{fig:original_bscan_sub} shows the simulated noisy radar B-scan. Approximately 100 images like this are required to test the radar YOLO model without bias. A comparison with the `clean' B-scans in the training set (Section \ref{computervision}) shows that the simulated B-scan also has a faint parabola indicating the landmine, and a bold line representing the reflection from the soil surface, and thus the simulations are somewhat validated with other data. However, the simulation assumes a simplified environment with flat ground, an absence of foliage, and the absence of puddles or other surface irregularities. These factors may account for discrepancies between simulated and real-world data.
 
     
     \subsubsection{Data Augmentation}
@@ -117,8 +117,7 @@
 
         \begin{table}[htbp]
           \centering
-          \caption{Augmented Simulation B-scan Results}
-          \label{tab:cv_results}
+
           \begin{tabular}{@{} l l @{}} 
             \toprule
             \textbf{Metric} & \textbf{Value} \\
@@ -132,5 +131,7 @@
             \textbf{Recall} & \textbf{83.3\%}\\
             \bottomrule
           \end{tabular}
+            \caption{Augmented Simulation B-scan Results}
+            \label{tab:cv_results}
         \end{table}       
         
