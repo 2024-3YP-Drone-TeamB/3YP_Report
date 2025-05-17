@@ -34,7 +34,7 @@ Previous sections (e.g. Section \ref{fusion_bounds}) hypothesised that a physics
 
     \paragraph{ANFIS} The ANFIS architecture is implemented using the Keras framework \footnote{\url{https://keras.io/}}. The model accepts four input features: soil moisture, wind speed, thermal sensor confidence, and radar sensor confidence. Input fuzzification uses three Gaussian membership functions per input, whose parameters ($c,~\sigma$ in Equation \ref{eq:gaussian_mf}) are trainable variables within the network.
 
-    While Section \ref{ANFIS} proposed explicit, physics-derived fuzzy rules, this basic implementation uses a dense rule antecedent layer (see Figure \ref{fig:ANFIS_diagram}). A dense layer combines the membership degrees from the four inputs (each with 3 membership functions), allowing the network to learn the antecedent combinations corresponding to all $3^4=81$ possible fuzzy rules. The consequent layer learns the parameters that define the output for each of these implicitly formed rules. 
+    While Section \ref{ANFIS} proposed explicit, physics-derived fuzzy rules, this basic implementation uses a dense rule antecedent layer (see Figure \ref{fig:ANFIS_diagram}). A dense layer combines the membership degrees from the four inputs (each with 3 membership functions), allowing the network to learn the antecedent combinations corresponding to all $3^4=81$ possible fuzzy `AND' rules. The consequent layer learns the parameters that define the output for each of these implicitly formed rules. 
     
     The final custom output layer calculates a normalised, weighted sum of these rule outputs and applies a sigmoid function to ensure the final fused confidence is between 0 and 1.
 
@@ -54,7 +54,7 @@ Previous sections (e.g. Section \ref{fusion_bounds}) hypothesised that a physics
     \begin{figure}[h]
         \centering
         \includegraphics[width=0.98\textwidth]{figs/Rory/0_summary.png}
-        \caption[ANFIS NB comparison summary]{ANFIS NB comparison summary. \textbf{Left:} simulated fusion for Naive Bayes. \textbf{Centre:} simulated fusion for ANFIS. \textbf{Right:} soil moisture distribution}
+        \caption[ANFIS Naive-Bayes Comparison Summary]{ANFIS NB comparison summary. \textbf{Left:} simulated fusion for Naive Bayes. \textbf{Centre:} simulated fusion for ANFIS. \textbf{Right:} soil moisture distribution}
         \label{fig:anfis_summary}
     \end{figure}
 

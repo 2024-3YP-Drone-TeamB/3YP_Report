@@ -4,13 +4,13 @@
     
         \begin{enumerate}
         
-            \item \textbf{Mission Planning} The operator will select a region that they wish to map, by selecting the perimeter of the region of interest (Section \ref{sec:msp}). The base-station computer will then decide on the optimal path a drone should take to get there, and cover the region of interest with the thermal sensor. A human operator then manually loads these flight instructions from the computer onto the thermal drone, after some pre-flight checks.
+            \item \textbf{Mission Planning} The operator will select a region that they wish to map, by selecting the perimeter of the region of interest (Section \ref{sec:msp}). The base-station computer will then decide on the optimal path a drone should take to get there, and cover the region of interest with the thermal sensor. A human operator then manually loads these flight instructions from the computer onto the drone with the thermal sensor (referred to as the thermal drone), after some pre-flight checks.
             
             \item \textbf{Thermal Data Acquisition} The thermal drone autonomously captures images along the planned trajectory. Post-mission, images are transferred to the base station and processed by a YOLOv11 computer vision model, described in Section \ref{compvis_implementation}. This generates a thermal probability map \newline \(\mathcal{P}_{\text{thermal}}(x,y)\), where each coordinate \((x,y)\) is assigned a confidence score (between 0 and 1) for landmine presence. Probability map assembly described in Section \ref{fusion_overview} uses position and pose metadata to \textbf{project just the detections} onto a geographic grid, avoiding computationally intensive image mosaicking.
             
-            \item \textbf{Radar Data Acquisition} Regions with \(\mathcal{P}_{\text{thermal}} > \mathcal{P}_{\text{threshold}}\) are flagged as \gls{POI}s. A radar drone autonomously surveys these \gls{POI}s, collecting GPSAR B-scans along linear transects (Section \ref{sec:msp_layered_approach}). A second YOLOv11 computer vision model (described in Section \ref{compvis_implementation} processes these B-scans to produce a radar probability map \(\mathcal{P}_{\text{radar}}(x,y)\), which is projected onto the geographical map of the area.
+            \item \textbf{Radar Data Acquisition} Regions with \(\mathcal{P}_{\text{thermal}} > \mathcal{P}_{\text{threshold}}\) are flagged as \gls{POI}s. A radar drone autonomously surveys these \gls{POI}, collecting GPSAR B-scans along linear transects (Section \ref{sec:msp_layered_approach}). A second YOLOv11 computer vision model (described in Section \ref{compvis_implementation} processes these B-scans to produce a radar probability map \(\mathcal{P}_{\text{radar}}(x,y)\), which is projected onto the geographical map of the area.
             
-            \item \textbf{Fusion} These two probability maps, from different sensors, but over the same geographical space, are passed into a fusion algorithm, along with some environmental contextual data to return a third, fused, probability map $\mathcal{P}_{\text{fused}}$, that is the main output of the Section \ref{fusion}. This map can be visualised in a human-computer interface to provide actionable intelligence for demining teams
+            \item \textbf{Fusion} These two probability maps, from different sensors, but over the same geographical space, are passed into a fusion algorithm, along with some environmental contextual data to return a third, fused, probability map $\mathcal{P}_{\text{fused}}$, that is the main output of the Section \ref{fusion}. This map can be visualised in a human-computer interface to provide actionable intelligence for demining teams.
             
         \end{enumerate}
 
@@ -20,9 +20,9 @@
 
 
     
-        \noindent In summary, the literature indicates that the combination of a CNN-based YOLO model, with a physics-informed deep learning fusion framework is the optimal solution for achieving highly accurate and robust landmine detection.
+        \noindent In summary, the literature indicates that the combination of a CNN-based YOLO model, with a physics-informed deep learning late stage fusion framework is the optimal solution for achieving highly accurate and robust landmine detection.
 
-        \noindent The hierarchical sensor integration described ensures much faster detection, with minimal compromise on accuracy, by leveraging the high recall, high speed thermal sensors and the slower, high precision radar sensor in a very efficient manner. This 'layered approach' is justified from a flight efficiency standpoint in Section \ref{sec:msp_layered_approach}, and a computer vision standpoint in Section \ref{fusion}.
+        \noindent The hierarchical sensor integration described ensures much faster detection, with minimal compromise on accuracy, by leveraging the high recall, high speed thermal sensors and the slower, high precision radar sensor in a very efficient manner. This `layered approach' is justified from a flight efficiency standpoint in Section \ref{sec:msp_layered_approach}, and a computer vision standpoint in Section \ref{fusion}.
             
         \noindent The system outlined in this report represents a novelty in the fusion approach. The layered approach for landmine detection has not yet been justified from a computer vision perspective before, and the specific physics-informed deep learning model for late stage fusion used in Section \ref{fusion}, has not been used before in the context of landmine detection.
 

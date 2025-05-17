@@ -1,6 +1,6 @@
 \subsection{Computer Vision Implementation} \label{compvis_implementation}
 
-    Both the thermal and radar Computer Vision (CV) models are implemented using Ultralytics YOLOv11\footnote{\url{https://github.com/ultralytics/ultralytics}}—a state-of-the-art, real-time object detection framework based on convolutional neural networks (CNNs). The software is free and open source, and released under a copyleft license\footnote{\url{https://github.com/ultralytics/ultralytics/blob/main/LICENSE}}. Although both systems utilise YOLOv11, there are significant differences in their network architectures and, notably, in the characteristics of their training, validation and testing datasets.
+    Both the thermal and radar Computer Vision (CV) models are implemented using Ultralytics YOLOv11\footnote{\url{https://github.com/ultralytics/ultralytics}}—a state-of-the-art, real-time object detection framework based on CNNs. The software is free and open source, and released under a copyleft license\footnote{\url{https://github.com/ultralytics/ultralytics/blob/main/LICENSE}}. Although both systems utilise YOLOv11, there are significant differences in their network architectures and, notably, in the characteristics of their training, validation and testing datasets.
 
 
 \subsubsection{Datasets Comparison} \label{sec:cv_dataset_comparison}
@@ -22,13 +22,13 @@ The thermal dataset consists of 1,080 images sourced from Roboflow\footnote{\url
     \caption{ }
     \label{fig:radar_example}
   \end{subfigure}
-  \caption{Example Images from \textbf{(a)} Thermal and \textbf{(b)} Radar Datasets}
+  \caption[Example Images from the Thermal and Radar Datasets]{Example Images from \textbf{(a)} Thermal and \textbf{(b)} Radar Datasets}
   \label{fig:dataset_examples}
 \end{figure}
 
 \subsubsection{Architecture Comparison} \label{sec:cv_architecture_comparison}
 
-Both models are built on the YOLOv11 Large model\footnote{\url{https://github.com/ultralytics/ultralytics}}, which prescribes the final network architecture; the thermal model results in a deeper network with 464 layers and 25,280,083 parameters, while the radar model, despite having the same parameter count, is shallower, with only 190 layers. This difference likely reflects the greater complexity required to extract features from the diverse thermal images, compared to the more uniform raw radar B-scans. For more detail of the YOLOv11 model, see \cite{khanam2024yolov11}
+Both models are built on the YOLOv11 Large model\footnote{\url{https://github.com/ultralytics/ultralytics}}, which prescribes the final network architecture; the thermal model results in a deeper network with 464 layers and 25,280,083 parameters, while the radar model, despite having the same parameter count, is shallower, with only 190 layers. This difference likely reflects the greater complexity required to extract features from the diverse thermal images, compared to the more uniform raw radar B-scans. For more detail of the YOLOv11 model, see \cite{khanam2024yolov11}.
 
 \subsubsection{Training} \label{sec:cv_training_comparison}
 
@@ -36,11 +36,11 @@ Both models are built on the YOLOv11 Large model\footnote{\url{https://github.co
 \begin{wrapfigure}{r}{0.35\textwidth} % Align right, width = 0.48\textwidth
   \centering
   \includegraphics[width=\linewidth]{figs/Rory/APR_curve_therm.png} % Use \linewidth to match wrapfig width
-  \caption[Precision-Recall Curve for the Thermal CV Model]{Precision-Recall (PR) curve for the thermal YOLOv11 model}
+  \caption[Precision-Recall Curve for the Thermal Computer Vision Model]{Precision-Recall (PR) curve for the thermal YOLOv11 model}
   \label{fig:pr_curve}
 \end{wrapfigure}
 
-The thermal model was trained for 100 epochs on a Tesla T4 GPU via Google Colab, taking 1.153 hours. The per-image average processing times were 1.3\,ms (preprocessing), 14.9\,ms (inference), and 3.6\,ms (postprocessing). In contrast, the radar model, also trained for 100 epochs on a T4 GPU, completed training in just 0.156 hours, with average processing times of 0.2\,ms (preprocessing), 10.2\,ms (inference), and 1.0\,ms (postprocessing). The 30\% faster inference time and 86\% faster training time for the radar model is a reflection of the radar dataset's limited size and diversity.
+The thermal model was trained for 100 epochs on a Tesla T4 GPU\footnote{\label{ftn:t4gpu}NVIDIA Tesla T4 GPU \url{https://www.nvidia.com/en-us/data-center/tesla-t4/}} via Google Colab, taking 1.153 hours. The per-image average processing times were 1.3\,ms (preprocessing), 14.9\,ms (inference), and 3.6\,ms (postprocessing). In contrast, the radar model, also trained for 100 epochs on a T4 GPU, completed training in just 0.156 hours, with average processing times of 0.2\,ms (preprocessing), 10.2\,ms (inference), and 1.0\,ms (postprocessing). The 30\% faster inference time and 86\% faster training time for the radar model is a reflection of the radar dataset's limited size and diversity.
 
 \subsubsection{Results} \label{sec:cv_results_comparison}
 
@@ -61,7 +61,7 @@ CNN architecture & YOLOv11 Large & YOLOv11 Large \\
 Number of layers & 464 & 190 \\
 Number of parameters & 25280083 & 25280083 \\
 Optimiser & Adam & Adam \\
-Training Hardware & T4 GPU\footnote{\label{ftn:t4gpu}NVIDIA Tesla T4 GPU} & T4 GPU\\
+Training Hardware & T4 GPU & T4 GPU\\
 Training time (100 epochs) & 1.153\,hr & 0.156\,hr \\
 Inference time & 14.9\,ms & 10.2\,ms \\
 Image type & Thermal Images & Raw B-scans \\

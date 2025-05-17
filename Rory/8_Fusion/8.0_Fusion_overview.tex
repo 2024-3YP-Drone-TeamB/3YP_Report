@@ -6,7 +6,7 @@
 
     \noindent In this section, the outputs from the individual YOLO models are interpreted as probability maps, where the confidence value assigned by the YOLO model is equal to the probability of finding a landmine at that location, according to each sensor. The fusion algorithm combines the two probability maps into a third. This is done using the sensor data and environmental contextual data, in a deep learning framework, as discussed in Section \ref{compvis_intro}.
 
-    Fusing the sensor outputs before the CNN is problematic due to irregular input sizes and the need for computationally intensive mosaicking algorithms that may introduce errors. Instead, the accurate position, pose and field of view metadata  is used to project each YOLO output onto a common geographical grid. Given that these probability maps are sparse (most of the probability map is zero, with occasional spikes over landmines), the projections are computationally efficient.
+    Fusing the sensor outputs before the CNN is problematic due to irregular input sizes and the need for computationally intensive mosaicking algorithms that may introduce errors. Instead, the accurate position, pose and field of view metadata  is used to \textbf{project each YOLO output onto a common geographical grid.} Given that these probability maps are sparse (most of the probability map is zero, with occasional spikes over landmines), the projections are computationally efficient.
 
     \subsubsection{The Precision-Recall Trade-off } \label{lossmatrix}
 
