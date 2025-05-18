@@ -59,7 +59,7 @@ In general, lower frequencies (e.g., < 1 GHz) enhance penetration depth but limi
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=7cm]{figs/Huirui/freq_tradeoff.png}
+    \includegraphics[width=8cm]{figs/Huirui/freq_tradeoff.png}
     \caption[Frequency, resolution, and penetration depth trade-off]{Frequency, resolution, and penetration depth trade-off\protect\footnotemark.}
     \label{fig:freq_tradeoff}
 \end{figure}
@@ -83,7 +83,7 @@ This relationship introduces a trade-off between penetration depth and physical 
 
 Traditional \gls{GPR} systems have limited cross-range resolution due to the small sizes of antennas. \gls{SAR} addresses this limitation by coherently integrating radar echoes collected along the \gls{UAV}’s flight path, synthesizing a larger aperture, and significantly improving lateral resolution. This is especially beneficial for \gls{UAV}-based \gls{GPR} where antenna size and weight are constrained~\cite{9758040}.
 
-Among \gls{SAR} algorithms, \textbf{\gls{BP}} is particularly suited for \gls{UAV} applications due to its robustness to irregular trajectories and non-uniform sampling. \gls{BP} operates by summing radar echoes along computed time-delay curves for each focal point. As shown in Figure~\ref{fig:bp_geometry}, radar signals $e_1(x_p, t)$ are collected at multiple \gls{UAV} positions $x_p$. The round-trip travel time $\tau_{m,n,p}$ from the transmitter to a target point $(x_n, z_m)$ and back is used to time-shift and coherently sum these signals by \(e_2(x_n, z_m) = \sum_{p=1}^{P} e_1(x_p, \tau_{m,n,p})\) and \(\tau_{m,n,p} = \frac{2R_a}{c} + \frac{2R_b}{v}\) where $R_a$ and $R_b$ are distances through air and soil respectively, $c$ is the speed of light, and $v$ is the wave velocity in soil. This delay-and-sum approach transforms hyperbolic reflections in conventional B-scans (like Figure~\ref{fig:gpr_bscan}) into focused point targets, improving subsurface interpretability. However, the method is computationally intensive and not ideal for real-time onboard processing~\cite{lei2014multi}.
+Among \gls{SAR} algorithms, \textbf{\gls{BP}} is particularly suited for \gls{UAV} applications due to its robustness to irregular trajectories and non-uniform sampling. \gls{BP} operates by summing radar echoes along computed time-delay curves for each focal point. As shown in Figure~\ref{fig:bp_geometry}, radar signals $e_1(x_p, t)$ are collected at multiple \gls{UAV} positions $x_p$. The round-trip travel time $\tau_{m,n,p}$ from the transmitter to a target point $(x_n, z_m)$ and back is used to time-shift and coherently sum these signals by \(e_2(x_n, z_m) = \sum_{p=1}^{P} e_1(x_p, \tau_{m,n,p})\) and \(\tau_{m,n,p} = \frac{2R_a}{c} + \frac{2R_b}{v}\), where $R_a$ and $R_b$ are distances through air and soil respectively, $c$ is the speed of light, and $v$ is the wave velocity in soil. This delay-and-sum approach transforms hyperbolic reflections in conventional B-scans (like Figure~\ref{fig:gpr_bscan}) into focused point targets, improving subsurface interpretability. However, the method is computationally intensive and not ideal for real-time onboard processing~\cite{lei2014multi}.
 
 \begin{figure}[H]
     \centering
