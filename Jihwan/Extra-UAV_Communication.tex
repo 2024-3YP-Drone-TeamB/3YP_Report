@@ -60,9 +60,9 @@ The technical requirements can be considered with respect to distance, bit rate 
 
 \paragraph{Bit rate} Table~\ref{tab:euc_messages} can be used to compute the bit rate requirement of the system. For a packet frequency of $f=2$\,Hz, the drone-to-base and base-to-drone bit rates are $772 \times f=1544$\,bps and $90 \times f=180$\,bps respectively. The extra-\gls{UAV} communication does not need to be high-frequency; the base station only needs to send emergency flags for Return to Home or Safety (which is usually not dependent on a second-by-second basis) and receive the approximate locations of the drones for retrieval. Hence, the bit rate requirement for each drone can be set in the range of kbps. 
 
-\paragraph{Geographical Factors} Demining operations may take place in regions where cell communications are unavailable (due to post-war recovery or remoteness of the location), so the communication protocol should not depend on any external cell communications. Different countries also have restrictions on the bandwidth available for specific use-cases, which should be met by the chosen communication protocol. 
+\paragraph{Geographical Factors} Demining operations may take place in regions where cell communications are unavailable (due to post-war recovery or remoteness of the location), so the communication protocol should not depend on any external cell communications. Different countries also have restrictions on the bandwidth available for specific use-cases which should be met by the chosen communication protocol. 
 
-We choose the \gls{LORA} communication technology with \gls{LORAWAN} protocol for the purpose of the extra-\gls{UAV} communication. Its theory, advantages and disadvantages are explained in greater detail in the next section. 
+We choose the \gls{LORA} communication technology with \gls{LORAWAN} protocol for the purpose of extra-\gls{UAV} communication. Its theory, advantages and disadvantages are explained in greater detail in the next section. 
 
 \subsection{LoRa Communication}
 \label{sec:euc_lora}
@@ -113,7 +113,7 @@ We choose the \gls{LORA} communication technology with \gls{LORAWAN} protocol fo
 
 \subsubsection{Advantages}
 
-\paragraph{Power Consumption} The coverage area of the landmine detection drones is directly dependent on the battery capacity. To maximise the coverage area to increase the efficiency of the system, the power consumption of the extra-\gls{UAV} communication method should be minimised. \gls{LORAWAN} protocol is able to achieve low power consumption levels by its efficient modulation technology and idling periods of the end devices, showing up to 10 times the duration of cellular machine-to-machine communication in general applications \cite{semtech2024lora}. 
+\paragraph{Power Consumption} The coverage area of the landmine detection drones is directly dependent on the battery capacity. To maximise the coverage area to increase the efficiency of the system, the power consumption of the extra-\gls{UAV} communication method should be minimised. \gls{LORAWAN} protocol is able to achieve low power consumption levels through its efficient modulation technology and idling periods of the end devices, showing up to 10 times the duration of cellular machine-to-machine communication in general applications \cite{semtech2024lora}. 
 
 \paragraph{Distance} The \gls{CSS} modulation technology of \gls{LORA} allows long distance coverage (in the kilometre-range) as outlined in Table~\ref{tab:euc_lorasf} which is suitable for our application of deploying drones into remote \gls{ROI}s. By adopting spreading factors of 7 or 8, the base station can communicate with drones from 2-4\,km away. This enables the operator to define larger \gls{ROI}s, increasing the efficiency of the system. 
 
@@ -130,7 +130,7 @@ We choose the \gls{LORA} communication technology with \gls{LORAWAN} protocol fo
 
 \subsubsection{Integration with the Mission Planning Framework}
 
-The base station and the drones of a \gls{ROI} will represent the gateway and end devices respectively in a star topology network. The network server will connect to the base station to form a \gls{LORAWAN} system where additional \gls{ROI}s can be added for an expandable design (Figure~\ref{fig:euc_network_diagram}). For the purpose of our drones, class B end devices are the most suitable due to their synchronised bi-directional communication and power efficiency. 
+The base station and the drones of a \gls{ROI} will represent the gateway and end devices, respectively, in a star topology network. The network server will connect to the base station to form a \gls{LORAWAN} system where additional \gls{ROI}s can be added for an expandable design (Figure~\ref{fig:euc_network_diagram}). For the purpose of our drones, class B end devices are the most suitable due to their synchronised bi-directional communication and power efficiency. 
 
 \begin{figure}[h!]
     \centering

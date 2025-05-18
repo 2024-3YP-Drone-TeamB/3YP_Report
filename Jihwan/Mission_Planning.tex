@@ -274,7 +274,7 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
 \subsection{Real Location Example}
 \label{sec:msp_example}
 
-To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{ROI} at Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}(a). The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{QGIS}. 
+To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{ROI} in Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}(a). The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{QGIS}. 
 
 \paragraph{Define} Figure~\ref{fig:msp_example}(b) shows the \gls{ROI} defined using \gls{QGIS}. The \gls{ROI} is about the size of a 400\,m by 400\,m field with 3 obstacles which have been manually identified.  
 
@@ -334,7 +334,7 @@ The Divide and Cluster method is visualised by Figure~\ref{fig:msp_divide_cluste
 
 \paragraph{Line Division} Instead of the Divide and Cluster method, the \gls{ROI} may be directly decomposed into $n$ subregions of equal area using $n-1$ parallel line segments. This offers algorithm simplicity and greatly reduced computation times, but it is more likely to generate inefficient coverage paths as the compactness requirement is not considered. 
 
-\paragraph{Boustrophedon Division} \gls{BCD} algorithm could be used during the Divide stage instead of \gls{CDT}, which would result in more appropriate polygons for generating boustrophedon coverage paths. However, \gls{BCD} tends to generate a smaller number of cells than \gls{CDT} which may make it harder to achieve the compactness and area requirements.  
+\paragraph{Boustrophedon Division} \gls{BCD} algorithm could be used during the Divide stage instead of \gls{CDT}, which would result in more appropriate polygons for generating boustrophedon coverage paths. However, \gls{BCD} tends to generate a smaller number of cells than \gls{CDT} which may make it harder to achieve compactness and meet area requirements.  
 
 \paragraph{Constrained Conforming Delaunay Triangulation} The example of \gls{CDT} in Figure~\ref{fig:msp_cdt} shows irregularly shaped and sized triangles being formed, which makes it harder to achieve the compactness and area requirements. \cite{shewchuk1996triangle} provides an implementation of the \gls{CCDT} which can be used to generate a more ideal mesh as demonstrated in Figure~\ref{fig:msp_shewchuk}. Additional software will need to be written to apply the algorithm to our \gls{CGAL} Polygon with Holes object. 
 
@@ -428,7 +428,7 @@ In the Define step of the layered approach, the operator must manually label the
 
 As a solution, image segmentation algorithms can be implemented to partially automate this process. Image segmentation models like Segment Anything Model 2 \cite{ravi2024sam2} can be used to automatically identify the vertices of obstacles which can be selected and adjusted by the operator. 
 
-\cite{patil2022segment} proposes a more specialised semantic segmentation model to automatically segment satellite images into regions and identify its class (building, land, road, vegetation, water, or miscellaneous). This can speed up the progress of defining the \gls{ROI} by removing areas such as bodies of water and buildings which are unlikely to be populated by landmines. 
+Authors of \cite{patil2022segment} propose a more specialised semantic segmentation model to automatically segment satellite images into regions and identify its class (building, land, road, vegetation, water, or miscellaneous). This can speed up the progress of defining the \gls{ROI} by removing areas such as bodies of water and buildings which are unlikely to be populated by landmines. 
 
 \subsubsection{Use of Satellite Image Databases}
 \label{sec:msp_satellite_database_limitation}
