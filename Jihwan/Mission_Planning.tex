@@ -121,7 +121,7 @@ For the purpose of a landmine detection system, it is important to use the exact
 
 \subsubsection{Boustrophedon Cellular Decomposition and Path Planning}
 
-\gls{BCD} is an exact cellular decomposition method first proposed by \cite{choset1998bcd}. It stems from \gls{TCD} -- a straight line segment sweeps through the decomposition area in one direction, dividing the area into trapezoidal cells each time it passes through a vertex of the obstacle polygons (Figure~\ref{fig:msp_choset}a). \gls{BCD} reduces the number of cells created by merging trapezoidal cells which occur between \textit{IN} (the straight line segmented is divided into two by the obstacle) and \textit{OUT} (the straight line segments are merged into one after passing the obstacle) events (Figure~\ref{fig:msp_choset}b). Having a fewer number of cells helps avoid unnecessary overlapping swaths from being generated in between two neighbouring cells as demonstrated in Figure~\ref{fig:msp_choset}c. 
+\gls{BCD} is an exact cellular decomposition method first proposed by \cite{choset1998bcd}. It stems from \gls{TCD} -- a straight line segment sweeps through the decomposition area in one direction, dividing the area into trapezoidal cells each time it passes through a vertex of the obstacle polygons (Figure~\ref{fig:msp_choset}(a)). \gls{BCD} reduces the number of cells created by merging trapezoidal cells which occur between \textit{IN} (the straight line segmented is divided into two by the obstacle) and \textit{OUT} (the straight line segments are merged into one after passing the obstacle) events (Figure~\ref{fig:msp_choset}(b)). Having a fewer number of cells helps avoid unnecessary overlapping swaths from being generated in between two neighbouring cells as demonstrated in Figure~\ref{fig:msp_choset}(c). 
 
 \begin{figure}[h!]
     \centering
@@ -161,7 +161,7 @@ For use, the software must be compiled from its ROS Noetic\footnote{\url{https:/
     \centering
     \includegraphics[width=\linewidth]{figs/Jihwan/CPP_diff_widths.pdf}
     \caption[CPP Solution Examples]
-    {\gls{CPP} solutions have been found for sensor coverage widths of 2\,m (left) and 5\,m (right). The colour of the background indicates segmentations resulting from the \gls{BCD}.}
+    {\gls{CPP} solutions have been found for sensor coverage widths of (a) 2\,m and (b) 5\,m. The colour of the background indicates segmentations resulting from the \gls{BCD}.}
     \label{fig:msp_bahnemann}
 \end{figure}
 
@@ -258,7 +258,7 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
     \centering
     \includegraphics[width=\linewidth]{figs/Jihwan/TSPO_diff_targets.pdf}
     \caption[TSP-O Solution for Different Numbers of Target Points]
-    {\gls{TSPO} solutions have been generated for 20 (left) and 100 (right) target points randomly generated through rejection sampling.}
+    {\gls{TSPO} solutions have been generated for (a) 20 and (b) 100 target points randomly generated through rejection sampling.}
     \label{fig:msp_tspo_20_100}
 \end{figure}
 
@@ -266,7 +266,7 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
     \centering
     \includegraphics[width=\linewidth]{figs/Jihwan/target_points_vs.pdf}
     \caption[Effect of Number of Target Points on Computing Time and Total Distance of TSP-O Solution]
-    {Plots showing the effect of the number of target points on the computing time (left) and total distance (right) in \gls{TSPO}. Number of Target Points have been changed from 10 to 150 at increments of 10, taking the mean of 3 trials each where the target points are randomly generated through rejection sampling. The total distance is based on the scale where the width of the outer boundary is 100\,m.}
+    {Plots showing the effect of the number of target points on the (a) computing time and (b) total distance in \gls{TSPO}. Number of Target Points have been changed from 10 to 150 at increments of 10, taking the mean of 3 trials each where the target points are randomly generated through rejection sampling. The total distance is based on the scale where the width of the outer boundary is 100\,m.}
     \label{fig:msp_tspo_plot}
 \end{figure}
 
@@ -274,13 +274,13 @@ Figure~\ref{fig:msp_tspo_plot} shows the effect of the number of target points o
 \subsection{Real Location Example}
 \label{sec:msp_example}
 
-To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{ROI} at Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}a. The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{QGIS}. 
+To test the validity of the layered approach, a real location example has been conducted for an arbitrarily selected \gls{ROI} at Ukraine (51°20'22.1"N 29°56'48.8"E) shown in Figure~\ref{fig:msp_example}(a). The example demonstrates the Define, Cover and Target steps of the layered approach by displaying the results of each step on \gls{QGIS}. 
 
-\paragraph{Define} Figure~\ref{fig:msp_example}b shows the \gls{ROI} defined using \gls{QGIS}. The \gls{ROI} is about the size of a 400\,m by 400\,m field with 3 obstacles which have been manually identified.  
+\paragraph{Define} Figure~\ref{fig:msp_example}(b) shows the \gls{ROI} defined using \gls{QGIS}. The \gls{ROI} is about the size of a 400\,m by 400\,m field with 3 obstacles which have been manually identified.  
 
-\paragraph{Cover} Figure~\ref{fig:msp_example}c shows the \gls{CPP} solution found using the implementation by \cite{bahnemann2021cpp}. The coverage width has been specified as approximately 9\,m, and the start/end points have been arbitrarily decided to be at the top-right region outside the \gls{ROI}. A thermal sensor drone will follow the generated path plan to collect the thermal readings. The total length of the path is calculated to be 15526\,m.
+\paragraph{Cover} Figure~\ref{fig:msp_example}(c) shows the \gls{CPP} solution found using the implementation by \cite{bahnemann2021cpp}. The coverage width has been specified as approximately 9\,m, and the start/end points have been arbitrarily decided to be at the top-right region outside the \gls{ROI}. A thermal sensor drone will follow the generated path plan to collect the thermal readings. The total length of the path is calculated to be 15526\,m.
 
-\paragraph{Target} Figure~\ref{fig:msp_example}d shows the \gls{TSPO} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{ROI} have been randomly generated using rejection sampling. The total length of the path is calculated to be 1777\,m. In a real mission, the suspected landmine points would be found during the Analyse step based on the thermal readings. At each point, the \gls{GPR} sensor drone will perform the scanning procedure described in Section~\ref{GPR_flight} before continuing onto the next point. 
+\paragraph{Target} Figure~\ref{fig:msp_example}(d) shows the \gls{TSPO} solution found using Algorithm~\ref{alg:msp_tspo2visgraph} and the heuristic Lin-Kernighan algorithm. To represent the suspected landmine points, 20 coordinates within the \gls{ROI} have been randomly generated using rejection sampling. The total length of the path is calculated to be 1777\,m. In a real mission, the suspected landmine points would be found during the Analyse step based on the thermal readings. At each point, the \gls{GPR} sensor drone will perform the scanning procedure described in Section~\ref{GPR_flight} before continuing onto the next point. 
 
 For Cover and Target, if the total length of the path is too large to be covered by a single drone the operator may choose to deploy multiple drones to cover the \gls{ROI}. This is further explained in Section~\ref{sec:msp_multi_drone}. 
 
