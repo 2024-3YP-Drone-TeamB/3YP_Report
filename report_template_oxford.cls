@@ -387,3 +387,4 @@
 \usepackage{url}
 \newcommand{\glsused}[1]{\glslink{#1}{\mbox{}}\glsadd{#1}\glsunset{#1}}
 
+\usepackage{pdfpages}
